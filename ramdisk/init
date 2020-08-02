@@ -3,8 +3,6 @@ export PATH=/sbin
 mount -t sysfs sysfs /sys
 mount -t devtmpfs devtmpfs /dev
 mount -t ext4 /dev/mmcblk0p32 /data
-timeout 30 bananui >> /data/bananian.log
-adbd >> /data/bananian.log &
 mount -t ext4 /dev/mmcblk1p2 /root >> /data/bananian.log
 mount -t devtmpfs devtmpfs /root/dev >> /data/bananian.log
 mount -t sysfs sysfs /root/sys >> /data/bananian.log
