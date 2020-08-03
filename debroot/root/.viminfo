@@ -12,7 +12,7 @@
 ~h
 # Command Line History (newest to oldest):
 :q
-|2,0,157429,,"q"
+|2,0,1596481522,,"q"
 :wq
 |2,0,157381,,"wq"
 :d
@@ -50,36 +50,90 @@
 |3,0,2,1,1,0,156827,"        # No-op"
 
 # File marks:
-'0  14  0  /etc/rc.wifi.sh
-|4,48,14,0,157430,"/etc/rc.wifi.sh"
-'1  1  0  /var/log/wifi.stop.log
-|4,49,1,0,157387,"/var/log/wifi.stop.log"
-'2  5  0  /etc/rc.wifi.stop.sh
-|4,50,5,0,157381,"/etc/rc.wifi.stop.sh"
+'0  1  0  /var/log/wifi.log
+|4,48,1,0,1596481522,"/var/log/wifi.log"
+'1  1  0  /var/log/wifi.
+|4,49,1,0,1596481510,"/var/log/wifi."
+'2  14  0  /etc/rc.wifi.sh
+|4,50,14,0,157430,"/etc/rc.wifi.sh"
 '3  1  0  /var/log/wifi.stop.log
-|4,51,1,0,157370,"/var/log/wifi.stop.log"
-'4  3  0  /init.sh
-|4,52,3,0,157194,"/init.sh"
+|4,51,1,0,157387,"/var/log/wifi.stop.log"
+'4  5  0  /etc/rc.wifi.stop.sh
+|4,52,5,0,157381,"/etc/rc.wifi.stop.sh"
 '5  1  0  /var/log/wifi.stop.log
-|4,53,1,0,157130,"/var/log/wifi.stop.log"
-'6  1  0  /var/log/wifi.stop.log
-|4,54,1,0,157130,"/var/log/wifi.stop.log"
+|4,53,1,0,157370,"/var/log/wifi.stop.log"
+'6  3  0  /init.sh
+|4,54,3,0,157194,"/init.sh"
 '7  1  0  /var/log/wifi.stop.log
-|4,55,1,0,156980,"/var/log/wifi.stop.log"
+|4,55,1,0,157130,"/var/log/wifi.stop.log"
 '8  1  0  /var/log/wifi.stop.log
-|4,56,1,0,156980,"/var/log/wifi.stop.log"
+|4,56,1,0,157130,"/var/log/wifi.stop.log"
 '9  1  0  /var/log/wifi.stop.log
 |4,57,1,0,156980,"/var/log/wifi.stop.log"
 
 # Jumplist (newest first):
+-'  1  0  /var/log/wifi.log
+|4,39,1,0,1596481522,"/var/log/wifi.log"
+-'  1  0  /var/log/wifi.
+|4,39,1,0,1596481510,"/var/log/wifi."
+-'  1  0  /var/log/wifi.
+|4,39,1,0,1596481510,"/var/log/wifi."
 -'  14  0  /etc/rc.wifi.sh
 |4,39,14,0,157430,"/etc/rc.wifi.sh"
+-'  14  0  /etc/rc.wifi.sh
+|4,39,14,0,157430,"/etc/rc.wifi.sh"
+-'  14  0  /etc/rc.wifi.sh
+|4,39,14,0,157430,"/etc/rc.wifi.sh"
+-'  14  0  /etc/rc.wifi.sh
+|4,39,14,0,157430,"/etc/rc.wifi.sh"
+-'  16  0  /etc/rc.wifi.sh
+|4,39,16,0,157428,"/etc/rc.wifi.sh"
+-'  16  0  /etc/rc.wifi.sh
+|4,39,16,0,157428,"/etc/rc.wifi.sh"
+-'  16  0  /etc/rc.wifi.sh
+|4,39,16,0,157428,"/etc/rc.wifi.sh"
 -'  16  0  /etc/rc.wifi.sh
 |4,39,16,0,157428,"/etc/rc.wifi.sh"
 -'  1  0  /var/log/wifi.stop.log
 |4,39,1,0,157387,"/var/log/wifi.stop.log"
 -'  1  0  /var/log/wifi.stop.log
 |4,39,1,0,157387,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157387,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157387,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157387,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157387,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157387,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157387,"/var/log/wifi.stop.log"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
+-'  5  0  /etc/rc.wifi.stop.sh
+|4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
 -'  5  0  /etc/rc.wifi.stop.sh
 |4,39,5,0,157381,"/etc/rc.wifi.stop.sh"
 -'  5  0  /etc/rc.wifi.stop.sh
@@ -96,6 +150,30 @@
 |4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
 -'  6  7  /etc/rc.wifi.stop.sh
 |4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
+-'  6  7  /etc/rc.wifi.stop.sh
+|4,39,6,7,157380,"/etc/rc.wifi.stop.sh"
 -'  3  0  /etc/rc.wifi.stop.sh
 |4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
 -'  3  0  /etc/rc.wifi.stop.sh
@@ -104,6 +182,54 @@
 |4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
 -'  3  0  /etc/rc.wifi.stop.sh
 |4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  3  0  /etc/rc.wifi.stop.sh
+|4,39,3,0,157379,"/etc/rc.wifi.stop.sh"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
+-'  1  0  /var/log/wifi.stop.log
+|4,39,1,0,157370,"/var/log/wifi.stop.log"
 -'  1  0  /var/log/wifi.stop.log
 |4,39,1,0,157370,"/var/log/wifi.stop.log"
 -'  1  0  /var/log/wifi.stop.log
@@ -144,136 +270,18 @@
 |4,39,3,0,157194,"/init.sh"
 -'  3  0  /init.sh
 |4,39,3,0,157194,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /init.sh
-|4,39,1,0,157192,"/init.sh"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,157130,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,157130,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,157130,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,157130,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,157130,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,157130,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,157130,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,157130,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,156980,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,156980,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,156980,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,156980,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,156980,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,156980,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,156980,"/var/log/wifi.stop.log"
--'  1  0  /var/log/wifi.stop.log
-|4,39,1,0,156980,"/var/log/wifi.stop.log"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
--'  3  0  /etc/rc.wifi.stop.sh
-|4,39,3,0,156971,"/etc/rc.wifi.stop.sh"
+-'  3  0  /init.sh
+|4,39,3,0,157194,"/init.sh"
 
 # History of marks within files (newest to oldest):
+
+> /var/log/wifi.log
+	*	1596481514	0
+	"	1	0
+
+> /var/log/wifi.
+	*	1596481509	0
+	"	1	0
 
 > /etc/rc.wifi.sh
 	*	157428	0

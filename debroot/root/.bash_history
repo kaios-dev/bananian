@@ -91,3 +91,15 @@ vim /etc/rc.wifi.sh
 ps ax
 kill 236
 kill 238
+ls
+ls
+passwd
+ls
+service wifi start
+vim /var/log/wifi.
+vim /var/log/wifi.log 
+service ssh start
+service ssh start
+ls -l sshd/run/sshd
+ls -l run/sshd/
+ls -l run/

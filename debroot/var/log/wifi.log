@@ -1,12 +1,5 @@
-/etc/rc.wifi.sh: 9: echo: echo: I/O error
-wlan0     Link encap:Ethernet  HWaddr 00:0A:F5:89:89:FF  
-          inet6 addr: fe80::20a:f5ff:fe89:89ff/64 Scope:Link
-          UP BROADCAST MULTICAST  MTU:1500  Metric:1
-          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
-          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-          collisions:0 txqueuelen:1000 
-          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
-
-Successfully initialized wpa_supplicant
-Failed to open config file '/etc/wpa_supplicant.conf', error: No such file or directory
-Failed to read or parse configuration '/etc/wpa_supplicant.conf'.
+modprobe: ERROR: ../libkmod/libkmod.c:586 kmod_search_moddep() could not open moddep file '/lib/modules/4.19.0-parrot4-28t-amd64/modules.dep.bin'
+modprobe: FATAL: Module wlan not found in directory /lib/modules/4.19.0-parrot4-28t-amd64
+There was an error loading wifi.
+Kernel log output:
+dmesg: read kernel buffer failed: Invalid argument
