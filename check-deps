@@ -18,15 +18,15 @@ END
 }
 missing () {
 	echo "Missing program $1." 1>&2
-	if [ -n "$2" ]; then
-		echo "It should have gotten installed together with $2."
-	fi
+#	if [ -n "$2" ]; then
+#		echo "It should have gotten installed together with $2."
+#	fi
 	exit 1
 }
 check () {
 	which sed || missing sed
 	which abootimg || missing abootimg
-	which abootimg-pack-initrd || missing abootimg-pack-initrd abootimg
+#	which abootimg-pack-initrd || missing abootimg-pack-initrd abootimg
 	which tar || missing tar
 }
 checkgcc () {
