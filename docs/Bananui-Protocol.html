@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Bananui Protocol</title>
+<style>
+pre, code {
+	background: #ddd;
+	padding: 3px;
+	border-radius: 3px;
+}
+body {
+	font-family: sans-serif;
+}
+footer {
+	text-align: center;
+}
+</style>
+<body>
+<h2>The Bananui Protocol</h2>
+<p>The Bananui Protocol is used by apps to display widgets (buttons,
+input fields etc.).</p>
+<p>To display something, the app first needs to connect to the unix socket
+/tmp/bananui.sock. This can be done using the socket() and connect() calls.
+<br>
+After this, it can send commands to the UI server.</p>
+<h4>Command format</h4>
+<p>Commands have the following format:<br>
+<code>cmd [arguments]&lt;newline&gt;</code><br>
+Even if there are no arguments, the command must be followed by a space.
+</p>
+<h4>Available commands</h4>
+<ul>
+	<li><code>lbl &lt;text&gt;</code><br>Display text.</li>
+	<li><code>lbc &lt;text&gt;</code><br>Display centered text.</li>
+	<li><code>lbr &lt;text&gt;</code><br>Display right-aligned text.
+	</li>
+	<li><code>im[l|c|r] &lt;newline&gt;&lt;binary data (see
+	<a href="#imgrepr">Image representation</a>)&gt;</code><br>Display
+	an image, aligned to the left, center or right, respectively.</li>
+	<li><code>btn &lt;text&gt;</code><br>Make a button.</li>
+	<li><code>inp &lt;initial text&gt;</code><br>Make an input field.
+	</li>
+	<li><code>cbx&nbsp;</code><br>Group widgets into one line. All
+	following widgets will be on one line.</li>
+	<li><code>cbe&nbsp;</code><br>End grouping widgets into one line.
+	</li>
+	<li><code>rfr&nbsp;</code><br>Refresh screen (Always add this at the
+	end)!</li>
+	<li><code>sk[l|c|r] &lt;text&gt;</code><br>Set the label for left,
+	center or right softkey.</li>
+	<li><code>tit &lt;text&gt;</code><br>Set the window title (displayed
+	in window list)</li>
+	<li><code>clr&nbsp;</code><br>Delete all widgets from the window</li>
+	<li><code>sty &lt;r, g, b, r, g, b, r, g, b, r, g, b&gt;</code>Set the
+	colors of widgets and softkey labels and the window background color.
+	The first three numbers are the foreground color, then comes the
+	background color, then the softkey label color and finally the softkey
+	panel color.</li>
+</ul>
+<h4>Widget IDs</h4>
+<p>When a widget is created, it is assigned an ID unique to its window.
+The ID is not sent by the server as it can be calcuated manually:
+the ID of a widget is the ID of the previous widget plus 1.</p>
+<h4>Server responses</h4>
+<p>The server can send responses to the client. A response looks like a
+command, but is sent by the server.</p>
+<ul>
+	<li><code>kdn &lt;keyid&gt;</code><br>A key with code <i>keyid</i>
+	(see <a href="#keycodes">Key codes</a>) has been pushed down.</li>
+	<li><code>kup &lt;keyid&gt;</code><br>A key with code <i>keyid</i>
+	has been released.</li>
+	<li><code>exi 0</code><br>The back button has been pressed.</li>
+	<li><code>clk &lt;widgetid&gt;</code><br>The widget with ID
+	<i>widgetid</i> has been clicked.</li>
+</ul>
+<h4 id="imgrepr">Image representation</h4>
+<p>A bitmap has the following structure: <code>(8-bit)width (8-bit)height
+(32-bit)pixel ...</code></p>
+<p>A pixel is composed of 8 bits of red, 8 bits of green, 8 bits of blue and
+8 bits of opacity (alpha channel).</p>
+<p>Example: a black 2x2 square, written in C code:</p>
+<pre>
+char prebitmap = "iml \n\2\2";
+unsigned int bitmap = {
+	0x000000ff, 0x000000ff,
+	0x000000ff, 0x000000ff
+};
+</pre>
+<h4 id="keycodes">Key codes</h4>
+<table>
+	<tr><td>KEY_0, KEY_1, KEY_2, ..., KEY_9</td><td>Numeric keys
+	</td></tr>
+	<tr><td>KEY_NUMERIC_STAR</td><td>Star (*) button</td></tr>
+	<tr><td>KEY_NUMERIC_POUND</td><td>Pound (#) button</td></tr>
+	<tr><td>KEY_AC_SEND</td><td>Call key</td></tr>
+	<tr><td>KEY_AC_MENU</td><td>Left softkey</td></tr>
+	<tr><td>KEY_AC_BACK</td><td>Right softkey</td></tr>
+	<tr><td>KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT</td>
+		<td>D-pad keys</td></tr>
+	<tr><td>KEY_OK</td><td>Center (enter) key</td></tr>
+	<tr><td>KEY_BACKSPACE (actually KEY_POWER, translated by server)
+	</td><td>Back button (difference from <code>exi 0</code>: Gets sent
+	while in a non-empty input field)</td></tr>
+</table>
+<hr>
+<footer>&copy; 2020 Affe Null</footer>
+</body>
+</html>
