@@ -7,7 +7,17 @@ Create two partitions on your SD card. Format the first one as FAT and the
 second as EXT4. Push boot.img to the phone and flash it to boot or recovery:
 
     (on your phone)
-    # dd if=boot.img of=/dev/block/bootdevice/by-name/<boot or recovery>
+    # dd if=path/to/boot.img of=/dev/block/bootdevice/by-name/<boot or recovery>
+
+Then insert the SD card into the phone, push the debroot.tar file and run the
+following commands on your phone:
+
+    # mkdir /data/debian
+    # mount /dev/block/mmcblk1p2 /data/debian
+    # cd /data/debian
+    # tar xvf /path/to/debroot.tar
+    (lots of output)
+    # umount /data/debian
 
 ### Wireless networking
 To enable WiFi networking, create a file named debroot/etc/wpa\_supplicant.conf
@@ -31,6 +41,6 @@ To show a list of open windows, press the power button with the slide open.
 There some bugs and many things aren't implemented yet.
 Here is one bug:
  - The display is very glitchy because some parts don't get refreshed.
- - Color Grid app does not work
+ - Color Grid app does not always work
 
 Please report other bugs as an issue.
