@@ -19,7 +19,7 @@ END
 missing () {
 	echo "Missing program $1." 1>&2
 	if [ -n "$2" ]; then
-		echo "It should be installed together with $2."
+		echo "It should have gotten installed together with $2."
 	fi
 	exit 1
 }

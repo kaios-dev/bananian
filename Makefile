@@ -35,9 +35,9 @@ browser: $(BROWSEROBJECTS)
 colorgrid: $(COLORGOBJECTS)
 	$(CC) -o $@ $(COLORGOBJECTS) $(CFLAGS)
 
-initrd.img:
+initrd.img: ramdisk
 	rm -f $@
-	abootimg-pack-initrd $@
+	./pack-initrd $@ $<
 
 boot.img: initrd.img
 	abootimg --create $@ -f bootimg.cfg -k zImage -r $<
