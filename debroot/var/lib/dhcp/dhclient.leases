@@ -1,0 +1,18 @@
+lease {
+  interface "wlan0";
+  fixed-address 192.168.178.38;
+  option subnet-mask 255.255.255.0;
+  option routers 192.168.178.1;
+  option dhcp-lease-time 864000;
+  option dhcp-message-type 5;
+  option domain-name-servers 192.168.178.1;
+  option dhcp-server-identifier 192.168.178.1;
+  option dhcp-renewal-time 432000;
+  option ntp-servers 192.168.178.1;
+  option broadcast-address 192.168.178.255;
+  option dhcp-rebinding-time 756000;
+  option domain-name "fritz.box";
+  renew 3 1970/01/07 14:39:38;
+  rebind 0 1970/01/11 13:39:14;
+  expire 1 1970/01/12 19:39:14;
+}

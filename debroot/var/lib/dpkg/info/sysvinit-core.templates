@@ -1,0 +1,32 @@
+Template: sysvinit/hurd-fix-inittab
+Type: boolean
+Description: Update getty pathnames and add hurd-console?
+ Your /etc/inittab seems to use /libexec/getty as getty and/or to miss
+ hurd-console entry. The default inittab has been changed, however your
+ /etc/inittab has been modified. Note that sysvinit has not been used
+ to boot an Hurd system for long, so any errors in that file would not
+ have shown up earlier.
+ .
+ If you allow this change, a backup will be stored in /etc/inittab.dpkg-old.
+ .
+ If you don't allow this change, an updated inittab will be written to
+ /etc/inittab.dpkg-new. Please review the changes and update your
+ /etc/inittab accordingly.
+Description-de.UTF-8: Getty-Pfadnamen aktualisieren und Hurd-Konsole hinzufügen?
+ Ihre /etc/inittab scheint /libexec/getty als Getty zu verwenden und/oder der Hurd-Konsoleneintrags scheint zu fehlen. Die Standard-Inittab wurde geändert, allerdings wurde Ihre /etc/inittab verändert. Beachten Sie, dass Sysvinit seit langem nicht zum Starten eines Hurd-Systems benutzt wurde, daher wären alle Fehler in dieser Datei nicht früher angezeigt worden.
+ .
+ Falls Sie diese Änderung erlauben, wird eine Sicherungskopie in /etc/inittab.dpkg-old gespeichert.
+ .
+ Falls Sie diese Änderung nicht erlauben, wird eine aktualisierte Inittab nach /etc/inittab.dpkg-new geschrieben. Bitte überprüfen Sie die Änderungen und aktualisieren Sie Ihre /etc/inittab entsprechend.
+Description-fr.UTF-8: Faut-il mettre à jour les chemins d'accès de getty et ajouter la console de hurd ?
+ Le script « /etc/inittab » semble utiliser « /libexec/getty » comme terminal et/ou il semble qu'il manque une entrée pour la console hurd. Le script « inittab » par défaut a été modifié, d'un autre côté le fichier « /etc/inittab » de votre système a aussi été modifié. Veuillez noter que sysvinit n'a pas été utilisé pour démarrer un système Hurd depuis longtemps, par conséquent, toute erreur dans ce fichier ne serait pas apparue plus tôt.
+ .
+ En autorisant cette modification, une sauvegarde sera enregistrée dans « /etc/inittab.dpkg-old ».
+ .
+ En refusant cette modification, un fichier mis à jour sera créé dans « /etc/inittab.dpkg-new ». Veuillez vérifier les changements dans ce fichier et ensuite corriger en fonction le script « /etc/inittab ».
+Description-nl.UTF-8: getty-padnamen bijwerken en hurd-console toevoegen?
+ Uw /etc/inittab lijkt /libexec/getty te gebruiken als getty en/of geen hurd-console-item te bevatten. Het standaard inittab is gewijzigd, maar uw /etc/inittab werd lokaal aangepast. Merk op dat sysvinit lange tijd niet gebruikt werd om een Hurd-systeem op te starten, waardoor eventuele fouten in dat bestand niet eerder aan de oppervlakte konden komen.
+ .
+ Indien u akkoord gaat met deze aanpassing, zal een reservekopie bewaard worden in /etc/inittab.dpkg-old.
+ .
+ Indien u niet akkoord gaat met deze aanpassing, zal een bijgewerkte inittab opgeslagen worden in /etc/inittab.dpkg-new. Gelieve de aanpassingen na te kijken en uw eigen /etc/inittab dienovereenkomstig bij te werken.

@@ -1,4 +1,4 @@
-OUTPUTS = initrd.img boot.img
+OUTPUTS = initrd.img boot.img debroot.tar
 EXECS = bananui testclient mainclient browser colorgrid
 UISOURCES = gr.c ui.c uiserv.c
 UIOBJECTS = $(UISOURCES:.c=.o)
@@ -11,13 +11,14 @@ BROWSEROBJECTS = $(BROWSERSOURCES:.c=.o)
 COLORGSOURCES = colorgrid.c
 COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
 CFLAGS = -g -Wall -static -DHAVE_DEBUG
-CC = arm-linux-gnueabi-gcc-10
 
-ifeq (desktop, $(TARGET))
-CFLAGS += -DDESKTOP
-endif
+CC = $(shell ./check-deps findarmgcc)
 
-all: $(EXECS) $(OUTPUTS)
+all: check-deps $(EXECS) $(OUTPUTS)
+
+check-deps:
+	@./check-deps check
+	@./check-deps checkgcc $(CC)
 
 bananui: $(UIOBJECTS)
 	$(CC) -o $@ $(UIOBJECTS) $(CFLAGS)
@@ -35,10 +36,17 @@ colorgrid: $(COLORGOBJECTS)
 	$(CC) -o $@ $(COLORGOBJECTS) $(CFLAGS)
 
 initrd.img:
-	abootimg-pack-initrd
+	rm -f $@
+	abootimg-pack-initrd $@
 
 boot.img: initrd.img
-	abootimg --create boot.img -f bootimg.cfg -k zImage -r initrd.img
+	abootimg --create $@ -f bootimg.cfg -k zImage -r $<
+
+debroot.tar: $(EXECS)
+	rm -f $@
+	cp $(EXECS) debroot/usr/local/bin
+	tar cvf $@ debroot/
+
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
 

@@ -1,0 +1,15 @@
+588ae8d2615039227cc5c8b1eb65007a  sbin/halt
+2b5f33c30ab707a439ec12e8d3f2fd07  sbin/init
+0bb51209b4347f73fba31d40d4224e7a  sbin/runlevel
+26117ffe347fe0b2e7b7067f363530d7  sbin/shutdown
+65ce7f52ea846ff6cc9795b995f88d82  usr/include/initreq.h
+eed37e1019503374073265138cf77639  usr/share/doc/sysvinit-core/changelog.Debian.gz
+1d2dfa26415a558f96c39c4f1c992041  usr/share/doc/sysvinit-core/changelog.gz
+a21e2e9281e9354d0a9c6b49616464ad  usr/share/doc/sysvinit-core/copyright
+8ddbeb9d6e74c9e5bfe8f70fcf606c29  usr/share/man/man5/initscript.5.gz
+9a07a865770540941fd5f10fc1a5a28d  usr/share/man/man5/inittab.5.gz
+8a50377cd0292c74695acef8ef581662  usr/share/man/man8/halt.8.gz
+6f6ec0f0f4aba87c23eb30456ab7a867  usr/share/man/man8/init.8.gz
+ee282940d6dfa83d7fb35fb20e271337  usr/share/man/man8/runlevel.8.gz
+56632f341eafc45fdc48382dd1d814d7  usr/share/man/man8/shutdown.8.gz
+73c2f98d113d26d392edb89294baac47  usr/share/sysvinit/inittab

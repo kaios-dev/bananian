@@ -1,0 +1,53 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          wifi
+# Required-Start:    $all
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Run /etc/rc.wifi.sh if it exists
+### END INIT INFO
+
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+. /lib/init/vars.sh
+. /lib/lsb/init-functions
+VERBOSE=yes
+
+do_start() {
+	if [ -x /etc/rc.wifi.sh ]; then
+	        [ "$VERBOSE" != no ] && log_begin_msg "Running wifi boot scripts (/etc/rc.wifi.sh)"
+		/etc/rc.wifi.sh > /var/log/wifi.log 2>&1 < /dev/null
+		ES=$?
+		[ "$VERBOSE" != no ] && log_end_msg $ES
+		return $ES
+	fi
+}
+do_stop() {
+	if [ -x /etc/rc.wifi.stop.sh ]; then
+	        [ "$VERBOSE" != no ] && log_begin_msg "Running wifi stop script (/etc/rc.wifi.stop.sh)"
+		/etc/rc.wifi.stop.sh > /var/log/wifi.stop.log 2>&1 < /dev/null
+		ES=$?
+		[ "$VERBOSE" != no ] && log_end_msg $ES
+		return $ES
+	fi
+}
+
+case "$1" in
+    start)
+	do_start
+        ;;
+    restart|reload|force-reload)
+        echo "Error: argument '$1' not supported" >&2
+        exit 3
+        ;;
+    stop|status)
+	do_stop
+        exit 0
+        ;;
+    *)
+        echo "Usage: $0 start|stop" >&2
+        exit 3
+        ;;
+esac
