@@ -3,6 +3,8 @@
 Just run make. If it complains about missing compilers, make sure your ARM
 cross-compiler is named arm-linux-gnueabi-gcc or arm-linux-gnueabi-gcc-_version_.
 ### Installing
+This step requires a rooted phone. See
+[bananahackers](https://sites.google.com/view/bananahackers/root) for more info.
 Create two partitions on your SD card. Format the first one as FAT and the
 second as EXT4. Push boot.img to the phone and flash it to boot or recovery:
 
@@ -13,11 +15,11 @@ Then insert the SD card into the phone, push the debroot.tar file and run the
 following commands on your phone:
 
     # mkdir /data/debian
-    # mount /dev/block/mmcblk1p2 /data/debian
+    # busybox mount /dev/block/mmcblk1p2 /data/debian
     # cd /data/debian
     # tar xvf /path/to/debroot.tar
     (lots of output)
-    # umount /data/debian
+    # busybox umount /data/debian
 
 ### Wireless networking
 To enable WiFi networking, create a file named debroot/etc/wpa\_supplicant.conf
