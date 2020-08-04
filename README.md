@@ -55,7 +55,7 @@ Commit hash: e89da83520e1225d61d03ca39dd0b5009c0b892d
 Configuration (copy to .config) is in the kernel-config file.
 
 Patches:
-<https://gitlab.com/postmarketOS/pmaports/device/testing/linux-nokia-beatles/>
+<https://gitlab.com/postmarketOS/pmaports/-/tree/master/device/testing/linux-nokia-beatles/>
 
 The WLAN kernel module can be found in my repository
 <https://gitlab.com/affenull2345/prima-wlan>. Add the code to
