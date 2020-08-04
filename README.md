@@ -49,14 +49,20 @@ Please report other bugs as an issue.
 ### Kernel
 The kernel source is located at
 <https://source.codeaurora.org/quic/la/kernel/msm-3.10> under branch LF.BR.1.2.8.
+
 Commit hash: e89da83520e1225d61d03ca39dd0b5009c0b892d
+
 Configuration (copy to .config) is in the kernel-config file.
+
 Patches:
 <https://gitlab.com/postmarketOS/pmaports/device/testing/linux-nokia-beatles/>
+
 The WLAN kernel module can be found in my repository
 <https://gitlab.com/affenull2345/prima-wlan>. Add the code to
 drivers/net/wireless/prima in the tree to compile it.
+
 Device tree source: unavailable, blobs extracted from original KaiOS kernel.
+
 Append the dtb file from this repository to get the final kernel image.
 ### Disclaimer
 Install this at your own risk! I am not responsible for bricked phones!
