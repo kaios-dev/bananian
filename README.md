@@ -46,10 +46,6 @@ Here is one bug:
  - Color Grid app does not always work
 
 Please report other bugs as an issue.
-### Contribute
-If you would like to contribute, you can always submit a merge request.
-If you want to write an app, check out some of the existing apps and also the
-[Protocol Documentation](https://affenull2345.gitlab.io/bananian/docs/Bananui-Protocol.html).
 ### Kernel
 The kernel source is located at
 <https://source.codeaurora.org/quic/la/kernel/msm-3.10> under branch LF.BR.1.2.8.
