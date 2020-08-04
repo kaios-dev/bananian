@@ -39,13 +39,14 @@ initrd.img: ramdisk
 	rm -f $@
 	./pack-initrd $@ $<
 
-boot.img: initrd.img
+boot.img: initrd.img zImage bootimg.cfg
 	abootimg --create $@ -f bootimg.cfg -k zImage -r $<
 
 debroot.tar: $(EXECS)
 	rm -f $@
 	cp $(EXECS) debroot/usr/local/bin
-	tar cvf $@ --owner=1 --exclude=.gitignore debroot/
+	cd debroot
+	tar cvf $@ --owner=1 --exclude=.gitignore *
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@

@@ -1,12 +1,12 @@
-/* Downloaded from https://github.com/kaiostech/platform_bootable_recovery/
- * minui/font_10x18.h */
+/* This file can be found at https://raw.githubusercontent.com/kaiostech/platform_bootable_recovery/kaios-LF.BR.1.2.8/minui/font_10x18.h or in the
+ * Android Open Source Project. */
 struct {
   unsigned width;
   unsigned height;
   unsigned cwidth;
   unsigned cheight;
   unsigned char rundata[2973];
-} fnt = {
+} fnt /* originally named font */ = {
   .width = 960,
   .height = 18,
   .cwidth = 10,
