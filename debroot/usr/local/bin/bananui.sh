@@ -1,5 +1,5 @@
 #!/bin/sh
 
-/usr/local/bin/bananui > /dev/null < /dev/null 2>&1 &
-
+rm -f /tmp/bananui.sock
+/usr/local/bin/bananui > /var/log/bananui.log < /dev/null 2>&1 &
 jobs -p > /run/bananui.pid

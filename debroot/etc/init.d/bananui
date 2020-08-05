@@ -43,7 +43,6 @@ case "$1" in
   start)
 	if [ -f /run/bananui.pid ]; then
 	    log_failure_msg "Already running? pidfile /run/bananui.pid exists"
-	    exit 2
 	fi
 	log_daemon_msg "Starting Nokia 8110 4G UI" "bananui" || true
 	if start-stop-daemon --start --quiet --oknodo --chuid 0:0 --pidfile /run/bananui.pid --exec /usr/local/bin/bananui.sh; then
