@@ -283,7 +283,7 @@ int main()
 		perror("write");
 		return 1;
 	}
-	parse_config("/usr/share/bananui.openwith", &cfg);
+	parse_config("/dev/null", &cfg);
 	browse(fd, &cfg, getenv("HOME"));
 	while(read(fd, recvbuf+bufindex, 1) > 0){
 		if(recvbuf[bufindex] == '\n'){
