@@ -46,7 +46,7 @@ Add Prima WLAN kernel module:
     $ cd msm-3.10/drivers/net/wireless
     $ git clone https://gitlab.com/affenull2345/prima-wlan prima
     $ echo 'obj-$(CONFIG_PRIMA) += prima/' >> Makefile
-    $ echo 'source "drivers/net/wireless/prima"' >> Kconfig
+    $ echo 'source "drivers/net/wireless/prima/Kconfig"' >> Kconfig
     $ cd ../../../..
 
 Compile kernel:
