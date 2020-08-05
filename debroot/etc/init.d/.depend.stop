@@ -3,7 +3,7 @@ rsyslog: sendsigs
 umountnfs.sh: rsyslog sendsigs
 hwclock.sh: rsyslog
 networking: umountnfs.sh
-umountfs: networking hwclock.sh umountnfs.sh brightness urandom
+umountfs: networking umountnfs.sh hwclock.sh brightness urandom
 umountroot: umountfs udev
 halt: umountroot
 reboot: umountroot

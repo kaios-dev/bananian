@@ -1,8 +1,10 @@
-TARGETS = rsyslog killprocs bootlogs sudo single cron rmnologin dbus ssh rc.local
+TARGETS = rsyslog bootlogs killprocs bananui sudo single rmnologin cron ssh dbus rc.local usb wifi
 INTERACTIVE =
 single: killprocs
-cron: rsyslog
 rmnologin: sudo
-dbus: rsyslog
+cron: rsyslog
 ssh: rsyslog
-rc.local: cron rmnologin dbus ssh bootlogs
+dbus: rsyslog
+rc.local: rmnologin cron ssh dbus bootlogs bananui
+usb: rmnologin cron ssh dbus bootlogs bananui
+wifi: rmnologin cron ssh dbus bootlogs bananui
