@@ -2,7 +2,7 @@
 
 Download kernel:
 
-    $ git clone -b LF.BR.1.2.8 <https://source.codeaurora.org/quic/la/kernel/msm-3.10>
+    $ git clone -b LF.BR.1.2.8 https://source.codeaurora.org/quic/la/kernel/msm-3.10
 
 Install build tools (skip if already installed):
 
