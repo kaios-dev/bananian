@@ -33,6 +33,12 @@ run_by_init() {
     ([ "$previous" ] && [ "$runlevel" ]) || [ "$runlevel" = S ]
 }
 
+gen_keys_if_needed () {
+    if ! ls /etc/ssh/ssh_*_key > /dev/null 2>&1; then
+	ssh-keygen -N "" -f /etc/ssh/ssh_host_rsa_key
+    fi
+}
+
 check_for_no_start() {
     # forget it if we're trying to start, and /etc/ssh/sshd_not_to_be_run exists
     if [ -e /etc/ssh/sshd_not_to_be_run ]; then 
@@ -79,6 +85,7 @@ case "$1" in
 	check_privsep_dir
 	check_for_no_start
 	check_dev_null
+	gen_keys_if_needed
 	log_daemon_msg "Starting OpenBSD Secure Shell server" "sshd" || true
 	if start-stop-daemon --start --quiet --oknodo --chuid 0:0 --pidfile /run/sshd.pid --exec /usr/sbin/sshd -- $SSHD_OPTS; then
 	    log_end_msg 0 || true
@@ -113,6 +120,7 @@ case "$1" in
 	start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile /run/sshd.pid --exec /usr/sbin/sshd
 	check_for_no_start log_end_msg
 	check_dev_null log_end_msg
+	gen_keys_if_needed
 	if start-stop-daemon --start --quiet --oknodo --chuid 0:0 --pidfile /run/sshd.pid --exec /usr/sbin/sshd -- $SSHD_OPTS; then
 	    log_end_msg 0 || true
 	else
@@ -131,6 +139,7 @@ case "$1" in
 		# old daemon stopped
 		check_for_no_start log_end_msg
 		check_dev_null log_end_msg
+	        gen_keys_if_needed
 		if start-stop-daemon --start --quiet --oknodo --chuid 0:0 --pidfile /run/sshd.pid --exec /usr/sbin/sshd -- $SSHD_OPTS; then
 		    log_end_msg 0 || true
 		else
