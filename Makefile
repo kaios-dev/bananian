@@ -45,7 +45,7 @@ boot.img: initrd.img zImage bootimg.cfg
 debroot.tar: $(EXECS)
 	rm -f $@
 	cp $(EXECS) debroot/usr/local/bin
-	(cd debroot; tar cvf $@ --owner=1 --exclude=.gitignore *)
+	(cd debroot; tar cvf ../$@ --owner=1 --exclude=.gitignore *)
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
