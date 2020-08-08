@@ -1,3 +1,30 @@
+image: gcc
+
+build:
+  stage: build
+  before_script:
+    - apt update && apt install make cpio abootimg gcc-arm-linux-gnueabihf -y
+  script:
+    - make
+  artifacts:
+    paths:
+      - bananui
+      - browser
+      - colorgrid
+      - mainclient
+      - testclient
+      - boot.img
+      - initrd.img
+      - debroot/usr/local/bin/bananui
+      - debroot/usr/local/bin/browser
+      - debroot/usr/local/bin/colorgrid
+      - debroot/usr/local/bin/mainclient
+      - debroot/usr/local/bin/testclient
+      # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
+      # cache:
+      #   paths:
+      #     - "*.o"
+
 pages:
   stage: deploy
   script:

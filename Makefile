@@ -12,7 +12,7 @@ COLORGSOURCES = colorgrid.c
 COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
 CFLAGS = -g -Wall -static -DHAVE_DEBUG
 
-CC = $(shell ./check-deps findarmgcc)
+CC = $(shell ./check-deps findarmgcc $(CROSS_COMPILE))
 
 all: check-deps $(EXECS) $(OUTPUTS)
 

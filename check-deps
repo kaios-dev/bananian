@@ -1,8 +1,9 @@
 #!/bin/sh
 
 findarmgcc () {
+	CROSS_COMPILE=${1:-arm*}
 	for pth in `echo $PATH | sed 's/:/ /g'`; do
-		for gcc in $pth/arm-linux-gnueabi-gcc*; do
+		for gcc in $pth/${CROSS_COMPILE}gcc*; do
 			cat <<END > test-gcc.c
 int main() {}
 END
