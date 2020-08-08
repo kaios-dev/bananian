@@ -16,7 +16,7 @@ CC = $(shell ./check-deps findarmgcc $(CROSS_COMPILE))
 
 all: check-deps $(EXECS) $(OUTPUTS)
 
-check-deps:
+check-deps::
 	@./check-deps check
 	@./check-deps checkgcc $(CC)
 
