@@ -3,7 +3,7 @@ image: gcc
 build:
   stage: build
   before_script:
-    - apt update && apt install make -y
+    - apt update && apt install make cpio abootimg -y
   script:
     - make
   artifacts:
