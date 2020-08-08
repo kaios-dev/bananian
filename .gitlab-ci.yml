@@ -15,11 +15,7 @@ build:
       - testclient
       - boot.img
       - initrd.img
-      - debroot/usr/local/bin/bananui
-      - debroot/usr/local/bin/browser
-      - debroot/usr/local/bin/colorgrid
-      - debroot/usr/local/bin/mainclient
-      - debroot/usr/local/bin/testclient
+      - debroot.tar
       # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
       # cache:
       #   paths:
