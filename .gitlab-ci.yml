@@ -3,7 +3,7 @@ image: gcc
 build:
   stage: build
   before_script:
-    - apt update && apt install make cpio abootimg -y
+    - apt update && apt install make cpio abootimg gcc-arm-linux-gnueabihf -y
   script:
     - make
   artifacts:
