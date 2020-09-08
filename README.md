@@ -42,7 +42,6 @@ To show a list of open windows, press the power button with the slide open.
 ### Bugs
 There some bugs and many things aren't implemented yet.
 Here is one bug:
- - The display is very glitchy because some parts don't get refreshed.
  - Color Grid app does not always work
 
 Please report other bugs as an issue.
