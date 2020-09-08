@@ -644,14 +644,19 @@ static void handleSlideClose(struct uiinfo *uiinf)
 {
 #ifndef DESKTOP
 	int ledfd;
-	if(ioctl(uiinf->fbinf->fd, FBIOBLANK, FB_BLANK_POWERDOWN)){
-		perror("ioctl FBIOBLANK");
-	}
 	uiinf->on = 0;
 	ledfd = open("/sys/class/leds/button-backlight/brightness",
 		O_WRONLY);
 	if(ledfd < 0){
 		perror("/sys/class/leds/button-backlight/brightness");
+		return;
+	}
+	write(ledfd, "0\n", 2);
+	close(ledfd);
+	ledfd = open("/sys/class/leds/lcd-backlight/brightness",
+		O_WRONLY);
+	if(ledfd < 0){
+		perror("/sys/class/leds/lcd-backlight/brightness");
 		return;
 	}
 	write(ledfd, "0\n", 2);
@@ -662,10 +667,6 @@ static void handleSlideOpen(struct uiinfo *uiinf)
 {
 #ifndef DESKTOP
 	int ledfd;
-	if(ioctl(uiinf->fbinf->fd, FBIOBLANK, FB_BLANK_UNBLANK)){
-		perror("ioctl FBIOBLANK");
-	}
-	refreshScreen(uiinf->fbinf);
 	uiinf->on = 1;
 	ledfd = open("/sys/class/leds/button-backlight/brightness",
 		O_WRONLY);
@@ -675,6 +676,15 @@ static void handleSlideOpen(struct uiinfo *uiinf)
 	}
 	write(ledfd, "40\n", 4);
 	close(ledfd);
+	ledfd = open("/sys/class/leds/lcd-backlight/brightness",
+		O_WRONLY);
+	if(ledfd < 0){
+		perror("/sys/class/leds/lcd-backlight/brightness");
+		return;
+	}
+	write(ledfd, "255\n", 4);
+	close(ledfd);
+	refreshScreen(uiinf->fbinf);
 #endif
 }
 static void handleSlideFullopen(struct uiinfo *uiinf)

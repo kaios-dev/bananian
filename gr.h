@@ -1,12 +1,14 @@
 #ifndef _GR_H_
 #define _GR_H_
 #include <linux/fb.h>
+#include "ion.h"
 
 struct fbinfo {
-	unsigned char *framebuffer, *real_framebuffer;
+	unsigned char *framebuffer, *ion_mem;
 	struct fb_fix_screeninfo *finfo;
 	struct fb_var_screeninfo *vinfo;
-	int fd;
+	int fd, ovid, memid, iondev_fd;
+	ion_user_handle_t ion_handle;
 };
 
 #define fbcpy(__dst, __src, __yoffset) memcpy((__dst)->framebuffer + \
