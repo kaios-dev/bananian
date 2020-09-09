@@ -82,9 +82,9 @@ command, but is sent by the server.</p>
 <p>Example: a black 2x2 square, written in C code:</p>
 <pre>
 char prebitmap = "iml \n\2\2";
-unsigned int bitmap = {
-	0x000000ff, 0x000000ff,
-	0x000000ff, 0x000000ff
+unsigned int bitmap[2][2] = {
+	{ 0x000000ff, 0x000000ff },
+	{ 0x000000ff, 0x000000ff }
 };
 </pre>
 <h4 id="keycodes">Key codes</h4>
@@ -103,7 +103,5 @@ unsigned int bitmap = {
 	</td><td>Back button (difference from <code>exi 0</code>: Gets sent
 	while in a non-empty input field)</td></tr>
 </table>
-<hr>
-<footer>&copy; 2020 Affe Null</footer>
 </body>
 </html>

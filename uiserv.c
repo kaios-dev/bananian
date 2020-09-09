@@ -101,7 +101,9 @@ static void saveByte(struct mydata *mydat, int clientid, char byte)
 		data[1] = byte;
 	}
 	else {
-		if(mydat->bufindex[clientid]+1 == data[0] * data[1] *
+		data[2 + mydat->bufindex[clientid]] = byte;
+		mydat->bufindex[clientid]++;
+		if(mydat->bufindex[clientid] == data[0] * data[1] *
 			sizeof(unsigned int))
 		{
 			mydat->isbinary[clientid] = 0;
@@ -109,8 +111,6 @@ static void saveByte(struct mydata *mydat, int clientid, char byte)
 			mydat->bufindex[clientid] = 0;
 			return;
 		}
-		data[2 + mydat->bufindex[clientid]] = byte;
-		mydat->bufindex[clientid]++;
 	}
 	mydat->img[clientid]->data = data;
 }

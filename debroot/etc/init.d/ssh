@@ -35,7 +35,9 @@ run_by_init() {
 
 gen_keys_if_needed () {
     if ! ls /etc/ssh/ssh_*_key > /dev/null 2>&1; then
-	ssh-keygen -N "" -f /etc/ssh/ssh_host_rsa_key
+	ssh-keygen -t rsa -N "" -f /etc/ssh/ssh_host_rsa_key
+	ssh-keygen -t ecdsa -N "" -f /etc/ssh/ssh_host_ecdsa_key
+	ssh-keygen -t ed25519 -N "" -f /etc/ssh/ssh_host_ed25519_key
     fi
 }
 
