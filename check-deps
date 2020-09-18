@@ -1,7 +1,8 @@
 #!/bin/sh
+	
+CROSS_COMPILE=${2:-arm*-linux-gnueabihf*}
 
 findarmgcc () {
-	CROSS_COMPILE=${1:-arm*}
 	for pth in `echo $PATH | sed 's/:/ /g'`; do
 		for gcc in $pth/${CROSS_COMPILE}gcc*; do
 			cat <<END > test-gcc.c
@@ -19,20 +20,17 @@ END
 }
 missing () {
 	echo "Missing program $1." 1>&2
-#	if [ -n "$2" ]; then
-#		echo "It should have gotten installed together with $2."
-#	fi
 	exit 1
 }
 check () {
 	which sed || missing sed
 	which abootimg || missing abootimg
-#	which abootimg-pack-initrd || missing abootimg-pack-initrd abootimg
 	which tar || missing tar
+	which debuild || missing debuild
 }
 checkgcc () {
 	if [ -z "$1" ]; then
-		echo "Could not find a GCC compiler for arm-linux-gnueabi."
+		echo "Could not find a GCC compiler for $CROSS_COMPILE."
 		exit 1
 	fi
 }

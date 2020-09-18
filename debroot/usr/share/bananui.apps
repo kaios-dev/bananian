@@ -1,4 +1,0 @@
-Test client=/usr/local/bin/testclient
-File Browser=/usr/local/bin/browser
-Power Off=/sbin/poweroff
-Reboot=/sbin/reboot

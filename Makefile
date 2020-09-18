@@ -1,39 +1,19 @@
-OUTPUTS = initrd.img boot.img debroot.tar
-EXECS = bananui testclient mainclient browser colorgrid
-UISOURCES = gr.c ui.c uiserv.c
-UIOBJECTS = $(UISOURCES:.c=.o)
-TESTSOURCES = testclient.c
-TESTOBJECTS = $(TESTSOURCES:.c=.o)
-MAINCSOURCES = mainclient.c
-MAINCOBJECTS = $(MAINCSOURCES:.c=.o)
-BROWSERSOURCES = browser.c
-BROWSEROBJECTS = $(BROWSERSOURCES:.c=.o)
-COLORGSOURCES = colorgrid.c
-COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
-CFLAGS = -g -Wall -static -DHAVE_DEBUG
+VERSION = 0.0.2
+OUTPUTS = initrd.img boot.img debroot debroot.tar
+DEBS = bananui-base_$(VERSION)-1_armhf.deb
 
 CC = $(shell ./check-deps findarmgcc $(CROSS_COMPILE))
 
-all: check-deps $(EXECS) $(OUTPUTS)
+all: check-deps $(OUTPUTS)
 
 check-deps::
 	@./check-deps check
 	@./check-deps checkgcc $(CC)
 
-bananui: $(UIOBJECTS)
-	$(CC) -o $@ $(UIOBJECTS) $(CFLAGS)
-
-testclient: $(TESTOBJECTS)
-	$(CC) -o $@ $(TESTOBJECTS) $(CFLAGS)
-
-mainclient: $(MAINCOBJECTS)
-	$(CC) -o $@ $(MAINCOBJECTS) $(CFLAGS)
-
-browser: $(BROWSEROBJECTS)
-	$(CC) -o $@ $(BROWSEROBJECTS) $(CFLAGS)
-
-colorgrid: $(COLORGOBJECTS)
-	$(CC) -o $@ $(COLORGOBJECTS) $(CFLAGS)
+bananui-base_$(VERSION)-1_armhf.deb:
+	(cd bananui-base-$(VERSION) && $(MAKE) clean)
+	tar czf bananui-base_$(VERSION).orig.tar.gz bananui-base-$(VERSION)
+	(cd bananui-base-$(VERSION) && debuild -us -uc)
 
 initrd.img: ramdisk
 	rm -f $@
@@ -42,10 +22,12 @@ initrd.img: ramdisk
 boot.img: initrd.img zImage bootimg.cfg
 	abootimg --create $@ -f bootimg.cfg -k zImage -r $<
 
-debroot.tar: $(EXECS)
-	rm -f $@
-	cp $(EXECS) debroot/usr/local/bin
-	(cd debroot; chmod a=rwxt tmp; tar cvf ../$@ --owner=0 --exclude=.gitignore *)
+debroot: $(DEBS)
+
+debroot.tar:
+#	rm -f $@
+#	cp $(EXECS) debroot/usr/local/bin
+#	(cd debroot; chmod a=rwxt tmp; tar cvf ../$@ --owner=0 --exclude=.gitignore *)
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -58,4 +40,4 @@ deps.mk: $(UISOURCES)
 	$(CC) -MM $^ > $@
 
 clean:
-	rm -f *.o $(EXECS) $(OUTPUTS)
+	rm -rf *.o $(DEBS) $(OUTPUTS)
