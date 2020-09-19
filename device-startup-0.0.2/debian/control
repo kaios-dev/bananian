@@ -1,0 +1,14 @@
+Source: device-startup
+Section: misc
+Maintainer: Affe Null <affenull2345@gmail.com>
+Priority: standard
+Standards-Version: 4.3.0
+Build-Depends: debhelper (>=10)
+
+Package: device-startup
+Architecture: all
+Depends: lsb-base, ${shlibs:Depends}, ${misc:Depends}
+Description: Device startup files for Nokia 8110 4G
+ This package includes:
+  - WLAN init scripts
+  - USB init scripts (do not work)

@@ -1,5 +1,6 @@
 EXECS = bananui testclient mainclient browser colorgrid
-HELPERS = bananui.sh
+HELPERS = bananui-bg
+INITSCRIPTS = initscripts/bananui
 UISOURCES = gr.c ui.c uiserv.c
 UIOBJECTS = $(UISOURCES:.c=.o)
 TESTSOURCES = testclient.c
@@ -11,6 +12,7 @@ BROWSEROBJECTS = $(BROWSERSOURCES:.c=.o)
 COLORGSOURCES = colorgrid.c
 COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
 CFLAGS = -g -Wall -Wno-unused-function -DHAVE_DEBUG
+CC = $(shell cat ../.target-gcc) # Please do not move this makefile
 
 all: $(EXECS)
 
@@ -19,6 +21,7 @@ bananui: $(UIOBJECTS)
 
 install:
 	install $(EXECS) $(HELPERS) $(DESTDIR)/usr/bin
+	install $(INITSCRIPTS) $(DESTDIR)/etc/init.d
 	install defconfig/* $(DESTDIR)/etc/bananui
 
 testclient: $(TESTOBJECTS)

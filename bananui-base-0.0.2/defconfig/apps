@@ -1,0 +1,4 @@
+Test client=/usr/bin/testclient
+File Browser=/usr/bin/browser
+Power Off=/sbin/poweroff
+Reboot=/sbin/reboot

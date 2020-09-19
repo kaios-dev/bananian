@@ -539,8 +539,8 @@ int main(){
 	addWidget(mydat.uiinf, mydat.win, &testcbx, 1);
 	redrawWindow(mydat.uiinf, mydat.win);*/
 	if(fork() == 0){
-		execl("/usr/local/bin/mainclient", "mainclient", NULL);
-		perror("/usr/local/bin/mainclient");
+		execl("/usr/bin/mainclient", "mainclient", NULL);
+		perror("/usr/bin/mainclient");
 		exit(2);
 	}
 	uiLoop(mydat.uiinf, mydat.sockfds, &mydat.nsockfds,

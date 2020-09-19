@@ -1,0 +1,17 @@
+Source: bananui-base
+Section: misc
+Maintainer: Affe Null <affenull2345@gmail.com>
+Priority: standard
+Standards-Version: 4.3.0
+Build-Depends: debhelper (>=10)
+
+Package: bananui-base
+Architecture: armhf
+Depends: lsb-base, ${shlibs:Depends}, ${misc:Depends}
+Description: User Interface for Bananian - Core and Base apps
+ This package includes:
+  - File browser
+  - Test/Demo client
+  - Home screen
+  - Window and widget manager
+  - "Color grid" - currently an app to demonstrate bugs

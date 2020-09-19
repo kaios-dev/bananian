@@ -1,0 +1,4 @@
+#!/bin/sh
+update-rc.d wifi remove
+update-rc.d usb remove
+#DEBHELPER#

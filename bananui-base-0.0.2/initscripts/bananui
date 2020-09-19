@@ -1,0 +1,95 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:		bananui
+# Required-Start:	
+# Required-Stop:	
+# Default-Start:	2 3 4 5
+# Default-Stop:		
+# Short-Description:	User interface for Debian on Nokia 8110 4G
+### END INIT INFO
+
+set -e
+
+# /etc/init.d/bananui: start and stop the user interface for Nokia 8110 4G
+
+test -x /usr/bin/bananui-bg || exit 0
+
+umask 022
+
+. /lib/lsb/init-functions
+
+export PATH="${PATH:+$PATH:}/usr/bin"
+
+case "$1" in
+  start)
+	if [ -f /run/bananui.pid ]; then
+	    log_failure_msg "Already running? pidfile /run/bananui.pid exists"
+	    exit 1
+	fi
+	log_daemon_msg "Starting Nokia 8110 4G UI" "bananui" || true
+	if start-stop-daemon --start --quiet --oknodo --chuid 0:0 --pidfile /run/bananui.pid --exec /usr/bin/bananui-bg; then
+	    log_end_msg 0 || true
+	else
+	    log_end_msg 1 || true
+	fi
+	;;
+  stop)
+	log_daemon_msg "Stopping Nokia 8110 4G UI" "bananui" || true
+	if start-stop-daemon --stop --quiet --oknodo --pidfile /run/bananui.pid --exec /usr/bin/bananui; then
+	    log_end_msg 0 || true
+	else
+	    log_end_msg 1 || true
+	fi
+	rm -f /run/bananui.pid
+	;;
+
+  reload|force-reload)
+	;;
+
+  restart)
+	log_daemon_msg "Restarting Nokia 8110 4G UI" "bananui" || true
+	start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile /run/bananui.pid --exec /usr/bin/bananui
+	if start-stop-daemon --start --quiet --oknodo --chuid 0:0 --pidfile /run/bananui.pid --exec /usr/bin/bananui-bg; then
+	    log_end_msg 0 || true
+	else
+	    log_end_msg 1 || true
+	fi
+	;;
+
+  try-restart)
+	log_daemon_msg "Restarting Nokia 8110 4G UI" "bananui" || true
+	RET=0
+	start-stop-daemon --stop --quiet --retry 30 --pidfile /run/bananui.pid --exec /usr/bin/bananui || RET="$?"
+	case $RET in
+	    0)
+		# old daemon stopped
+		if start-stop-daemon --start --quiet --oknodo --chuid 0:0 --pidfile /run/bananui.pid --exec /usr/bin/bananui-bg; then
+		    log_end_msg 0 || true
+		else
+		    log_end_msg 1 || true
+		fi
+		;;
+	    1)
+		# daemon not running
+		log_progress_msg "(not running)" || true
+		log_end_msg 0 || true
+		;;
+	    *)
+		# failed to stop
+		log_progress_msg "(failed to stop)" || true
+		log_end_msg 1 || true
+		;;
+	esac
+	;;
+
+  status)
+	status_of_proc -p /run/bananui.pid /usr/bin/bananui-bg bananuid && exit 0 || exit $?
+	;;
+
+  *)
+	log_action_msg "Usage: /etc/init.d/bananui {start|stop|reload|force-reload|restart|try-restart|status}" || true
+	exit 1
+esac
+
+exit 0

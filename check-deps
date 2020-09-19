@@ -27,6 +27,7 @@ check () {
 	which abootimg || missing abootimg
 	which tar || missing tar
 	which debuild || missing debuild
+	which debootstrap || missing debootstrap
 }
 checkgcc () {
 	if [ -z "$1" ]; then
