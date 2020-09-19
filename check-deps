@@ -20,13 +20,16 @@ END
 }
 missing () {
 	echo "Missing program $1." 1>&2
+	if [ "$2" ]; then
+		echo "Please install $2." 1>&2
+	fi
 	exit 1
 }
 check () {
 	which sed || missing sed
 	which abootimg || missing abootimg
 	which tar || missing tar
-	which debuild || missing debuild
+	which debuild || missing debuild devscripts
 	which debootstrap || missing debootstrap
 }
 checkgcc () {
