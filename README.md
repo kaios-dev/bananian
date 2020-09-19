@@ -1,7 +1,7 @@
 # Bananian - Debian for the Nokia 8110 4G and a UI
 ### Compiling
 Just run make. If it complains about missing compilers, make sure your ARM
-cross-compiler is named arm-linux-gnueabi-gcc or arm-linux-gnueabi-gcc-_version_.
+cross-compiler is named arm-linux-gnueabihf-gcc or arm-linux-gnueabihf-gcc-_version_.
 ### Installing
 This step requires a rooted phone. See
 [BananaHackers](https://sites.google.com/view/bananahackers/root) for more info.
