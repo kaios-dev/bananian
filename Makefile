@@ -1,4 +1,4 @@
-VERSION = 0.0.2
+VERSION = 0.1.1
 OUTPUTS = initrd.img boot.img debroot debroot.tar
 DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db
 DEBS = bananui-base_$(VERSION)-1_armhf.deb device-startup_$(VERSION)-1_all.deb
@@ -10,17 +10,18 @@ all: check-deps $(OUTPUTS)
 check-deps::
 	@./check-deps check
 	@./check-deps checkgcc $(CC)
-	@echo "$(CC)" > .target-gcc
 
 bananui-base_$(VERSION)-1_armhf.deb: bananui-base-$(VERSION)
+	echo "$(CC)" > bananui-base-$(VERSION)/.target-gcc
+	echo "$(VERSION)" > bananui-base-$(VERSION)/.version
 	(cd bananui-base-$(VERSION) && $(MAKE) clean)
 	tar czf bananui-base_$(VERSION).orig.tar.gz bananui-base-$(VERSION)
-	(cd bananui-base-$(VERSION) && debuild -us -uc)
+	(cd bananui-base-$(VERSION) && debuild --no-lintian -us -uc)
 
 device-startup_$(VERSION)-1_all.deb: device-startup-$(VERSION)
 	(cd device-startup-$(VERSION) && $(MAKE) clean)
 	tar czf device-startup_$(VERSION).orig.tar.gz device-startup-$(VERSION)
-	(cd device-startup-$(VERSION) && debuild -us -uc)
+	(cd device-startup-$(VERSION) && debuild --no-lintian -us -uc)
 
 initrd.img: ramdisk
 	rm -f $@
@@ -34,20 +35,9 @@ debroot: $(DEBS)
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf stable debroot/ $(MIRROR)
 	dpkg --root debroot/ -i $(DEBS)
 
-debroot.tar:
-#	rm -f $@
-#	cp $(EXECS) debroot/usr/local/bin
-#	(cd debroot; chmod a=rwxt tmp; tar cvf ../$@ --owner=0 --exclude=.gitignore *)
-
-%.o: %.c %.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-ifneq (clean, $(MAKECMDGOALS))
--include deps.mk
-endif
-
-deps.mk: $(UISOURCES)
-	$(CC) -MM $^ > $@
+debroot.tar: debroot
+	rm -f $@
+	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
 
 clean:
-	rm -rf .target-gcc *.o *.deb $(OUTPUTS)
+	rm -rf *.deb $(OUTPUTS)

@@ -11,8 +11,9 @@ BROWSERSOURCES = browser.c
 BROWSEROBJECTS = $(BROWSERSOURCES:.c=.o)
 COLORGSOURCES = colorgrid.c
 COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
-CFLAGS = -g -Wall -Wno-unused-function -DHAVE_DEBUG
-CC = $(shell cat ../.target-gcc) # Please do not move this makefile
+VERSION = $(shell cat .version)
+CFLAGS = -g -Wall -Wno-unused-function -DHAVE_DEBUG -DVERSION="\"$(VERSION)\""
+CC = $(shell cat .target-gcc)
 
 all: $(EXECS)
 

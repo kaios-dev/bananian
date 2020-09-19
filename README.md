@@ -23,7 +23,7 @@ following commands on your phone:
 
 ### Wireless networking
 To enable WiFi networking, create a file named debroot/etc/wpa\_supplicant.conf
-before compiling and add the following contents:
+after compiling and add the following contents:
 
     network={
         ssid="[your network name]"

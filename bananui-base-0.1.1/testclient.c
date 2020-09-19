@@ -99,7 +99,7 @@ static const unsigned int img [11][20] = {
 	}
 };
 static const char string [] =
-	"lbc Bananian v0.0.1\ncbe \n"
+	"lbc Bananian v" VERSION "\ncbe \n"
 	"tit Bananian Login\n"
 	"lbl \n"
 	"lbl \n"

@@ -1,21 +1,21 @@
-image: gcc
+#image: gcc
 
-build:
-  stage: build
-  before_script:
-    - apt update && apt install make cpio abootimg gcc-arm-linux-gnueabihf -y
-  script:
-    - make
-  artifacts:
-    paths:
-      - bananui
-      - browser
-      - colorgrid
-      - mainclient
-      - testclient
-      - boot.img
-      - initrd.img
-      - debroot.tar
+#build:
+#  stage: build
+#  before_script:
+#    - apt update && apt install make cpio abootimg gcc-arm-linux-gnueabihf -y
+#  script:
+#    - make
+#  artifacts:
+#    paths:
+#      - bananui
+#      - browser
+#      - colorgrid
+#      - mainclient
+#      - testclient
+#      - boot.img
+#      - initrd.img
+#      - debroot.tar
       # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
       # cache:
       #   paths:
