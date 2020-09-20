@@ -33,6 +33,8 @@ after compiling and add the following contents:
         psk="[your network password]"
     }
 
+Then run make -B debroot.tar.
+
 ### Shell access
 You need to enable networking first.
 To get shell access to your phone, find out its IP address via your router. Then:
