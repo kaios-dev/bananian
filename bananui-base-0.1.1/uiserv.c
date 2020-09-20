@@ -375,7 +375,7 @@ static void clientEventCallback(void *data, int id, enum ui_event ev)
 	char outbuf[15];
 	char *code;
 	int fd;
-	fd = (int) data;
+	fd = *((int*)data);
 	switch(ev){
 		case UI_EVENT_CLICK:
 			code = "clk";
@@ -413,7 +413,7 @@ static void fdCallback(void *data, int i)
 		mydat->windows[mydat->nsockfds] =
 			createWindow(mydat->uiinf);
 		mydat->windows[mydat->nsockfds]->userdata =
-			(void*) mydat->sockfds[mydat->nsockfds];
+			(void*) &mydat->sockfds[mydat->nsockfds];
 		mydat->windows[mydat->nsockfds]->event =
 			clientEventCallback;
 		mydat->styles[mydat->nsockfds] = malloc(
