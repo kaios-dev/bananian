@@ -47,4 +47,4 @@ deps.mk: $(UISOURCES)
 	$(CC) -MM $^ > $@
 
 clean:
-	rm -f *.o $(EXECS)
+	rm -f deps.mk *.o $(EXECS)
