@@ -14,7 +14,7 @@ bananui-base_$(VERSION)-1_armhf.deb: bananui-base-$(VERSION)
 	(cd bananui-base-$(VERSION) && $(MAKE) clean)
 	tar czf bananui-base_$(VERSION).orig.tar.gz bananui-base-$(VERSION)
 	(cd bananui-base-$(VERSION) && debuild --no-lintian -us -uc \
-		--target-arch armhf)
+		--host-arch armhf)
 
 device-startup_$(VERSION)-1_all.deb: device-startup-$(VERSION)
 	(cd device-startup-$(VERSION) && $(MAKE) clean)
