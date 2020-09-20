@@ -13,7 +13,6 @@ COLORGSOURCES = colorgrid.c
 COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
 VERSION = $(shell cat .version)
 CFLAGS = -g -Wall -Wno-unused-function -DHAVE_DEBUG -DVERSION="\"$(VERSION)\""
-CC = $(shell cat .target-gcc)
 
 all: $(EXECS)
 

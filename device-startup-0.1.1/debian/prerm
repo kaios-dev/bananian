@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+if [ -x "/etc/init.d/usb" ]; then
+	invoke-rc.d usb stop
+fi
+if [ -x "/etc/init.d/wifi" ]; then
+	invoke-rc.d wifi stop
+fi
+#DEBHELPER#

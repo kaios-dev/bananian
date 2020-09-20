@@ -3,20 +3,18 @@ OUTPUTS = initrd.img boot.img debroot debroot.tar
 DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db
 DEBS = bananui-base_$(VERSION)-1_armhf.deb device-startup_$(VERSION)-1_all.deb
 
-CC = $(shell ./check-deps findarmgcc $(CROSS_COMPILE))
-
 all: check-deps $(OUTPUTS)
 
 check-deps::
 	@./check-deps check
-	@./check-deps checkgcc $(CC)
+	@./check-deps checkgcc
 
 bananui-base_$(VERSION)-1_armhf.deb: bananui-base-$(VERSION)
-	echo "$(CC)" > bananui-base-$(VERSION)/.target-gcc
 	echo "$(VERSION)" > bananui-base-$(VERSION)/.version
 	(cd bananui-base-$(VERSION) && $(MAKE) clean)
 	tar czf bananui-base_$(VERSION).orig.tar.gz bananui-base-$(VERSION)
-	(cd bananui-base-$(VERSION) && debuild --no-lintian -us -uc)
+	(cd bananui-base-$(VERSION) && debuild --no-lintian -us -uc \
+		--target-arch armhf)
 
 device-startup_$(VERSION)-1_all.deb: device-startup-$(VERSION)
 	(cd device-startup-$(VERSION) && $(MAKE) clean)

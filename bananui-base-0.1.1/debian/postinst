@@ -1,3 +1,9 @@
 #!/bin/sh
-update-rc.d bananui defaults
+set -e
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	if [ -x "/etc/init.d/bananui" ]; then
+		update-rc.d bananui >/dev/null
+		invoke-rc.d bananui start
+	fi
+fi
 #DEBHELPER#

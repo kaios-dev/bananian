@@ -7,7 +7,7 @@ Build-Depends: debhelper (>=10)
 
 Package: device-startup
 Architecture: all
-Depends: lsb-base, ${shlibs:Depends}, ${misc:Depends}
+Depends: lsb-base, ${misc:Depends}
 Description: Device startup files for Nokia 8110 4G
  This package includes:
   - WLAN init scripts

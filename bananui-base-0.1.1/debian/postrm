@@ -1,3 +1,6 @@
 #!/bin/sh
-update-rc.d bananui remove
+set -e
+if [ "$1" = "purge" ] ; then
+	update-rc.d bananui remove >/dev/null
+fi
 #DEBHELPER#

@@ -2,22 +2,6 @@
 	
 CROSS_COMPILE=${2:-arm*-linux-gnueabihf*}
 
-findarmgcc () {
-	for pth in `echo $PATH | sed 's/:/ /g'`; do
-		for gcc in $pth/${CROSS_COMPILE}gcc*; do
-			cat <<END > test-gcc.c
-int main() {}
-END
-			if $gcc test-gcc.c -o /dev/null > /dev/null 2>&1; then
-				echo $gcc
-				rm test-gcc.c
-				exit 0
-			fi
-			rm test-gcc.c
-		done
-	done
-	exit 1
-}
 missing () {
 	echo "Missing program $1." 1>&2
 	if [ "$2" ]; then
@@ -33,9 +17,16 @@ check () {
 	which debootstrap || missing debootstrap
 }
 checkgcc () {
-	if [ -z "$1" ]; then
-		echo "Could not find a GCC compiler for $CROSS_COMPILE."
-		exit 1
+	gcc="arm-linux-gnueabihf-gcc"
+	cat <<END > test-gcc.c
+int main() {}
+END
+	if $gcc test-gcc.c -o /dev/null > /dev/null 2>&1; then
+		rm test-gcc.c
+		exit 0
 	fi
+	rm test-gcc.c
+	echo "Could not find a GCC compiler for $CROSS_COMPILE."
+	exit 1
 }
 $@

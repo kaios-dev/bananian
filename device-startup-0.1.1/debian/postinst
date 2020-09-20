@@ -1,4 +1,15 @@
 #!/bin/sh
-update-rc.d wifi defaults
-update-rc.d usb defaults
+set -e
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	if [ -x "/etc/init.d/usb" ]; then
+		update-rc.d usb defaults >/dev/null
+		invoke-rc.d usb start
+	fi
+fi
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	if [ -x "/etc/init.d/wifi" ]; then
+		update-rc.d wifi defaults >/dev/null
+		invoke-rc.d wifi start
+	fi
+fi
 #DEBHELPER#

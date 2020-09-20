@@ -6,7 +6,7 @@ Standards-Version: 4.3.0
 Build-Depends: debhelper (>=10)
 
 Package: bananui-base
-Architecture: armhf
+Architecture: any
 Depends: lsb-base, ${shlibs:Depends}, ${misc:Depends}
 Description: User Interface for Bananian - Core and Base apps
  This package includes:
