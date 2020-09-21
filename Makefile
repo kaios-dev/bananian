@@ -28,11 +28,16 @@ initrd.img: ramdisk
 boot.img: initrd.img zImage bootimg.cfg
 	abootimg --create $@ -f bootimg.cfg -k zImage -r $<
 
-debroot: $(DEBS)
+debroot:
 	rm -rf debroot
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
 		stable debroot/ $(MIRROR)
+	cp -r modules debroot/lib/modules/3.10.49-bananian
 	cp $(DEBS) debroot/var/cache
+
+debroot.tar: debroot $(DEBS)
+	rm -f $@
+	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
 	@echo "Now, you can push the files boot.img and debroot.tar to the" \
 		"device and execute the following in your phone's root shell:"
 	@echo " cd /data"
@@ -54,10 +59,6 @@ debroot: $(DEBS)
 	@echo " dd if=/path/to/boot.img" \
 		"of=/dev/block/bootdevice/by-name/<recovery or boot> bs=2048"
 	@echo " reboot recovery"
-
-debroot.tar: debroot
-	rm -f $@
-	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
 
 clean:
 	rm -rf *.deb $(OUTPUTS)

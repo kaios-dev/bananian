@@ -1,5 +1,8 @@
 #!/bin/sh
 set -e
+if [ -x "/etc/init.d/fwmount" ]; then
+	invoke-rc.d fwmount stop
+fi
 if [ -x "/etc/init.d/usb" ]; then
 	invoke-rc.d usb stop
 fi

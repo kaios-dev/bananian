@@ -1,5 +1,5 @@
 SCRIPTS = rc.wifi.sh rc.wifi.stop.sh rc.usb.sh
-INITSCRIPTS = initscripts/wifi initscripts/usb
+INITSCRIPTS = initscripts/wifi initscripts/usb initscripts/fwmount
 
 all:
 

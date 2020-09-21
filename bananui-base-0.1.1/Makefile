@@ -12,7 +12,10 @@ BROWSEROBJECTS = $(BROWSERSOURCES:.c=.o)
 COLORGSOURCES = colorgrid.c
 COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
 VERSION = $(shell cat .version)
-CFLAGS = -g -Wall -Wno-unused-function -DHAVE_DEBUG -DVERSION="\"$(VERSION)\""
+CFLAGS = -g -Wall -Wno-unused-function -DHAVE_DEBUG -DVERSION="\"$(VERSION)\"" \
+	-B "$$(pwd)/../debroot/usr/lib/arm-linux-gnueabihf/" \
+	-B "$$(pwd)/../debroot/usr/include/arm-linux-gnueabihf/" \
+	-B "$$(pwd)/../debroot/usr/include/" \
 
 all: $(EXECS)
 
