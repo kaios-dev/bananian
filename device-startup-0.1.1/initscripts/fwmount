@@ -1,0 +1,50 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          fwmount
+# Required-Start:    
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Mount firmware directory
+### END INIT INFO
+
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+. /lib/init/vars.sh
+. /lib/lsb/init-functions
+VERBOSE=yes
+
+do_start() {
+        [ "$VERBOSE" != no ] && log_begin_msg "Mounting firmware"
+	mount /dev/disk/by-partlabel/firmware /lib/firmware
+	ES=$?
+	[ "$VERBOSE" != no ] && log_end_msg $ES
+	return $ES
+}
+do_stop() {
+        [ "$VERBOSE" != no ] && log_begin_msg "Unmounting firmware"
+	umount /lib/firmware
+	ES=$?
+	[ "$VERBOSE" != no ] && log_end_msg $ES
+	return $ES
+}
+
+case "$1" in
+    start)
+	do_start
+        ;;
+    restart|reload|force-reload)
+        echo "Error: argument '$1' not supported" >&2
+        exit 3
+        ;;
+    stop|status)
+	do_stop
+        exit 0
+        ;;
+    *)
+        echo "Usage: $0 start|stop" >&2
+        exit 3
+        ;;
+esac
+#DEBHELPER#
