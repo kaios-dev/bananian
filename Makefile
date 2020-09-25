@@ -34,10 +34,10 @@ debroot:
 		stable debroot/ $(MIRROR)
 	mkdir -p debroot/lib/modules/
 	cp -rf modules debroot/lib/modules/3.10.49-bananian
-	cp -f $(DEBS) debroot/var/cache
 
 debroot.tar: debroot $(DEBS)
 	rm -f $@
+	cp -f $(DEBS) debroot/var/cache
 	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
 	@echo "Now, you can push the files boot.img and debroot.tar to the" \
 		"device and execute the following in your phone's root shell:"
