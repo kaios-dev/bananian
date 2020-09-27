@@ -15,7 +15,7 @@ COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
 LOGINSOURCES = login.c
 LOGINOBJECTS = $(LOGINSOURCES:.c=.o)
 SHUTDOWNSOURCES = shutdown.c
-SHUTDOWNOBJECTS = $(SHUTDOWNSOURCES:.c=.0)
+SHUTDOWNOBJECTS = $(SHUTDOWNSOURCES:.c=.o)
 VERSION = $(shell cat .version)
 CFLAGS = -g -Wall -Wno-unused-function -DHAVE_DEBUG -DVERSION="\"$(VERSION)\"" \
 	-B "$$(pwd)/../debroot/usr/lib/arm-linux-gnueabihf/" \
