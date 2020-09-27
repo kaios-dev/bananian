@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
-if [ -x "/etc/init.d/fwmount" ]; then
-	invoke-rc.d fwmount stop
+if [ -x "/etc/init.d/fwload" ]; then
+	invoke-rc.d fwload stop
 fi
 if [ -x "/etc/init.d/wifi" ]; then
 	invoke-rc.d wifi stop

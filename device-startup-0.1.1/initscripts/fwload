@@ -1,11 +1,11 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          fwmount
+# Provides:          fwload
 # Required-Start:    
 # Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:
-# Short-Description: Mount firmware directory
+# Short-Description: Copy firmware from system, mount /persist
 ### END INIT INFO
 
 
@@ -16,15 +16,22 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 VERBOSE=yes
 
 do_start() {
-        [ "$VERBOSE" != no ] && log_begin_msg "Mounting firmware"
-	mount /dev/disk/by-partlabel/firmware /lib/firmware
+        [ "$VERBOSE" != no ] && log_begin_msg "Mounting and copying firmware"
+	mkdir -p /lib/.system
+	mount -t ext4 /dev/disk/by-partlabel/system /lib/.system
+	cp -rf /lib/.system/etc/firmware/* /lib/firmware/
+	umount /lib/.system
+	rmdir /lib/.system
+	mkdir -p /persist
+	mount -t ext4 /dev/disk/by-partlabel/persist /persist
 	ES=$?
 	[ "$VERBOSE" != no ] && log_end_msg $ES
 	return $ES
 }
 do_stop() {
-        [ "$VERBOSE" != no ] && log_begin_msg "Unmounting firmware"
-	umount /lib/firmware
+        [ "$VERBOSE" != no ] && log_begin_msg "Unmounting /persist"
+	umount /persist
+	rmdir /persist
 	ES=$?
 	[ "$VERBOSE" != no ] && log_end_msg $ES
 	return $ES

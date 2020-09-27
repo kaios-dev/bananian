@@ -1,5 +1,5 @@
 SCRIPTS = rc.wifi.sh rc.wifi.stop.sh
-INITSCRIPTS = initscripts/wifi initscripts/fwmount
+INITSCRIPTS = initscripts/wifi initscripts/fwload
 
 all:
 
