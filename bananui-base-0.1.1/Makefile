@@ -1,4 +1,5 @@
-EXECS = bananui testclient mainclient browser colorgrid
+EXECS = bananui testclient mainclient browser colorgrid bananui-login \
+	bananui-shutdown
 HELPERS = bananui-bg
 INITSCRIPTS = initscripts/bananui
 UISOURCES = gr.c ui.c uiserv.c
