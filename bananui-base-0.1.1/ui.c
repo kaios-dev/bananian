@@ -961,7 +961,8 @@ void uiLoop(struct uiinfo *uiinf, int *custom_fds, int *ncustom_fds,
 			if(custom_fds[i] >= mfds)
 				mfds = custom_fds[i]+1;
 		}
-		res = select(mfds, &readfds, NULL, NULL, uiinf->on ? &timeout : NULL);
+		res = select(mfds, &readfds, NULL, NULL, uiinf->on ? &timeout :
+			NULL);
 		if(res < 0){
 			perror("select");
 			exit(1);
@@ -971,6 +972,7 @@ void uiLoop(struct uiinfo *uiinf, int *custom_fds, int *ncustom_fds,
 				showTopPanel(uiinf);
 				refreshScreen(uiinf->fbinf);
 			}
+			uiinf->curkey = -1;
 			continue;
 		}
 		for(i = 0; i < uiinf->nfds; i++){
