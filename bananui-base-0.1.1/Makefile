@@ -11,11 +11,16 @@ BROWSERSOURCES = browser.c
 BROWSEROBJECTS = $(BROWSERSOURCES:.c=.o)
 COLORGSOURCES = colorgrid.c
 COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
+LOGINSOURCES = login.c
+LOGINOBJECTS = $(LOGINSOURCES:.c=.o)
+SHUTDOWNSOURCES = shutdown.c
+SHUTDOWNOBJECTS = $(SHUTDOWNSOURCES:.c=.0)
 VERSION = $(shell cat .version)
 CFLAGS = -g -Wall -Wno-unused-function -DHAVE_DEBUG -DVERSION="\"$(VERSION)\"" \
 	-B "$$(pwd)/../debroot/usr/lib/arm-linux-gnueabihf/" \
 	-B "$$(pwd)/../debroot/usr/include/arm-linux-gnueabihf/" \
 	-B "$$(pwd)/../debroot/usr/include/" \
+	-Wl,-rpath-link="$$(pwd)/../debroot/usr/lib/arm-linux-gnueabihf/"
 
 all: $(EXECS)
 
@@ -38,6 +43,14 @@ browser: $(BROWSEROBJECTS)
 
 colorgrid: $(COLORGOBJECTS)
 	$(CC) -o $@ $(COLORGOBJECTS) $(CFLAGS)
+
+bananui-login: $(LOGINOBJECTS)
+	$(CC) -o $@ $(LOGINOBJECTS) $(CFLAGS) \
+		$$(pwd)/../debroot/usr/lib/arm-linux-gnueabihf/libpam.so.0
+	# -lpam does not work
+
+bananui-shutdown: $(SHUTDOWNOBJECTS)
+	$(CC) -o $@ $(SHUTDOWNOBJECTS) $(CFLAGS)
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@

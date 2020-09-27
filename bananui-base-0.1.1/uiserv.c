@@ -165,6 +165,7 @@ static int doInput(struct mydata *mydat, struct ui_window *win,
 static void returnContents(struct mydata *mydat, int fd,
 	struct ui_widget *widget)
 {
+	write(fd, "set ", 4); /* So it won't conflict with events */
 	switch(widget->type){
 		case UI_IMAGE:
 		case UI_LABEL:
@@ -539,8 +540,8 @@ int main(){
 	addWidget(mydat.uiinf, mydat.win, &testcbx, 1);
 	redrawWindow(mydat.uiinf, mydat.win);*/
 	if(fork() == 0){
-		execl("/usr/bin/mainclient", "mainclient", NULL);
-		perror("/usr/bin/mainclient");
+		execl("/usr/bin/bananui-login", "bananui-login", NULL);
+		perror("/usr/bin/bananui-login");
 		exit(2);
 	}
 	uiLoop(mydat.uiinf, mydat.sockfds, &mydat.nsockfds,
