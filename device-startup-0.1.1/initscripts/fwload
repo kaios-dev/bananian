@@ -21,6 +21,9 @@ do_start() {
 	mount -t ext4 /dev/disk/by-partlabel/system /lib/.system
 	cp -rf /lib/.system/etc/firmware/* /lib/firmware/
 	umount /lib/.system
+	mount -t vfat /dev/disk/by-partlabel/firmware /lib/.system
+	cp -rf /lib/.system/image/* /lib/firmware/
+	umount /lib/.system
 	rmdir /lib/.system
 	mkdir -p /persist
 	mount -t ext4 /dev/disk/by-partlabel/persist /persist
