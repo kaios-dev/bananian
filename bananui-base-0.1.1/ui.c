@@ -636,7 +636,7 @@ static char handleNumeric(struct uiinfo *uiinf, int n,
 				uiinf->inptype = INPTYPE_ALPHA_LOWER;
 				*stat = KEY_STAT_NOP;
 				uiinf->curkey = -1;
-				return 255;
+				return 0;
 			}
 		case INPTYPE_ALPHA_UPPER:
 		case INPTYPE_ALPHA_LOWER:
@@ -648,7 +648,7 @@ static char handleNumeric(struct uiinfo *uiinf, int n,
 				);
 				*stat = KEY_STAT_NOP;
 				uiinf->curkey = -1;
-				return 255;
+				return 0;
 			}
 			if(n != uiinf->curkey){
 				uiinf->curkey = n;
@@ -656,6 +656,9 @@ static char handleNumeric(struct uiinfo *uiinf, int n,
 			}
 			else {
 				uiinf->keyindex++;
+				if(!keymap[uiinf->curkey][uiinf->keyindex]){
+					uiinf->keyindex = 0;
+				}
 				*stat = KEY_STAT_REPLACE;
 			}
 			{
