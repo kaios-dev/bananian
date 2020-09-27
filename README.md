@@ -27,8 +27,7 @@ following commands on your phone:
     mount -o bind /dev dev
     mount -o bind /sys sys
     mount -o bind /proc proc
-    export" \
-	       "\"PATH=/usr/local/sbin:/usr/sbin:/usr/local/bin:/usr/bin:\$$PATH\"
+    export PATH=/usr/local/sbin:/usr/sbin:/usr/local/bin:/usr/bin:$PATH
     chroot . /bin/bash
     debootstrap/debootstrap --second-stage
     cd var/cache
