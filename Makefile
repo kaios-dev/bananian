@@ -41,9 +41,10 @@ debroot.tar: debroot $(DEBS)
 	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
 	@echo "Now, you can push the files boot.img and debroot.tar to the" \
 		"device and execute the following in your phone's root shell:"
+	@echo "(see README.md for more info)"
 	@echo " cd /data"
 	@echo " mkdir debroot"
-	@echo " busybox mount /dev/block/mmcblk0p2 debroot"
+	@echo " busybox mount /dev/block/mmcblk1p2 debroot"
 	@echo " cd debroot"
 	@echo " busybox tar xvf /path/to/debroot.tar"
 	@echo " mount -o bind /dev dev"

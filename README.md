@@ -3,7 +3,8 @@
 NOTE: This has been tested only on Debian GNU/Linux. There will
 probably be many errors on non-Debian-based GNU/Linux distros.
 
-Just run make as root. If it complains about missing compilers, make sure that
+Just run make as root (Please make a dry-run first to prove that nothing
+malicious happens). If it complains about missing compilers, make sure that
 the package crossbuild-essential-armhf (or similar) is installed.
 ### Installing
 This step requires a rooted phone. See
@@ -17,29 +18,44 @@ second as EXT4. Push boot.img to the phone and flash it to boot or recovery:
 Then insert the SD card into the phone, push the debroot.tar file and run the
 following commands on your phone:
 
-    # mkdir /data/debian
-    # busybox mount /dev/block/mmcblk1p2 /data/debian
-    # cd /data/debian
-    # tar xvf /path/to/debroot.tar
-    (lots of output)
-    # busybox umount /data/debian
+    cd /data
+    mkdir debroot
+    busybox mount /dev/block/mmcblk1p2 debroot
+    cd debroot
+    busybox tar xvf /path/to/debroot.tar
+     (lots of output)
+    mount -o bind /dev dev
+    mount -o bind /sys sys
+    mount -o bind /proc proc
+    export" \
+	       "\"PATH=/usr/local/sbin:/usr/sbin:/usr/local/bin:/usr/bin:\$$PATH\"
+    chroot . /bin/bash
+    debootstrap/debootstrap --second-stage
+    cd var/cache
+    dpkg -i $(DEBS)
+    rm $(DEBS)
+    adduser user
+     (enter data)
+    exit
+    dd if=/path/to/boot.img" \
+		"of=/dev/block/bootdevice/by-name/<recovery or boot> bs=2048
+    reboot recovery
 
 ### Wireless networking
-To enable WiFi networking, create a file named debroot/etc/wpa\_supplicant.conf
-after compiling and add the following contents:
+To enable WiFi networking, create a file named /etc/wpa\_supplicant.conf
+after running debootstrap/debootstrap --second-stage:
 
     network={
         ssid="[your network name]"
         psk="[your network password]"
     }
 
-Then run make -B debroot.tar.
 
 ### Shell access
 You need to enable networking first.
 To get shell access to your phone, find out its IP address via your router. Then:
 
-    $ ssh root@X.X.X.X # Where X.X.X.X is your the phone's IP address
+    $ ssh user@X.X.X.X # Where X.X.X.X is your the phone's IP address
 
 You should be asked for a password. The password is bananian.
 ### Window list
