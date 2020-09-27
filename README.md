@@ -37,7 +37,7 @@ following commands on your phone:
     exit
     dd if=/path/to/boot.img" \
 		"of=/dev/block/bootdevice/by-name/<recovery or boot> bs=2048
-    reboot recovery
+    <reboot or reboot recovery>
 
 ### Wireless networking
 To enable WiFi networking, create a file named /etc/wpa\_supplicant.conf
