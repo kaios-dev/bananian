@@ -664,7 +664,7 @@ static char handleNumeric(struct uiinfo *uiinf, int n,
 			{
 				char ch;
 				ch = keymap[uiinf->curkey][uiinf->keyindex];
-				if((ch >= 'A' || ch <= 'Z') &&
+				if(ch >= 'A' && ch <= 'Z' &&
 					uiinf->inptype == INPTYPE_ALPHA_LOWER)
 				{
 					ch += 0x20;
