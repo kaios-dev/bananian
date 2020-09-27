@@ -31,8 +31,7 @@ following commands on your phone:
     chroot . /bin/bash
     debootstrap/debootstrap --second-stage
     cd var/cache
-    dpkg -i $(DEBS)
-    rm $(DEBS)
+    dpkg -i bananui-base_0.0.1-armhf.deb device-startup_0.0.1-all.deb
     adduser user
      (enter data)
     exit

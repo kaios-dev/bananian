@@ -622,7 +622,27 @@ static int handleInputRight(struct uiinfo *uiinf, struct ui_widget *inp)
 	return 1;
 }
 
-static int numeric(struct uiinfo *uiinf, struct ui_window *win, int n)
+static char handleNumeric(struct uiinfo *uiinf, int n)
+{
+	switch(uiinf->inptype){
+		case INPTYPE_NUMERIC:
+			if(n < 10) return n + '0';
+			if(n == 11){ /* # */
+				uiinf->inptype = INPTYPE_ALPHA;
+			}
+		case INPTYPE_ALPHA:
+			if(n != uiinf->curkey){
+				uiinf->curkey = n;
+				uiinf->keyindex = 0;
+			}
+			else {
+				uiinf->keyindex++;
+			}
+			return keymap[uiinf->curkey][uiinf->keyindex];
+			break;
+}
+
+static int keyIn(struct uiinfo *uiinf, struct ui_window *win, int n)
 {
 	char ch, *text;
 	int i;
@@ -635,7 +655,7 @@ static int numeric(struct uiinfo *uiinf, struct ui_window *win, int n)
 		text[i+1] = text[i];
 	}
 	text[255] = 0;
-	text[*cursorpos] = ch = n + '0';
+	text[*cursorpos] = ch = handleNumeric(uiinf, n);
 	if(*cursorpos == *scrolloffset + ((win->focused->rightend -
 		win->focused->x) / fnt.cwidth) - 2)
 	{
@@ -835,16 +855,18 @@ static void handleKeydown(struct uiinfo *uiinf, struct ui_window *win,
 				focus(uiinf, win, win->focused->rightfoc);
 			}
 			break;
-		case KEY_1: numeric(uiinf, win, 1); break;
-		case KEY_2: numeric(uiinf, win, 2); break;
-		case KEY_3: numeric(uiinf, win, 3); break;
-		case KEY_4: numeric(uiinf, win, 4); break;
-		case KEY_5: numeric(uiinf, win, 5); break;
-		case KEY_6: numeric(uiinf, win, 6); break;
-		case KEY_7: numeric(uiinf, win, 7); break;
-		case KEY_8: numeric(uiinf, win, 8); break;
-		case KEY_9: numeric(uiinf, win, 9); break;
-		case KEY_0: numeric(uiinf, win, 0); break;
+		case KEY_1: keyIn(uiinf, win, 1); break;
+		case KEY_2: keyIn(uiinf, win, 2); break;
+		case KEY_3: keyIn(uiinf, win, 3); break;
+		case KEY_4: keyIn(uiinf, win, 4); break;
+		case KEY_5: keyIn(uiinf, win, 5); break;
+		case KEY_6: keyIn(uiinf, win, 6); break;
+		case KEY_7: keyIn(uiinf, win, 7); break;
+		case KEY_8: keyIn(uiinf, win, 8); break;
+		case KEY_9: keyIn(uiinf, win, 9); break;
+		case KEY_0: keyIn(uiinf, win, 0); break;
+		case KEY_NUMERIC_STAR: keyIn(uiinf, win, 10); break;
+		case KEY_NUMERIC_POUND: keyIn(uiinf, win, 11); break;
 		case KEY_BACKSPACE: {
 			char *text;
 			int i;
