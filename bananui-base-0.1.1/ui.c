@@ -485,7 +485,8 @@ void showSoftkeys(struct uiinfo *uiinf, struct ui_window *win)
 		win->skbgb, win->skbga);
 	text_y = uiinf->fbinf->vinfo->yres - 20;
 	loffset = 5;
-	roffset = uiinf->fbinf->vinfo->xres - 5 - strlen(win->current_skr);
+	roffset = uiinf->fbinf->vinfo->xres - 5 - (strlen(win->current_skr) *
+		fnt.cwidth);
 	coffset = uiinf->fbinf->vinfo->xres / 2 -
 		(strlen(win->current_skc) * fnt.cwidth) / 2;
 	text(uiinf, loffset, text_y, win->current_skl, win->skfgr,
