@@ -28,6 +28,7 @@
 #include "font_10x18.h"
 #include "gr.h"
 #include "ui.h"
+#include "keymap.h"
 #define BG_R 0xA0
 #define BG_G 0xA0
 #define BG_B 0x80
@@ -622,24 +623,52 @@ static int handleInputRight(struct uiinfo *uiinf, struct ui_widget *inp)
 	return 1;
 }
 
-static char handleNumeric(struct uiinfo *uiinf, int n)
+enum key_status_code { KEY_STAT_INSERT, KEY_STAT_REPLACE, KEY_STAT_NOP };
+
+static char handleNumeric(struct uiinfo *uiinf, int n,
+	enum key_status_code *stat)
 {
+	*stat = KEY_STAT_INSERT;
 	switch(uiinf->inptype){
 		case INPTYPE_NUMERIC:
 			if(n < 10) return n + '0';
 			if(n == 11){ /* # */
-				uiinf->inptype = INPTYPE_ALPHA;
+				uiinf->inptype = INPTYPE_ALPHA_LOWER;
+				*stat = KEY_STAT_NOP;
+				uiinf->curkey = -1;
+				return 255;
 			}
-		case INPTYPE_ALPHA:
+		case INPTYPE_ALPHA_UPPER:
+		case INPTYPE_ALPHA_LOWER:
+			if(n == 11){ /* # */
+				uiinf->inptype = (
+					uiinf->inptype == INPTYPE_ALPHA_LOWER ?
+					INPTYPE_ALPHA_UPPER :
+					INPTYPE_NUMERIC
+				);
+				*stat = KEY_STAT_NOP;
+				uiinf->curkey = -1;
+				return 255;
+			}
 			if(n != uiinf->curkey){
 				uiinf->curkey = n;
 				uiinf->keyindex = 0;
 			}
 			else {
 				uiinf->keyindex++;
+				*stat = KEY_STAT_REPLACE;
 			}
-			return keymap[uiinf->curkey][uiinf->keyindex];
-			break;
+			{
+				char ch;
+				ch = keymap[uiinf->curkey][uiinf->keyindex];
+				if((ch >= 'A' || ch <= 'Z') &&
+					uiinf->inptype == INPTYPE_ALPHA_LOWER)
+				{
+					ch += 0x20;
+				}
+				return ch;
+			}
+	}
 }
 
 static int keyIn(struct uiinfo *uiinf, struct ui_window *win, int n)
@@ -647,7 +676,10 @@ static int keyIn(struct uiinfo *uiinf, struct ui_window *win, int n)
 	char ch, *text;
 	int i;
 	unsigned char *cursorpos, *scrolloffset;
+	enum key_status_code stat;
 	if(!win->focused || win->focused->type != UI_FOINPUT) return 0;
+	ch = handleNumeric(uiinf, n, &stat);
+	if(stat == KEY_STAT_NOP) return 0;
 	scrolloffset = ((unsigned char*)win->focused->data);
 	cursorpos = ((unsigned char*)win->focused->data)+1;
 	text = ((char*)win->focused->data)+2;
@@ -655,7 +687,7 @@ static int keyIn(struct uiinfo *uiinf, struct ui_window *win, int n)
 		text[i+1] = text[i];
 	}
 	text[255] = 0;
-	text[*cursorpos] = ch = handleNumeric(uiinf, n);
+	text[*cursorpos] = ch;
 	if(*cursorpos == *scrolloffset + ((win->focused->rightend -
 		win->focused->x) / fnt.cwidth) - 2)
 	{
@@ -1104,6 +1136,7 @@ struct uiinfo *getui()
 		uiinf->windows[i] = NULL;
 	}
 	uiinf->nextwindowid = 0;
+	uiinf->curkey = -1;
 	input_dir = opendir("/dev/input");
 	if(!input_dir){
 		fprintf(stderr, "opendir /dev/input failed");

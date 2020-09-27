@@ -86,12 +86,16 @@ struct ui_window {
 	unsigned int hideskpanel	: 1;
 };
 
+enum input_type { INPTYPE_NUMERIC, INPTYPE_ALPHA_LOWER, INPTYPE_ALPHA_UPPER };
+
 struct uiinfo {
 	struct fbinfo *fbinf;
 	struct ui_window* windows[MAX_WINDOWS];
 	struct ui_window *curwindow;
 	int nextwindowid, nfds, inpfds[MAX_INPUTS], on, listingwindows;
 	enum slide_state slidestate;
+	enum input_type inptype;
+	int curkey, keyindex;
 };
 
 struct ui_cbx_info {

@@ -32,7 +32,7 @@ following commands on your phone:
     debootstrap/debootstrap --second-stage
     cd var/cache
     dpkg -i bananui-base_0.0.1-armhf.deb device-startup_0.0.1-all.deb
-    adduser user
+    adduser --ingroup sudo user
      (enter data)
     exit
     dd if=/path/to/boot.img" \
@@ -55,7 +55,6 @@ To get shell access to your phone, find out its IP address via your router. Then
 
     $ ssh user@X.X.X.X # Where X.X.X.X is your the phone's IP address
 
-You should be asked for a password. The password is bananian.
 ### Window list
 To show a list of open windows, press the power button with the slide open.
 ### Bugs
