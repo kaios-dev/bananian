@@ -17,24 +17,25 @@ VERBOSE=yes
 
 do_start() {
         [ "$VERBOSE" != no ] && log_begin_msg "Mounting and copying firmware"
-	mkdir -p /lib/.system
-	mount -t ext4 /dev/disk/by-partlabel/system /lib/.system
-	cp -rf /lib/.system/etc/firmware/* /lib/firmware/
-	umount /lib/.system
-	mount -t vfat /dev/disk/by-partlabel/modem /lib/.system
-	cp -rf /lib/.system/image/* /lib/firmware/
-	umount /lib/.system
-	rmdir /lib/.system
-	mkdir -p /persist
-	mount -t ext4 /dev/disk/by-partlabel/persist /persist
+	mkdir -p /lib/.system && \
+	mount -t ext4 /dev/disk/by-partlabel/system /lib/.system && \
+	cp -rf /lib/.system/etc/firmware/* /lib/firmware/ && \
+	umount /lib/.system && \
+	mount -t vfat /dev/disk/by-partlabel/modem /lib/.system && \
+	cp -rf /lib/.system/image/* /lib/firmware/ && \
+	umount /lib/.system && \
+	rmdir /lib/.system && \
+	mkdir -p /persist && \
+	mount -t ext4 /dev/disk/by-partlabel/persist /persist && \
+	rm -f /lib/firmware/wlan/prima/WCNSS_qcom_cfg.ini && \
+	cp -f /lib/firmware/WCNSS_qcom_cfg.ini /lib/firmware/wlan/prima/
 	ES=$?
 	[ "$VERBOSE" != no ] && log_end_msg $ES
 	return $ES
 }
 do_stop() {
         [ "$VERBOSE" != no ] && log_begin_msg "Unmounting /persist"
-	umount /persist
-	rmdir /persist
+	umount /persist && rmdir /persist
 	ES=$?
 	[ "$VERBOSE" != no ] && log_end_msg $ES
 	return $ES
