@@ -683,10 +683,15 @@ static int keyIn(struct uiinfo *uiinf, struct ui_window *win, int n)
 	scrolloffset = ((unsigned char*)win->focused->data);
 	cursorpos = ((unsigned char*)win->focused->data)+1;
 	text = ((char*)win->focused->data)+2;
-	for(i = 254; i >= *cursorpos; i--){
-		text[i+1] = text[i];
+	if(stat != KEY_STAT_REPLACE){
+		for(i = 254; i >= *cursorpos; i--){
+			text[i+1] = text[i];
+		}
+		text[255] = 0;
 	}
-	text[255] = 0;
+	else {
+		(*cursorpos)--;
+	}
 	text[*cursorpos] = ch;
 	if(*cursorpos == *scrolloffset + ((win->focused->rightend -
 		win->focused->x) / fnt.cwidth) - 2)
@@ -1137,6 +1142,7 @@ struct uiinfo *getui()
 	}
 	uiinf->nextwindowid = 0;
 	uiinf->curkey = -1;
+	uiinf->inptype = INPTYPE_ALPHA_LOWER;
 	input_dir = opendir("/dev/input");
 	if(!input_dir){
 		fprintf(stderr, "opendir /dev/input failed");
