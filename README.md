@@ -32,8 +32,9 @@ following commands on your phone:
     debootstrap/debootstrap --second-stage
     cd var/cache
     dpkg -i bananui-base_0.0.1-armhf.deb device-startup_0.0.1-all.deb
-    adduser --ingroup sudo user
+    adduser user
      (enter data)
+    adduser user sudo
     exit
     dd if=/path/to/boot.img" \
 		"of=/dev/block/bootdevice/by-name/<recovery or boot> bs=2048

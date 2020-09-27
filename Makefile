@@ -1,6 +1,6 @@
 VERSION = 0.1.1
 OUTPUTS = initrd.img boot.img debroot debroot.tar
-DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox
+DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo
 DEBS = bananui-base_$(VERSION)-1_armhf.deb device-startup_$(VERSION)-1_all.deb
 
 all: check-deps $(OUTPUTS)
