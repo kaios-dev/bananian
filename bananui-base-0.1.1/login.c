@@ -38,17 +38,17 @@ static const char string [] =
 	"skl Power\n"
 	"skc LOG IN\n"
 	"lbc Bananian v" VERSION "\n"	/* ID: 0 */
-	"tit Bananian Login\n"		/* ID: 1 */
+	"tit Bananian Login\n"
+	"lbl \n"			/* ID: 1 */
 	"lbl \n"			/* ID: 2 */
-	"lbl \n"			/* ID: 3 */
-	"lbc Log in\n"			/* ID: 4 */
-	"lbl \n"			/* ID: 5 */
-	"lbl Username\n"		/* ID: 6 */
-	"inp \n"			/* ID: 7 */
+	"lbc Log in\n"			/* ID: 3 */
+	"lbl \n"			/* ID: 4 */
+	"lbl Username\n"		/* ID: 5 */
+	"inp \n"			/* ID: 6 */
 	"rfr \n";
 
-static const char getusername [] = "get 7\n";
-static const char getother [] = "get 2\n";
+static const char getusername [] = "get 6\n";
+static const char getother [] = "get 1\n";
 
 int readLine(int fd, char *dest, size_t maxsize)
 {
