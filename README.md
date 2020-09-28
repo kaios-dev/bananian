@@ -56,6 +56,8 @@ To get shell access to your phone, find out its IP address via your router. Then
 
     $ ssh user@X.X.X.X # Where X.X.X.X is your the phone's IP address
 
+To get root access, use sudo.
+
 ### Window list
 To show a list of open windows, press the power button with the slide open.
 ### Bugs
