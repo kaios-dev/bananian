@@ -419,7 +419,7 @@ static void fdCallback(void *data, int i)
 		}
 		mydat->sockfds[mydat->nsockfds] =
 			accept(mydat->sockfds[i], NULL, NULL);
-		fcntl(mydat->sockfds[mydat->nsockfds], F_SETFL, O_CLOEXEC);
+		fcntl(mydat->sockfds[mydat->nsockfds], F_SETFD, FD_CLOEXEC);
 		printf("Client! Id: %d\n", mydat->nsockfds);
 		mydat->bufindex[mydat->nsockfds] = 0;
 		mydat->isbinary[mydat->nsockfds] = BINARY_NONE;
@@ -499,7 +499,7 @@ int main(){
 		perror("socket");
 		exit(5);
 	}
-	fcntl(mydat.sockfds[0], F_SETFL, O_CLOEXEC);
+	fcntl(mydat.sockfds[0], F_SETFD, FD_CLOEXEC);
 	if(bind(mydat.sockfds[0], (struct sockaddr*) &addr, sizeof(addr)) <
 		0)
 	{

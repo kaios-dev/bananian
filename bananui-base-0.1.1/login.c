@@ -172,7 +172,7 @@ fullrestart:
 		perror("socket");
 		return 1;
 	}
-	fcntl(fd, F_SETFL, O_CLOEXEC);
+	fcntl(fd, F_SETFD, FD_CLOEXEC);
 	if(connect(fd, (struct sockaddr*) &addr, sizeof(addr)) < 0){
 		perror("Failed to bind to /tmp/bananui.sock");
 		return 1;
