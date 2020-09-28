@@ -551,24 +551,26 @@ void redrawWindow(struct uiinfo *uiinf,
 	if(!win){
 		drawRect(uiinf->fbinf, 0, 0, uiinf->fbinf->vinfo->yres,
 			uiinf->fbinf->vinfo->xres, 0, 0, 0, 255);
-		goto end;
 	}
-	tmpbuf = malloc(uiinf->fbinf->finfo->smem_len);
-	win->actual_yoffset = win->yoffset;
-	redrawWindowBuffer(uiinf, tmpbuf, win);
-	fbcpy(uiinf->fbinf, tmpbuf,
-		win->hidetoppanel ? 0 : 25);
-	free(tmpbuf);
-	if(!win->hideskpanel){
-		win->height -= 25;
-		showSoftkeys(uiinf, win);
+	else {
+		tmpbuf = malloc(uiinf->fbinf->finfo->smem_len);
+		win->actual_yoffset = win->yoffset;
+		redrawWindowBuffer(uiinf, tmpbuf, win);
+		if(win == uiinf->curwindow){
+			fbcpy(uiinf->fbinf, tmpbuf,
+				win->hidetoppanel ? 0 : 25);
+			if(!win->hideskpanel){
+				win->height -= 25;
+				showSoftkeys(uiinf, win);
+			}
+			if(!win->hidetoppanel){
+				win->actual_yoffset += 25;
+				win->height -= 25;
+				showTopPanel(uiinf);
+			}
+		}
+		free(tmpbuf);
 	}
-	if(!win->hidetoppanel){
-		win->actual_yoffset += 25;
-		win->height -= 25;
-		showTopPanel(uiinf);
-	}
-end:
 	refreshScreen(uiinf->fbinf);
 }
 
@@ -618,6 +620,7 @@ void addWidget(struct uiinfo *uiinf, struct ui_window *win,
 static int handleInputLeft(struct uiinfo *uiinf, struct ui_widget *inp)
 {
 	unsigned char *cursorpos, *scrolloffset;
+	uiinf->curkey = -1;
 	cursorpos = ((unsigned char*)inp->data)+1;
 	scrolloffset = ((unsigned char*)inp->data);
 	if(*cursorpos == 0) return 0;
@@ -632,6 +635,7 @@ static int handleInputLeft(struct uiinfo *uiinf, struct ui_widget *inp)
 static int handleInputRight(struct uiinfo *uiinf, struct ui_widget *inp)
 {
 	unsigned char *cursorpos, *scrolloffset;
+	uiinf->curkey = -1;
 	scrolloffset = (unsigned char*)inp->data;
 	cursorpos = ((unsigned char*)inp->data)+1;
 	if(*cursorpos == strlen(((char*)inp->data)+2)) return 0;
@@ -934,6 +938,7 @@ static void handleKeydown(struct uiinfo *uiinf, struct ui_window *win,
 			char *text;
 			int i;
 			unsigned char *cursorpos, *scrolloffset;
+			uiinf->curkey = -1;
 			if(!win->focused || win->focused->type !=
 				UI_FOINPUT)
 			{

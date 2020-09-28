@@ -46,7 +46,8 @@ struct applist_item {
 static const char string [] =
 	"lbc Apps\n"
 	"tit Browse Apps\n"
-	"skc OPEN\n";
+	"skc OPEN\n"
+	"skl Log out\n";
 
 
 struct applist_item *create_new_tail(struct applist_item *prevtail)
@@ -147,6 +148,9 @@ void processResponse(int fd, struct config *cfg, const char *response)
 			perror(cfg->exec_paths[id-1]);
 			exit(140);
 		}
+	}
+	else if(0 == strcmp(response, "kdn 139")){
+		exit(0);
 	}
 }
 

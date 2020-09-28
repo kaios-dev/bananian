@@ -155,7 +155,7 @@ struct fbinfo *getfb(){
 	finfo = malloc(sizeof(struct fb_fix_screeninfo));
 	vinfo = malloc(sizeof(struct fb_var_screeninfo));
 	info = malloc(sizeof(struct fbinfo));
-	fd = open(FBDEV, O_RDWR);
+	fd = open(FBDEV, O_RDWR|O_CLOEXEC);
 	if(fd < 0){
 		perror(FBDEV);
 		exit(2);

@@ -121,6 +121,7 @@ enum restart_type tryLogin(int fd)
 		readLine(fd, set_username, MAX_RECV_LINE_SIZE);
 	} while(0 != strncmp(set_username, "set ", 4));
 	pam_start("bananui-login", set_username+4, &conv, &pamhan);
+	write(fd, "skl \n", 5);
 	stat = pam_authenticate(pamhan, 0);
 	if(stat != PAM_SUCCESS){
 		const char *errstr = pam_strerror(pamhan, stat);
