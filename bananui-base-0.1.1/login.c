@@ -37,6 +37,7 @@
 enum restart_type { NORESTART, SOFTRESTART, FULLRESTART };
 
 static const char string [] =
+	"roo \n"			/* Root window */
 	"clr \n"			/* For restart */
 	"skl Power\n"
 	"skc LOG IN\n"

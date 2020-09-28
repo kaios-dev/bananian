@@ -352,6 +352,11 @@ static void serverCommand(struct mydata *mydat, int i, const char *command)
 	else if(0 == strncmp(command, "clr ", 4)){
 		clearWindow(mydat->uiinf, mydat->windows[i]);
 	}
+	else if(0 == strncmp(command, "roo ", 4) && !mydat->uiinf->windows[0]){
+		mydat->uiinf->windows[mydat->windows[i]->id] = NULL;
+		mydat->uiinf->windows[0] = mydat->windows[i];
+		mydat->windows[i]->id = 0;
+	}
 	else if(0 == strncmp(command, "sty ", 4)){
 		char *end;
 		mydat->styles[i]->fgr = strtol(command+4, &end, 10);
