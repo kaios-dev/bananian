@@ -37,7 +37,6 @@
 enum restart_type { NORESTART, SOFTRESTART, FULLRESTART };
 
 static const char string [] =
-	"roo \n"			/* Root window */
 	"clr \n"			/* For restart */
 	"skl Power\n"
 	"skc LOG IN\n"
@@ -112,7 +111,7 @@ enum restart_type tryLogin(int fd)
 	char set_username[MAX_RECV_LINE_SIZE];
 	const char *username;
 	char *envpath;
-	int stat;
+	int stat, pid;
 	pam_handle_t *pamhan;
 	struct pam_conv conv;
 	struct passwd *passent;
@@ -138,7 +137,7 @@ enum restart_type tryLogin(int fd)
 	passent = getpwnam(username);
 	pam_end(pamhan, stat);
 	close(fd);
-	if(fork() == 0){
+	if((pid = fork()) == 0){
 		setuid(passent->pw_uid);
 		setgid(passent->pw_gid);
 		setsid();
@@ -156,7 +155,7 @@ enum restart_type tryLogin(int fd)
 		execl("/usr/bin/mainclient", "mainclient", NULL);
 		perror("/usr/bin/mainclient");
 	}
-	wait(NULL);
+	waitpid(pid, NULL, 0);
 	return FULLRESTART;
 }
 

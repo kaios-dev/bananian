@@ -393,9 +393,17 @@ void destroyWindow(struct uiinfo *uiinf, struct ui_window *win)
 	int i;
 	unsigned char *tmpbuf1, *tmpbuf2;
 	uiinf->windows[win->id] = NULL;
-	if(win == uiinf->curwindow)
-		uiinf->curwindow = win->parent ?
-			win->parent : uiinf->windows[0];
+	if(win == uiinf->curwindow){
+		if(win->parent) uiinf->curwindow = win->parent;
+		else {
+			int i;
+			for(i = 0; i < MAX_WINDOWS; i++){
+				if(i == win->id) continue;
+				if(uiinf->windows[i])
+					uiinf->curwindow = uiinf->windows[i];
+			}
+		}
+	}
 	tmpbuf1 = malloc(uiinf->fbinf->finfo->smem_len);
 	tmpbuf2 = malloc(uiinf->fbinf->finfo->smem_len);
 	if(uiinf->curwindow)
