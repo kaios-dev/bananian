@@ -1164,7 +1164,7 @@ struct uiinfo *getui()
 		}
 		id = strtol(input_dirent->d_name + 5, NULL, 10);
 		uiinf->inpfds[id] = openat(dirfd(input_dir),
-			input_dirent->d_name, O_RDONLY);
+			input_dirent->d_name, O_RDONLY|O_CLOEXEC);
 		if(uiinf->inpfds[id] == -1){
 			perror(input_dirent->d_name);
 		}

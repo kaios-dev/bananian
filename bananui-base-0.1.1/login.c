@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/wait.h>
@@ -32,6 +33,8 @@
 #else
 # define DEBUG(s)
 #endif
+
+enum restart_type { NORESTART, SOFTRESTART, FULLRESTART };
 
 static const char string [] =
 	"clr \n"			/* For restart */
@@ -103,7 +106,7 @@ int converse(int n, const struct pam_message **msg,
 	return PAM_SUCCESS;
 }
 
-void tryLogin(int fd)
+enum restart_type tryLogin(int fd)
 {
 	char set_username[MAX_RECV_LINE_SIZE];
 	const char *username;
@@ -125,27 +128,28 @@ void tryLogin(int fd)
 		write(fd, errstr, strlen(errstr));
 		write(fd, "\nrfr \n", 6);
 		sleep(3);
-		return;
+		return SOFTRESTART;
 	}
 	pam_get_user(pamhan, &username, "Username: ");
 	passent = getpwnam(username);
 	pam_end(pamhan, stat);
-	setuid(passent->pw_uid);
-	setgid(passent->pw_gid);
-	setsid();
+	close(fd);
 	if(fork() == 0){
+		setuid(passent->pw_uid);
+		setgid(passent->pw_gid);
+		setsid();
 		execl("/usr/bin/mainclient", "mainclient", NULL);
 		perror("/usr/bin/mainclient");
 	}
 	wait(NULL);
+	return FULLRESTART;
 }
 
-int processResponse(int fd, const char *response)
+enum restart_type processResponse(int fd, const char *response)
 {
 	DEBUG(response);
 	if(0 == strncmp(response, "clk ", 4)){
-		tryLogin(fd);
-		return 0;
+		return tryLogin(fd);
 	}
 	else if(0 == strcmp(response, "kdn 139")){
 		if(fork() == 0){
@@ -154,18 +158,20 @@ int processResponse(int fd, const char *response)
 			perror("/usr/bin/bananui-shutdown");
 		}
 	}
-	return 1;
+	return NORESTART;
 }
 
 int main(){
 	struct sockaddr_un addr = {AF_UNIX, "/tmp/bananui.sock"};
 	int fd, bufindex = 0;
 	char recvbuf[MAX_RECV_LINE_SIZE];
+fullrestart:
 	fd = socket(AF_UNIX, SOCK_STREAM, 0);
 	if(fd < 0){
 		perror("socket");
 		return 1;
 	}
+	fcntl(fd, F_SETFL, O_CLOEXEC);
 	if(connect(fd, (struct sockaddr*) &addr, sizeof(addr)) < 0){
 		perror("Failed to bind to /tmp/bananui.sock");
 		return 1;
@@ -177,9 +183,12 @@ restart:
 	}
 	while(read(fd, recvbuf+bufindex, 1) > 0){
 		if(recvbuf[bufindex] == '\n'){
+			int res;
 			recvbuf[bufindex] = 0;
 			bufindex = 0;
-			if(!processResponse(fd, recvbuf)) goto restart;
+			res = processResponse(fd, recvbuf);
+			if(res == SOFTRESTART) goto restart;
+			if(res == FULLRESTART) goto fullrestart;
 		}
 		else if(bufindex == MAX_RECV_LINE_SIZE - 1){
 			char ch;
