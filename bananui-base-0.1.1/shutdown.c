@@ -54,6 +54,9 @@ void processResponse(int fd, const char *response)
 			exit(140);
 		}
 	}
+	else if(0 == strncmp(response, "exi ", 4)){
+		exit(0);
+	}
 }
 
 int main()
