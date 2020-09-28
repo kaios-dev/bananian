@@ -111,10 +111,12 @@ enum restart_type tryLogin(int fd)
 {
 	char set_username[MAX_RECV_LINE_SIZE];
 	const char *username;
+	char *envpath;
 	int stat;
 	pam_handle_t *pamhan;
 	struct pam_conv conv;
 	struct passwd *passent;
+	envpath = getenv("PATH");
 	conv.conv = converse;
 	conv.appdata_ptr = &fd;
 	write(fd, getusername, sizeof(getusername)-1);
@@ -140,6 +142,17 @@ enum restart_type tryLogin(int fd)
 		setuid(passent->pw_uid);
 		setgid(passent->pw_gid);
 		setsid();
+		clearenv();
+		setenv("HOME", passent->pw_dir, 0);
+		setenv("SHELL", passent->pw_shell, 0);
+		if(envpath)
+			setenv("PATH", envpath, 0);
+		else
+			setenv("PATH", "/usr/local/bin:/usr/bin:/bin", 0);
+		if(chdir(passent->pw_dir) < 0){
+			perror(passent->pw_dir);
+			chdir("/");
+		}
 		execl("/usr/bin/mainclient", "mainclient", NULL);
 		perror("/usr/bin/mainclient");
 	}
