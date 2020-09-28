@@ -11,6 +11,7 @@
 enum ui_widget_type { UI_LABEL, UI_BUTTON, UI_INPUT, UI_FOBUTTON,
 	UI_FOINPUT, UI_CBX, UI_IMAGE };
 enum ui_text_align { UI_TA_LEFT, UI_TA_CENTER, UI_TA_RIGHT };
+enum ui_input_type { UI_INP_NORMAL, UI_INP_PASSWORD };
 enum ui_event { UI_EVENT_CLICK, UI_EVENT_KEYUP, UI_EVENT_KEYDOWN,
 	UI_EVENT_EXIT };
 enum slide_state { SLIDE_CLOSED, SLIDE_HALFOPEN, SLIDE_FULLOPEN };
@@ -45,7 +46,10 @@ struct ui_style {
 
 struct ui_widget {
 	enum ui_widget_type type;
-	enum ui_text_align textalign;
+	union {
+		enum ui_text_align textalign;
+		enum ui_input_type inputtype;
+	};
 	int id, focusable, freedata;
 	int x, y, rightend, height;
 	void *data;

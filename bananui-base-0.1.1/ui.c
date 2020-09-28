@@ -175,8 +175,30 @@ static void displayInput(struct uiinfo *uiinf, struct ui_widget *widget)
 			fnt.cwidth) - 2];
 	txt[scrolloffset + ((widget->rightend - widget->x) /
 			fnt.cwidth) - 2] = 0;
-	text(uiinf, widget->x + 10, widget->y + 20, txt+scrolloffset,
-		0, 0, 0, 255);
+	if(widget->inputtype != UI_INP_PASSWORD){
+		text(uiinf, widget->x + 10, widget->y + 20, txt+scrolloffset,
+			0, 0, 0, 255);
+	}
+	else {
+		char *fakestring;
+		int i;
+		fakestring = malloc((strlen(txt+scrolloffset)+1) *
+			sizeof(char));
+		for(i = 0; i < strlen(txt+scrolloffset); i++){
+			if(i == cursorpos - scrolloffset - 1 &&
+				uiinf->curkey >= 0)
+			{
+				fakestring[i] = txt[scrolloffset+i];
+			}
+			else {
+				fakestring[i] = '*';
+			}
+		}
+		fakestring[i] = 0;
+		text(uiinf, widget->x + 10, widget->y + 20, fakestring,
+			0, 0, 0, 255);
+		free(fakestring);
+	}
 	txt[scrolloffset + ((widget->rightend - widget->x) / fnt.cwidth)
 		- 2] = tmp;
 	if(widget->type == UI_FOINPUT){

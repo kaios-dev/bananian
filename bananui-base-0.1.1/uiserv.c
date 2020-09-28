@@ -157,7 +157,19 @@ static int doInput(struct mydata *mydat, struct ui_window *win,
 	widget->type = UI_INPUT;
 	widget->data = malloc(258);
 	widget->freedata = 1;
-	strncpy(((char*)widget->data) + 2, command+4, 256);
+	switch(command[4]){
+		case 'p':
+			widget->inputtype = UI_INP_PASSWORD;
+			break;
+		default:
+			widget->inputtype = UI_INP_NORMAL;
+	}
+	if(command[4] && command[5] == ' '){
+		strncpy(((char*)widget->data) + 2, command+6, 256);
+	}
+	else {
+		((char*)widget->data)[2] = 0;
+	}
 	((char*)widget->data)[0] = 0;
 	((char*)widget->data)[1] = 0;
 	widget->rightend = mydat->uiinf->fbinf->vinfo->xres;
