@@ -1,39 +1,25 @@
-OUTPUTS = initrd.img boot.img debroot.tar
-EXECS = bananui testclient mainclient browser colorgrid
-UISOURCES = gr.c ui.c uiserv.c
-UIOBJECTS = $(UISOURCES:.c=.o)
-TESTSOURCES = testclient.c
-TESTOBJECTS = $(TESTSOURCES:.c=.o)
-MAINCSOURCES = mainclient.c
-MAINCOBJECTS = $(MAINCSOURCES:.c=.o)
-BROWSERSOURCES = browser.c
-BROWSEROBJECTS = $(BROWSERSOURCES:.c=.o)
-COLORGSOURCES = colorgrid.c
-COLORGOBJECTS = $(COLORGSOURCES:.c=.o)
-CFLAGS = -g -Wall -static -DHAVE_DEBUG
+VERSION = 0.1.1
+OUTPUTS = initrd.img boot.img debroot debroot.tar
+DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo
+DEBS = bananui-base_$(VERSION)-1_armhf.deb device-startup_$(VERSION)-1_all.deb
 
-CC = $(shell ./check-deps findarmgcc $(CROSS_COMPILE))
-
-all: check-deps $(EXECS) $(OUTPUTS)
+all: check-deps $(OUTPUTS)
 
 check-deps::
 	@./check-deps check
-	@./check-deps checkgcc $(CC)
+	@./check-deps checkgcc
 
-bananui: $(UIOBJECTS)
-	$(CC) -o $@ $(UIOBJECTS) $(CFLAGS)
+bananui-base_$(VERSION)-1_armhf.deb: bananui-base-$(VERSION)
+	echo "$(VERSION)" > bananui-base-$(VERSION)/.version
+	(cd bananui-base-$(VERSION) && $(MAKE) clean)
+	tar czf bananui-base_$(VERSION).orig.tar.gz bananui-base-$(VERSION)
+	(cd bananui-base-$(VERSION) && debuild --no-lintian -us -uc \
+		-aarmhf)
 
-testclient: $(TESTOBJECTS)
-	$(CC) -o $@ $(TESTOBJECTS) $(CFLAGS)
-
-mainclient: $(MAINCOBJECTS)
-	$(CC) -o $@ $(MAINCOBJECTS) $(CFLAGS)
-
-browser: $(BROWSEROBJECTS)
-	$(CC) -o $@ $(BROWSEROBJECTS) $(CFLAGS)
-
-colorgrid: $(COLORGOBJECTS)
-	$(CC) -o $@ $(COLORGOBJECTS) $(CFLAGS)
+device-startup_$(VERSION)-1_all.deb: device-startup-$(VERSION)
+	(cd device-startup-$(VERSION) && $(MAKE) clean)
+	tar czf device-startup_$(VERSION).orig.tar.gz device-startup-$(VERSION)
+	(cd device-startup-$(VERSION) && debuild --no-lintian -us -uc)
 
 initrd.img: ramdisk
 	rm -f $@
@@ -42,20 +28,18 @@ initrd.img: ramdisk
 boot.img: initrd.img zImage bootimg.cfg
 	abootimg --create $@ -f bootimg.cfg -k zImage -r $<
 
-debroot.tar: $(EXECS)
+debroot:
+	rm -rf debroot
+	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
+		buster debroot/ $(MIRROR)
+	mkdir -p debroot/lib/modules/
+	cp -rf modules debroot/lib/modules/3.10.49-bananian
+
+debroot.tar: debroot $(DEBS)
 	rm -f $@
-	cp $(EXECS) debroot/usr/local/bin
-	(cd debroot; chmod a=rwxt tmp; tar cvf ../$@ --owner=0 --exclude=.gitignore *)
-
-%.o: %.c %.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-ifneq (clean, $(MAKECMDGOALS))
--include deps.mk
-endif
-
-deps.mk: $(UISOURCES)
-	$(CC) -MM $^ > $@
+	cp -f $(DEBS) debroot/var/cache
+	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
+	@echo "Now you can execute the commands from README.md."
 
 clean:
-	rm -f *.o $(EXECS) $(OUTPUTS)
+	rm -rf *.deb $(OUTPUTS)

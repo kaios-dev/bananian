@@ -1,5 +1,0 @@
-modprobe: ERROR: ../libkmod/libkmod.c:586 kmod_search_moddep() could not open moddep file '/lib/modules/4.19.0-parrot4-28t-amd64/modules.dep.bin'
-modprobe: FATAL: Module wlan not found in directory /lib/modules/4.19.0-parrot4-28t-amd64
-There was an error loading wifi.
-Kernel log output:
-dmesg: read kernel buffer failed: Invalid argument

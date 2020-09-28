@@ -57,6 +57,8 @@ Even if there are no arguments, the command must be followed by a space.
 	colors of widgets and softkey labels and the window background color.
 	<i>Not fully implemented yet</i>
 	</li>
+	<li><code>get &lt;widgetid&gt;</code><br>Get the contents of a widget
+	</li>
 </ul>
 <h4>Widget IDs</h4>
 <p>When a widget is created, it is assigned an ID unique to its window.
@@ -73,6 +75,8 @@ command, but is sent by the server.</p>
 	<li><code>exi 0</code><br>The back button has been pressed.</li>
 	<li><code>clk &lt;widgetid&gt;</code><br>The widget with ID
 	<i>widgetid</i> has been clicked.</li>
+	<li><code>set &lt;data&gt;</code><br>Contents returned from
+	<code>get</code></li>
 </ul>
 <h4 id="imgrepr">Image representation</h4>
 <p>A bitmap has the following structure: <code>(8-bit)width (8-bit)height
@@ -82,9 +86,9 @@ command, but is sent by the server.</p>
 <p>Example: a black 2x2 square, written in C code:</p>
 <pre>
 char prebitmap = "iml \n\2\2";
-unsigned int bitmap = {
-	0x000000ff, 0x000000ff,
-	0x000000ff, 0x000000ff
+unsigned int bitmap[2][2] = {
+	{ 0x000000ff, 0x000000ff },
+	{ 0x000000ff, 0x000000ff }
 };
 </pre>
 <h4 id="keycodes">Key codes</h4>
@@ -93,9 +97,9 @@ unsigned int bitmap = {
 	</td></tr>
 	<tr><td>KEY_NUMERIC_STAR</td><td>Star (*) button</td></tr>
 	<tr><td>KEY_NUMERIC_POUND</td><td>Pound (#) button</td></tr>
-	<tr><td>KEY_AC_SEND</td><td>Call key</td></tr>
-	<tr><td>KEY_AC_MENU</td><td>Left softkey</td></tr>
-	<tr><td>KEY_AC_BACK</td><td>Right softkey</td></tr>
+	<tr><td>KEY_SEND</td><td>Call key</td></tr>
+	<tr><td>KEY_MENU</td><td>Left softkey</td></tr>
+	<tr><td>KEY_BACK</td><td>Right softkey</td></tr>
 	<tr><td>KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT</td>
 		<td>D-pad keys</td></tr>
 	<tr><td>KEY_OK</td><td>Center (enter) key</td></tr>
@@ -103,7 +107,5 @@ unsigned int bitmap = {
 	</td><td>Back button (difference from <code>exi 0</code>: Gets sent
 	while in a non-empty input field)</td></tr>
 </table>
-<hr>
-<footer>&copy; 2020 Affe Null</footer>
 </body>
 </html>

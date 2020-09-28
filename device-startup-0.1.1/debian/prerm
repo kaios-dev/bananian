@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+if [ -x "/etc/init.d/fwload" ]; then
+	invoke-rc.d fwload stop
+fi
+if [ -x "/etc/init.d/wifi" ]; then
+	invoke-rc.d wifi stop
+fi
+#DEBHELPER#

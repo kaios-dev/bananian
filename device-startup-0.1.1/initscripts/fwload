@@ -1,0 +1,61 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          fwload
+# Required-Start:    
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Copy firmware from system, mount /persist
+### END INIT INFO
+
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+. /lib/init/vars.sh
+. /lib/lsb/init-functions
+VERBOSE=yes
+
+do_start() {
+        [ "$VERBOSE" != no ] && log_begin_msg "Mounting and copying firmware"
+	mkdir -p /lib/.system && \
+	mount -t ext4 /dev/disk/by-partlabel/system /lib/.system && \
+	cp -rf /lib/.system/etc/firmware/* /lib/firmware/ && \
+	umount /lib/.system && \
+	mount -t vfat /dev/disk/by-partlabel/modem /lib/.system && \
+	cp -rf /lib/.system/image/* /lib/firmware/ && \
+	umount /lib/.system && \
+	rmdir /lib/.system && \
+	mkdir -p /persist && \
+	mount -t ext4 /dev/disk/by-partlabel/persist /persist && \
+	rm -f /lib/firmware/wlan/prima/WCNSS_qcom_cfg.ini && \
+	cp -f /lib/firmware/WCNSS_qcom_cfg.ini /lib/firmware/wlan/prima/
+	ES=$?
+	[ "$VERBOSE" != no ] && log_end_msg $ES
+	return $ES
+}
+do_stop() {
+        [ "$VERBOSE" != no ] && log_begin_msg "Unmounting /persist"
+	umount /persist && rmdir /persist
+	ES=$?
+	[ "$VERBOSE" != no ] && log_end_msg $ES
+	return $ES
+}
+
+case "$1" in
+    start)
+	do_start
+        ;;
+    restart|reload|force-reload)
+        echo "Error: argument '$1' not supported" >&2
+        exit 3
+        ;;
+    stop|status)
+	do_stop
+        exit 0
+        ;;
+    *)
+        echo "Usage: $0 start|stop" >&2
+        exit 3
+        ;;
+esac
+#DEBHELPER#

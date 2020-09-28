@@ -1,7 +1,11 @@
 # Bananian - Debian for the Nokia 8110 4G and a UI
 ### Compiling
-Just run make. If it complains about missing compilers, make sure your ARM
-cross-compiler is named arm-linux-gnueabi-gcc or arm-linux-gnueabi-gcc-_version_.
+NOTE: This has been tested only on Debian GNU/Linux. There will
+probably be many errors on non-Debian-based GNU/Linux distros.
+
+Just run make as root (Please make a dry-run first to prove that nothing
+malicious happens). If it complains about missing compilers, make sure that
+the package crossbuild-essential-armhf (or similar) is installed.
 ### Installing
 This step requires a rooted phone. See
 [BananaHackers](https://sites.google.com/view/bananahackers/root) for more info.
@@ -14,37 +18,57 @@ second as EXT4. Push boot.img to the phone and flash it to boot or recovery:
 Then insert the SD card into the phone, push the debroot.tar file and run the
 following commands on your phone:
 
-    # mkdir /data/debian
-    # busybox mount /dev/block/mmcblk1p2 /data/debian
-    # cd /data/debian
-    # tar xvf /path/to/debroot.tar
-    (lots of output)
-    # busybox umount /data/debian
+    cd /data
+    mkdir debroot
+    busybox mount /dev/block/mmcblk1p2 debroot
+    cd debroot
+    busybox tar xvf /path/to/debroot.tar
+     (lots of output)
+    mount -o bind /dev dev
+    mount -o bind /sys sys
+    mount -o bind /proc proc
+    export PATH=/usr/local/sbin:/usr/sbin:/usr/local/bin:/usr/bin:$PATH
+    chroot . /bin/bash
+    debootstrap/debootstrap --second-stage
+    cd var/cache
+    dpkg -i bananui-base_0.0.1-armhf.deb device-startup_0.0.1-all.deb
+    adduser user
+     (enter data)
+    adduser user sudo
+    exit
+    dd if=/path/to/boot.img" \
+		"of=/dev/block/bootdevice/by-name/<recovery or boot> bs=2048
+    <reboot or reboot recovery>
 
 ### Wireless networking
-To enable WiFi networking, create a file named debroot/etc/wpa\_supplicant.conf
-before compiling and add the following contents:
+To enable WiFi networking, create a file named /etc/wpa\_supplicant.conf
+after running debootstrap/debootstrap --second-stage:
 
     network={
         ssid="[your network name]"
         psk="[your network password]"
     }
 
+Note: The loading of wifi drivers did not work when I first booted this release,
+the whole system just crashed, but after a reboot everything started working.
+
 ### Shell access
 You need to enable networking first.
 To get shell access to your phone, find out its IP address via your router. Then:
 
-    $ ssh root@X.X.X.X # Where X.X.X.X is your the phone's IP address
+    $ ssh user@X.X.X.X # Where X.X.X.X is your the phone's IP address
 
-You should be asked for a password. The password is bananian.
+To get root access, use sudo.
+
 ### Window list
 To show a list of open windows, press the power button with the slide open.
 ### Bugs
 There some bugs and many things aren't implemented yet.
 Here is one bug:
- - Color Grid app does not always work
+ - Color Grid app does not always work (it has been removed from the home screen
+but can be launched via ssh as colorgrid)
 
-Please report other bugs as an issue.
+Please report other bugs as issues.
 ### Contribute
 If you would like to contribute, you can always submit a merge request.
 If you want to write an app, check out some of the existing apps and also the

@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+if [ "$1" = "purge" ] ; then
+	update-rc.d fwload remove >/dev/null
+fi
+if [ "$1" = "purge" ] ; then
+	update-rc.d wifi remove >/dev/null
+fi
+#DEBHELPER#
