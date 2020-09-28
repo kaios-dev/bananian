@@ -736,6 +736,7 @@ static int keyIn(struct uiinfo *uiinf, struct ui_window *win, int n)
 static void handleKeyup(struct uiinfo *uiinf, struct ui_window *win,
 	int code)
 {
+	if(!win) return;
 	win->event(win->userdata, code, UI_EVENT_KEYUP);
 }
 static void handleSlideClose(struct uiinfo *uiinf)
