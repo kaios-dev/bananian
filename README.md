@@ -49,6 +49,8 @@ after running debootstrap/debootstrap --second-stage:
         psk="[your network password]"
     }
 
+Note: The loading of wifi drivers did not work when I first booted this release,
+the whole system just crashed, but after a reboot everything started working.
 
 ### Shell access
 You need to enable networking first.
@@ -63,9 +65,10 @@ To show a list of open windows, press the power button with the slide open.
 ### Bugs
 There some bugs and many things aren't implemented yet.
 Here is one bug:
- - Color Grid app does not always work
+ - Color Grid app does not always work (it has been removed from the home screen
+but can be launched via ssh as colorgrid)
 
-Please report other bugs as an issue.
+Please report other bugs as issues.
 ### Contribute
 If you would like to contribute, you can always submit a merge request.
 If you want to write an app, check out some of the existing apps and also the
