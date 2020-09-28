@@ -394,8 +394,8 @@ void destroyWindow(struct uiinfo *uiinf, struct ui_window *win)
 	unsigned char *tmpbuf1, *tmpbuf2;
 	uiinf->windows[win->id] = NULL;
 	if(win == uiinf->curwindow){
-		if(win->parent) uiinf->curwindow = win->parent;
-		else {
+		uiinf->curwindow = win->parent;
+		if(!uiinf->curwindow){
 			int i;
 			for(i = 0; i < MAX_WINDOWS; i++){
 				if(i == win->id) continue;
