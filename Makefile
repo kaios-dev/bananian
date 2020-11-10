@@ -19,7 +19,7 @@ bananui-base_$(VERSION)_armhf.deb: bananui-base
 	(cd bananui-base; debuild --no-lintian -us -uc -aarmhf)
 
 device-startup_$(VERSION)_all.deb: device-startup
-	(cd bananui-base; debuild --no-lintian -us -uc -aarmhf)
+	(cd device-startup; debuild --no-lintian -us -uc -aarmhf)
 
 initrd.img: ramdisk
 	rm -f $@
