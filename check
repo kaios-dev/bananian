@@ -1,7 +1,5 @@
 #!/bin/sh
 	
-CROSS_COMPILE=${2:-arm*-linux-gnueabihf*}
-
 missing () {
 	echo "Missing program $1." 1>&2
 	if [ "$2" ]; then
@@ -9,14 +7,14 @@ missing () {
 	fi
 	exit 1
 }
-check () {
+deps () {
 	which sed || missing sed
 	which abootimg || missing abootimg
 	which tar || missing tar
 	which debuild || missing debuild devscripts
 	which debootstrap || missing debootstrap
 }
-checkgcc () {
+gcc () {
 	gcc="arm-linux-gnueabihf-gcc"
 	cat <<END > test-gcc.c
 int main() {}
@@ -26,7 +24,7 @@ END
 		exit 0
 	fi
 	rm test-gcc.c
-	echo "Could not find a GCC compiler for $CROSS_COMPILE."
+	echo "Could not find a compiler $gcc."
 	exit 1
 }
 $@

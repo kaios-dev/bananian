@@ -3,9 +3,14 @@
 NOTE: This has been tested only on Debian GNU/Linux. There will
 probably be many errors on non-Debian-based GNU/Linux distros.
 
-Just run make as root (Please make a dry-run first to prove that nothing
+Before building, please clone the package repositories:
+
+    $ git clone https://gitlab.com/affenull2345/bananui-base
+    $ git clone https://gitlab.com/affenull2345/device-startup
+
+Then run make as root (Please make a dry-run first to prove that nothing
 malicious happens). If it complains about missing compilers, make sure that
-the package crossbuild-essential-armhf (or similar) is installed.
+the package crossbuild-essential-armhf is installed.
 ### Installing
 This step requires a rooted phone. See
 [BananaHackers](https://sites.google.com/view/bananahackers/root) for more info.

@@ -1,8 +1,0 @@
-bananui-base (0.1.1-1) UNRELEASED; urgency=medium
-
-  [ Affe Null ]
-  * Initial debianized release.
-  * Supports password input.
-  * Supports multiple users.
-
- -- Affe Null <affenull2345@gmail.com>  Fri, 18 Sep 2020 15:41:55 +0000
