@@ -1,13 +1,25 @@
+# Makefile for bananian (installer)
+
+
+
 VERSION = 0.1.1
 OUTPUTS = initrd.img boot.img debroot debroot.tar
-DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo
-DEBS = bananui-base_$(VERSION)-1_armhf.deb device-startup_$(VERSION)-1_all.deb
+DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
+DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
 all: check $(OUTPUTS)
 
 check::
+	@./check packages
 	@./check deps
 	@./check gcc
+
+bananui-base_$(VERSION)_armhf.deb: bananui-base
+	echo "$(VERSION)" > bananui-base/.version
+	(cd bananui-base; debuild --no-lintian -us -uc -aarmhf)
+
+device-startup_$(VERSION)_all.deb: device-startup
+	(cd bananui-base; debuild --no-lintian -us -uc -aarmhf)
 
 initrd.img: ramdisk
 	rm -f $@

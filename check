@@ -2,16 +2,16 @@
 	
 missing () {
 	echo "Missing program $1." 1>&2
-	if [ "$2" ]; then
+	if [ -n "$2" ]; then
 		echo "Please install $2." 1>&2
 	fi
 	exit 1
 }
+
 deps () {
 	which sed || missing sed
 	which abootimg || missing abootimg
 	which tar || missing tar
-	which debuild || missing debuild devscripts
 	which debootstrap || missing debootstrap
 }
 gcc () {
@@ -27,4 +27,26 @@ END
 	echo "Could not find a compiler $gcc."
 	exit 1
 }
+packages () {
+	if which debuild >/dev/null 2>&1; then
+		for pkg in $@; do
+			if [ ! -d "$pkg" ]; then
+				PREBUILT="$PREBUILT $pkg"
+			fi
+		done
+		if [ -z "$PREBUILT" ]; then exit; fi
+		echo "The following packages will be downloaded as binaries:"
+		echo $PREBUILT
+	else
+		echo "Program debuild is missing. Packages will be downloaded" \
+			"as binaries from the Internet."
+		PREBUILT="$@"
+	fi
+	which wget | missing wget
+	for pkg in "$PREBUILT"; do
+		PACKAGE_URL="https://affenull2345.gitlab.io/$pkg/$pkg.deb"
+		wget -c "$PACKAGE_URL"
+	done
+}
+
 $@
