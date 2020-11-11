@@ -1,7 +1,7 @@
 build:
   stage: build
   before_script:
-    - apt update && apt install cpio abootimg debootstrap devscripts crossbuild-essential-armhf -y
+    - apt update && apt install cpio abootimg debootstrap devscripts crossbuild-essential-armhf build-essential -y
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/bananui-base
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/device-startup
   script:
