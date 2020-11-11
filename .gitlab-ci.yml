@@ -1,9 +1,9 @@
-build:
+Update .gitlab-ci.ymlbuild:
   stage: build
   before_script:
     - apt update && apt install cpio abootimg debootstrap devscripts crossbuild-essential-armhf -y
-    - git clone $CI_SERVER_URL/bananui-base
-    - git clone $CI_SERVER_URL/device-startup
+    - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/bananui-base
+    - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/device-startup
   script:
     - make
     # This should run make to check for the version
