@@ -49,7 +49,7 @@ packages () {
 		PREBUILT="$@"
 	fi
 	which wget | missing wget
-	for pkg in "$PREBUILT"; do
+	for pkg in $PREBUILT; do
 		case "$pkg" in
 			device-startup)
 				arch=all
