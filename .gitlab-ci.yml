@@ -25,7 +25,7 @@ pages:
     paths:
       - public
   only:
-    - master
+    - stable
 packages:
   stage: deploy
   before_script:
@@ -35,3 +35,5 @@ packages:
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file device-startup_$PACKAGE_VERSION_all.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/device-startup/$PACKAGE_VERSION/bananui-base_$PACKAGE_VERSION_all.deb'
   dependencies:
     - build
+  only:
+    - stable
