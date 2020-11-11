@@ -31,7 +31,7 @@ boot.img: initrd.img zImage bootimg.cfg
 debroot:
 	rm -rf debroot
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
-		buster debroot/ $(MIRROR)
+		buster debroot/ $(MIRROR) || rm -rf debroot
 	mkdir -p debroot/lib/modules/
 	cp -rf modules debroot/lib/modules/3.10.49-bananian
 
