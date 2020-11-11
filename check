@@ -27,6 +27,12 @@ END
 	echo "Could not find a compiler $gcc."
 	exit 1
 }
+root () {
+	if [ "x`id -u`" != x0 ]; then
+		echo "You are not running as root."
+		exit 1
+	fi
+}
 packages () {
 	if which debuild >/dev/null 2>&1; then
 		for pkg in $@; do
@@ -44,7 +50,15 @@ packages () {
 	fi
 	which wget | missing wget
 	for pkg in "$PREBUILT"; do
-		PACKAGE_URL="https://affenull2345.gitlab.io/$pkg/$pkg.deb"
+		case "$pkg" in
+			device-startup)
+				arch=all
+				;;
+			*)
+				arch=armhf
+				;;
+		esac
+		PACKAGE_URL="https://affenull2345.gitlab.io/bananian/packages-latest/${pkg}_${VERSION}_${arch}.deb"
 		wget -c "$PACKAGE_URL"
 	done
 }

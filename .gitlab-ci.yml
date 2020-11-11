@@ -19,6 +19,9 @@ pages:
   script:
     - mkdir .public
     - cp -r docs/* .public
+    - mkdir .public/packages-latest
+    - cp bananui-base_${PACKAGE_VERSION}_armhf.deb .public/packages-latest/bananui-base_${PACKAGE_VERSION}_armhf.deb
+    - cp device_startup_${PACKAGE_VERSION}_all.deb .public/packages-latest/device_startup_${PACKAGE_VERSION}_all.deb
     - mv .public public
   artifacts:
     paths:
