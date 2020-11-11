@@ -1,4 +1,4 @@
-Update .gitlab-ci.ymlbuild:
+build:
   stage: build
   before_script:
     - apt update && apt install cpio abootimg debootstrap devscripts crossbuild-essential-armhf -y
