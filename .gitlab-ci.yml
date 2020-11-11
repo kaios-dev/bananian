@@ -1,34 +1,35 @@
-#image: gcc
-
-#build:
-#  stage: build
-#  before_script:
-#    - apt update && apt install make cpio abootimg gcc-arm-linux-gnueabihf -y
-#  script:
-#    - make
-#  artifacts:
-#    paths:
-#      - bananui
-#      - browser
-#      - colorgrid
-#      - mainclient
-#      - testclient
-#      - boot.img
-#      - initrd.img
-#      - debroot.tar
-      # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
-      # cache:
-      #   paths:
-      #     - "*.o"
-
+build:
+  stage: build
+  before_script:
+    - apt update && apt install cpio abootimg devscripts crossbuild-essential-armhf -y
+  script:
+    - make
+    # This should run make to check for the version
+    - echo "PACKAGE_VERSION=0.1.1" > version.env
+  artifacts:
+    reports:
+      dotenv: version.env
+    paths:
+      - bananui-base_*_armhf.deb
+      - device-startup_*_all.deb
 pages:
   stage: deploy
   script:
     - mkdir .public
     - cp -r docs/* .public
+    - mkdir .public/
     - mv .public public
   artifacts:
     paths:
       - public
   only:
     - master
+packages:
+  stage: deploy
+  before_script:
+    - apt update && apt install curl
+  script:
+    - curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file bananui-base_$PACKAGE_VERSION_armhf.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/bananui-base/$PACKAGE_VERSION/bananui-base_$PACKAGE_VERSION_armhf.deb
+    - curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file device-startup_$PACKAGE_VERSION_all.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/device-startup/$PACKAGE_VERSION/bananui-base_$PACKAGE_VERSION_all.deb
+  dependencies:
+    - build
