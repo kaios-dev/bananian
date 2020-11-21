@@ -7,12 +7,12 @@ DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_
 
 all: check $(OUTPUTS)
 
-getversion:
-	@git describe --abbrev=0
-
-VERSION = $(call getversion)
+VERSION = $(shell git describe --abbrev=0)
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
+
+getversion:
+	@echo "$(VERSION)"
 
 check::
 	@./check packages bananui-base device-startup
