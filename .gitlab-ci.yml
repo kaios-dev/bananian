@@ -6,8 +6,7 @@ build:
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/device-startup
   script:
     - make
-    # This should run make to check for the version
-    - echo "PACKAGE_VERSION=0.1.1" > version.env
+    - echo "PACKAGE_VERSION=$(make getversion)" > version.env
   artifacts:
     reports:
       dotenv: version.env

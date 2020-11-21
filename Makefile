@@ -2,13 +2,17 @@
 
 
 
-VERSION = 0.1.1
-export VERSION
 OUTPUTS = initrd.img boot.img debroot debroot.tar
 DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
 all: check $(OUTPUTS)
+
+getversion:
+	@git describe --abbrev=0
+
+VERSION = $(call getversion)
+export VERSION
 
 check::
 	@./check packages bananui-base device-startup
@@ -22,6 +26,9 @@ bananui-base_$(VERSION)_armhf.deb: bananui-base
 
 device-startup_$(VERSION)_all.deb: device-startup
 	(cd device-startup; debuild --no-lintian -us -uc -aarmhf)
+
+package-%: %
+	(cd $^; debuild --no-lintian -us -uc -aarmhf)
 
 initrd.img: ramdisk
 	rm -f $@
