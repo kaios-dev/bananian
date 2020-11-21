@@ -42,7 +42,7 @@ debroot:
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
 		buster debroot/ $(MIRROR) || rm -rf debroot
 	mkdir -p debroot/lib/modules/
-	cp -rf modules debroot/lib/modules/3.10.49-bananian
+	cp -rf modules debroot/lib/modules/3.10.49-bananian+
 
 debroot.tar: debroot $(DEBS)
 	rm -f $@
