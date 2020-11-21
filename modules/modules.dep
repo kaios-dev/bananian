@@ -22,6 +22,7 @@ kernel/drivers/mtd/tests/mtd_torturetest.ko:
 kernel/drivers/mtd/tests/mtd_nandecctest.ko:
 kernel/drivers/mtd/tests/mtd_nandbiterrs.ko:
 kernel/drivers/spi/spidev.ko:
+kernel/drivers/net/wireless/prima/wlan.ko:
 kernel/drivers/usb/host/ice40-hcd.ko:
 kernel/drivers/input/mouse/appletouch.ko:
 kernel/drivers/input/mouse/psmouse.ko:
