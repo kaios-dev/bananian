@@ -3,11 +3,18 @@
 
 
 OUTPUTS = initrd.img boot.img debroot debroot.tar
+# Pass USE_QEMU=1 to the make command to bootstrap on the build machine
+USE_QEMU = 0
+ifeq (USE_QEMU,1)
+QEMU_CMD = scripts/qemubootstrap
+else
+QEMU_CMD =
+endif
 DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
 
 all: check $(OUTPUTS)
 
-VERSION = $(shell git describe --abbrev=0)
+VERSION=$(shell git describe --abbrev=0)
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
@@ -15,10 +22,10 @@ getversion:
 	@echo "$(VERSION)"
 
 check::
-	@./check packages bananui-base device-startup
-	@./check root
-	@./check deps
-	@./check gcc
+	@scripts/check packages bananui-base device-startup
+	@scripts/check root
+	@scripts/check deps
+	@scripts/check gcc
 
 bananui-base_$(VERSION)_armhf.deb: bananui-base
 	echo "$(VERSION)" > bananui-base/.version
@@ -43,6 +50,7 @@ debroot:
 		buster debroot/ $(MIRROR) || rm -rf debroot
 	mkdir -p debroot/lib/modules/
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
+	$(QEMU_CMD)
 
 debroot.tar: debroot $(DEBS)
 	rm -f $@
