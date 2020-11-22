@@ -25,4 +25,8 @@ fi
 mkdir "$DEBIANDIR"
 busybox mount "$DEVICE" "$DEBIANDIR" || true
 cd "$DEBIANDIR"
+allfiles=*
+if [ -n "$allfiles" ]; then
+	echo "Debian partition not empty! Please delete all files manually."
+fi
 tar xvf ../debroot.tar

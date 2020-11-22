@@ -8,9 +8,11 @@ USE_QEMU = 0
 ifeq ($(USE_QEMU),1)
 QEMU_CMD = scripts/qemubootstrap
 ONDEV_BOOTSTRAP_CMD =
+USE_QEMU_INSTALL = qemu-install
 else
 QEMU_CMD =
 ONDEV_BOOTSTRAP_CMD = adb shell /data/bootstrap-debian.sh
+USE_QEMU_INSTALL =
 endif
 DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
 
@@ -50,20 +52,18 @@ debroot:
 	rm -rf debroot
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
 		buster debroot/ $(MIRROR) || rm -rf debroot
+
+copy-debs: $(DEBS)
 	mkdir -p debroot/lib/modules/
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
 	cp -f $(DEBS) debroot/var/cache
-	$(QEMU_CMD)
 
 ifeq ($(USE_QEMU),1)
-qemu-retry:
-	mkdir -p debroot/lib/modules/
-	cp -rf modules debroot/lib/modules/3.10.49-bananian+
-	cp -f $(DEBS) debroot/var/cache
+qemu-install: debroot copy-debs
 	$(QEMU_CMD)
 endif
 
-debroot.tar: debroot $(DEBS)
+debroot.tar: debroot $(DEBS) $(USE_QEMU_INSTALL)
 	rm -f $@
 	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
 	@echo "Now you can execute the commands from README.md."
