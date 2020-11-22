@@ -9,4 +9,4 @@ trap "exit 2" INT TERM
 mount -o bind /dev debroot/dev
 mount -o bind /proc debroot/proc
 mount -o bind /sys debroot/sys
-chroot debroot /bin/sh -c 'debootstrap/debootstrap --second-stage && cd /var/cache && dpkg -i *.deb && rm -f *.deb'
+chroot debroot /bin/sh -c 'debootstrap/debootstrap --second-stage; cd /var/cache && dpkg -i *.deb && rm -f *.deb'

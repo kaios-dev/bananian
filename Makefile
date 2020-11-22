@@ -50,11 +50,19 @@ debroot:
 		buster debroot/ $(MIRROR) || rm -rf debroot
 	mkdir -p debroot/lib/modules/
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
+	cp -f $(DEBS) debroot/var/cache
 	$(QEMU_CMD)
+
+ifeq ($(USE_QEMU),1)
+qemu-retry:
+	mkdir -p debroot/lib/modules/
+	cp -rf modules debroot/lib/modules/3.10.49-bananian+
+	cp -f $(DEBS) debroot/var/cache
+	$(QEMU_CMD)
+endif
 
 debroot.tar: debroot $(DEBS)
 	rm -f $@
-	cp -f $(DEBS) debroot/var/cache
 	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
 	@echo "Now you can execute the commands from README.md."
 
