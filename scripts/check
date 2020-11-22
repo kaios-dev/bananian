@@ -48,7 +48,7 @@ packages () {
 			"as binaries from the Internet."
 		PREBUILT="$@"
 	fi
-	which wget | missing wget
+	which wget || missing wget
 	for pkg in $PREBUILT; do
 		case "$pkg" in
 			device-startup)
