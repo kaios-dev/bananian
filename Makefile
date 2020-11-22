@@ -5,7 +5,7 @@
 OUTPUTS = initrd.img boot.img debroot debroot.tar
 # Pass USE_QEMU=1 to the make command to bootstrap on the build machine
 USE_QEMU = 0
-ifeq (USE_QEMU,1)
+ifeq ($(USE_QEMU),1)
 QEMU_CMD = scripts/qemubootstrap
 else
 QEMU_CMD =
@@ -14,7 +14,7 @@ DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_
 
 all: check $(OUTPUTS)
 
-VERSION=$(shell git describe --abbrev=0)
+VERSION=$(shell git describe --tags --abbrev=0)
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
