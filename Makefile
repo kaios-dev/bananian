@@ -39,7 +39,7 @@ package-%: %
 
 initrd.img: ramdisk
 	rm -f $@
-	./pack-initrd $@ $<
+	scripts/pack-initrd $@ $<
 
 boot.img: initrd.img zImage bootimg.cfg
 	abootimg --create $@ -f bootimg.cfg -k zImage -r $<
