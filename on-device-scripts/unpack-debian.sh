@@ -26,7 +26,7 @@ mkdir "$DEBIANDIR"
 busybox mount "$DEVICE" "$DEBIANDIR" || true
 cd "$DEBIANDIR"
 allfiles=*
-if [ "x$allfiles" = "x*" ]; then
+if [ "x$allfiles" != "x*" ]; then
 	echo "Debian partition not empty! Please delete all files manually."
 	exit 1
 fi
