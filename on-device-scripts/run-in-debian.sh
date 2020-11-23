@@ -20,4 +20,10 @@ busybox mount -t devtmpfs devtmpfs "$DEBIANDIR/dev" || \
 for i in dev/pts proc sys data system sdcard; do busybox mount -o bind /$i \
 	"$DEBIANDIR/$i"; done
 
-TERM=xterm SHELL=/bin/bash HOME=/root PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:$PATH chroot "$DEBIANDIR" $@
+if [ "$#" -gt 0 ]; then
+	cmd="$@"
+else
+	cmd="/bin/bash"
+fi
+
+TERM=xterm SHELL=/bin/bash HOME=/root PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:$PATH chroot "$DEBIANDIR" /bin/sh -c "$cmd"
