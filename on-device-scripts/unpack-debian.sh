@@ -28,5 +28,6 @@ cd "$DEBIANDIR"
 allfiles=*
 if [ -n "$allfiles" ]; then
 	echo "Debian partition not empty! Please delete all files manually."
+	exit 1
 fi
 tar xvf ../debroot.tar
