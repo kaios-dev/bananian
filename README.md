@@ -1,16 +1,30 @@
 # Bananian - Debian for the Nokia 8110 4G and a UI
-### Compiling
+### Building
 NOTE: This has been tested only on Debian GNU/Linux. There will
 probably be many errors on non-Debian-based GNU/Linux distros.
 
-Before building, please clone the package repositories:
+To build the subpackages, clone the package repositories:
 
     $ git clone https://gitlab.com/affenull2345/bananui-base
     $ git clone https://gitlab.com/affenull2345/device-startup
 
+If you don't do this, the build system will try downloading prebuilt versions
+of the packages. It may fail if the version is too old. Older versions can be
+found at:
+ * (prebuilt) <https://gitlab.com/affenull2345/bananian/-/packages>
+ * (source) <https://gitlab.com/affenull2345/bananui-base/-/releases> and
+   <https://gitlab.com/affenull2345/device-startup/-/releases>
+
 Then run make as root (Please make a dry-run first to prove that nothing
 malicious happens). If it complains about missing compilers, make sure that
 the package crossbuild-essential-armhf is installed.
+
+#### QEMU mode
+QEMU mode runs debootstrap --second-stage and various other setup commands in
+the qemu-user emulator. The package qemu-user-static is required for this mode.
+To enable it, append USE\_QEMU=1 to the make or make install-to-device command:
+
+    # make USE_QEMU=1 && make install-to-device USE_QEMU=1
 
 #### Wireless networking
 During the build process, you will be prompted to edit a file named
@@ -43,6 +57,8 @@ following commands on your phone:
     cd debroot
     busybox tar xvf /path/to/debroot.tar
      (lots of output)
+    (The following commands before 'exit' are only needed if QEMU mode was
+    disabled.)
     mount -o bind /dev dev
     mount -o bind /sys sys
     mount -o bind /proc proc
@@ -54,6 +70,7 @@ following commands on your phone:
     adduser user
      (enter data)
     adduser user sudo
+    (These commands are always needed:)
     exit
     dd if=/path/to/boot.img" \
 		"of=/dev/block/bootdevice/by-name/<recovery or boot> bs=2048
