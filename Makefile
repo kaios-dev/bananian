@@ -51,7 +51,7 @@ debroot:
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
 		buster debroot/ $(MIRROR) || rm -rf debroot
 
-copy-files: $(DEBS)
+copy-files: $(DEBS) modules
 	[ ! -f debroot/etc/wpa_supplicant.conf ] && \
 		echo 'network={' >> debroot/etc/wpa_supplicant.conf && \
 		echo '    ssid="SSID"' >> debroot/etc/wpa_supplicant.conf && \
@@ -59,6 +59,7 @@ copy-files: $(DEBS)
 		echo '}' >> debroot/etc/wpa_supplicant.conf
 	editor debroot/etc/wpa_supplicant.conf
 	mkdir -p debroot/lib/modules/
+	rm -rf debroot/lib/modules/3.10.49-bananian+
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
 	cp -f $(DEBS) debroot/var/cache
 
