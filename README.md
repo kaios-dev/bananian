@@ -78,8 +78,8 @@ following commands on your phone:
 
 ### Passwords
 
-If you used the on-device bootstrap method, you will need to set a password
-on first boot. Log in using the user interface and follow the instructions.
+If you used the on-device bootstrap method, the password will be set to
+the default value 'bananian'.
 If you use the QEMU bootstrap method, the password will be set at build time.
 
 ### Shell access
