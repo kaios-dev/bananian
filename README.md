@@ -28,7 +28,8 @@ To enable it, append USE\_QEMU=1 to the make or make install-to-device command:
 
 #### Wireless networking
 During the build process, you will be prompted to edit a file named
-/etc/wpa\_supplicant.conf. Its format is:
+/etc/wpa\_supplicant.conf. In case you want to install manually, here is its
+format:
 
     network={
         ssid="[your network name]"
