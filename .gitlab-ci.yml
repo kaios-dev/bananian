@@ -5,6 +5,7 @@ build:
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/bananui-base
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/device-startup
   script:
+    - make debroot
     - make bananui-base_$(make getversion)_armhf.deb
     - make device-startup_$(make getversion)_armhf.deb
     - echo "PACKAGE_VERSION=$(make getversion)" > version.env
