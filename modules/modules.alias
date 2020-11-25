@@ -38,6 +38,7 @@ alias usb:v06CBp0003d*dc*dsc*dp*ic*isc*ip*in* synaptics_usb
 alias usb:v06CBp0002d*dc*dsc*dp*ic*isc*ip*in* synaptics_usb
 alias usb:v06CBp0001d*dc*dsc*dp*ic*isc*ip*in* synaptics_usb
 alias input:b*v*p*e*-e*k*r*a*m*l*s*f*w* evbug
+alias fs-oprofilefs oprofile
 alias net-pf-31 bluetooth
 alias bt-proto-3 rfcomm
 alias bt-proto-4 bnep

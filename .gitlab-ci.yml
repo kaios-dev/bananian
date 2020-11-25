@@ -1,34 +1,40 @@
-#image: gcc
-
-#build:
-#  stage: build
-#  before_script:
-#    - apt update && apt install make cpio abootimg gcc-arm-linux-gnueabihf -y
-#  script:
-#    - make
-#  artifacts:
-#    paths:
-#      - bananui
-#      - browser
-#      - colorgrid
-#      - mainclient
-#      - testclient
-#      - boot.img
-#      - initrd.img
-#      - debroot.tar
-      # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
-      # cache:
-      #   paths:
-      #     - "*.o"
-
+build:
+  stage: build
+  before_script:
+    - apt update && apt install cpio abootimg debootstrap devscripts crossbuild-essential-armhf build-essential -y
+    - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/bananui-base
+    - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/device-startup
+  script:
+    - make
+    - echo "PACKAGE_VERSION=$(make getversion)" > version.env
+  artifacts:
+    reports:
+      dotenv: version.env
+    paths:
+      - bananui-base_*_armhf.deb
+      - device-startup_*_all.deb
 pages:
   stage: deploy
   script:
     - mkdir .public
     - cp -r docs/* .public
+    - mkdir .public/packages-latest
+    - cp bananui-base_${PACKAGE_VERSION}_armhf.deb .public/packages-latest/bananui-base_${PACKAGE_VERSION}_armhf.deb
+    - cp device_startup_${PACKAGE_VERSION}_all.deb .public/packages-latest/device_startup_${PACKAGE_VERSION}_all.deb
     - mv .public public
   artifacts:
     paths:
       - public
   only:
-    - master
+    - stable
+packages:
+  stage: deploy
+  before_script:
+    - apt update && apt install curl
+  script:
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file bananui-base_${PACKAGE_VERSION}_armhf.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/bananui-base/${PACKAGE_VERSION}/bananui-base_${PACKAGE_VERSION}_armhf.deb'
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file device-startup_${PACKAGE_VERSION}_all.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/device-startup/${PACKAGE_VERSION}/bananui-base_${PACKAGE_VERSION}_all.deb'
+  dependencies:
+    - build
+  only:
+    - stable

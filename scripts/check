@@ -1,0 +1,66 @@
+#!/bin/sh
+	
+missing () {
+	echo "Missing program $1." 1>&2
+	if [ -n "$2" ]; then
+		echo "Please install $2." 1>&2
+	fi
+	exit 1
+}
+
+deps () {
+	which sed || missing sed
+	which abootimg || missing abootimg
+	which tar || missing tar
+	which debootstrap || missing debootstrap
+}
+gcc () {
+	gcc="arm-linux-gnueabihf-gcc"
+	cat <<END > test-gcc.c
+int main() {}
+END
+	if $gcc test-gcc.c -o /dev/null > /dev/null 2>&1; then
+		rm test-gcc.c
+		exit 0
+	fi
+	rm test-gcc.c
+	echo "Could not find a compiler $gcc."
+	exit 1
+}
+root () {
+	if [ "x`id -u`" != x0 ]; then
+		echo "You are not running as root."
+		exit 1
+	fi
+}
+packages () {
+	if which debuild >/dev/null 2>&1; then
+		for pkg in $@; do
+			if [ ! -d "$pkg" ]; then
+				PREBUILT="$PREBUILT $pkg"
+			fi
+		done
+		if [ -z "$PREBUILT" ]; then exit; fi
+		echo "The following packages will be downloaded as binaries:"
+		echo $PREBUILT
+	else
+		echo "Program debuild is missing. Packages will be downloaded" \
+			"as binaries from the Internet."
+		PREBUILT="$@"
+	fi
+	which wget || missing wget
+	for pkg in $PREBUILT; do
+		case "$pkg" in
+			device-startup)
+				arch=all
+				;;
+			*)
+				arch=armhf
+				;;
+		esac
+		PACKAGE_URL="https://affenull2345.gitlab.io/bananian/packages-latest/${pkg}_${VERSION}_${arch}.deb"
+		wget -c "$PACKAGE_URL"
+	done
+}
+
+$@

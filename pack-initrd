@@ -1,3 +1,0 @@
-#!/bin/sh
-
-(cd $2; find . -name '[^.]*' | cpio -R 0:0 -o -H newc | gzip) > $1

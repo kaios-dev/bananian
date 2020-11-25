@@ -1,0 +1,12 @@
+#!/bin/sh
+
+which qemu-arm-static || \
+	"`dirname $0`/check" missing qemu-arm-static qemu-user-static
+
+trap "umount debroot/dev debroot/proc debroot/sys" EXIT
+trap "exit 2" INT TERM
+
+mount -o bind /dev debroot/dev
+mount -o bind /proc debroot/proc
+mount -o bind /sys debroot/sys
+chroot debroot /bin/sh -c 'debootstrap/debootstrap --second-stage; cd /var/cache && dpkg -i *.deb && rm -f *.deb && adduser --gecos "Bananian User" user && adduser user sudo'
