@@ -7,7 +7,7 @@ build:
   script:
     - make debroot
     - make bananui-base_$(make getversion)_armhf.deb
-    - make device-startup_$(make getversion)_armhf.deb
+    - make device-startup_$(make getversion)_all.deb
     - echo "PACKAGE_VERSION=$(make getversion)" > version.env
   artifacts:
     reports:
