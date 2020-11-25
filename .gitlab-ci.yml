@@ -13,6 +13,8 @@ build:
     paths:
       - bananui-base_*_armhf.deb
       - device-startup_*_all.deb
+  only:
+    - stable
 pages:
   stage: deploy
   script:
