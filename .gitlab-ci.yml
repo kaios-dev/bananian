@@ -22,7 +22,7 @@ pages:
     - cp -r docs/* .public
     - mkdir .public/packages-latest
     - cp bananui-base_${PACKAGE_VERSION}_armhf.deb .public/packages-latest/bananui-base_${PACKAGE_VERSION}_armhf.deb
-    - cp device_startup_${PACKAGE_VERSION}_all.deb .public/packages-latest/device_startup_${PACKAGE_VERSION}_all.deb
+    - cp device-startup_${PACKAGE_VERSION}_all.deb .public/packages-latest/device_startup_${PACKAGE_VERSION}_all.deb
     - mv .public public
   artifacts:
     paths:
@@ -35,7 +35,7 @@ packages:
     - apt update && apt install curl
   script:
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file bananui-base_${PACKAGE_VERSION}_armhf.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/bananui-base/${PACKAGE_VERSION}/bananui-base_${PACKAGE_VERSION}_armhf.deb'
-    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file device-startup_${PACKAGE_VERSION}_all.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/device-startup/${PACKAGE_VERSION}/bananui-base_${PACKAGE_VERSION}_all.deb'
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file device-startup_${PACKAGE_VERSION}_all.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/device-startup/${PACKAGE_VERSION}/device-startup_${PACKAGE_VERSION}_all.deb'
   dependencies:
     - build
   only:
