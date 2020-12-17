@@ -63,7 +63,7 @@ copy-files: $(DEBS) modules
 	mkdir -p debroot/lib/modules/
 	rm -rf debroot/lib/modules/3.10.49-bananian+
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
-	cp -f $(DEBS) debroot/var/cache
+	cp -f $(DEBS) libbananui_$(VERSION)_armhf.deb debroot/var/cache
 
 ifeq ($(USE_QEMU),1)
 qemu-install: debroot copy-files
