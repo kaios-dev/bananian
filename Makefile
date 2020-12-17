@@ -18,7 +18,8 @@ all: check $(OUTPUTS)
 
 VERSION=$(shell git describe --tags --abbrev=0)
 export VERSION
-DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
+DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb \
+	libbananui_$(VERSION)_armhf.deb
 
 getversion:
 	@echo "$(VERSION)"
@@ -36,8 +37,8 @@ bananui-base_$(VERSION)_armhf.deb: bananui-base
 device-startup_$(VERSION)_all.deb: device-startup
 	(cd device-startup; debuild --no-lintian -us -uc -aarmhf)
 
-package-%: %
-	(cd $^; debuild --no-lintian -us -uc -aarmhf)
+libbananui_$(VERSION)_armhf.deb: libbananui
+	(cd libbananui; debuild --no-lintian -us -uc -aarmhf)
 
 initrd.img: ramdisk
 	rm -f $@
