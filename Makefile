@@ -20,6 +20,15 @@ VERSION=$(shell git describe --tags --abbrev=0)
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
+CFLAGS = -B "$$(pwd)/debroot/usr/lib/arm-linux-gnueabihf/" \
+	-B "$$(pwd)/libbananui/" \
+	-isystem "$$(pwd)/debroot/usr/include/arm-linux-gnueabihf/" \
+	-isystem "$$(pwd)/debroot/usr/include/" \
+	-isystem "$$(pwd)/sysincludes/" \
+	-Wl,-rpath-link="$$(pwd)/debroot/usr/lib/arm-linux-gnueabihf/"
+
+export CFLAGS
+
 getversion:
 	@echo "$(VERSION)"
 
@@ -52,6 +61,8 @@ debroot:
 	rm -rf debroot
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
 		buster debroot/ $(MIRROR) || rm -rf debroot
+	ln -s debroot/usr/lib/arm-linux-gnueabihf/libpam.so.0 \
+		debroot/usr/lib/arm-linux-gnueabihf/libpam.so
 
 copy-files: $(DEBS) modules
 	[ ! -f debroot/etc/wpa_supplicant.conf ] && \
