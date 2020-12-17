@@ -18,8 +18,7 @@ all: check $(OUTPUTS)
 
 VERSION=$(shell git describe --tags --abbrev=0)
 export VERSION
-DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb \
-	libbananui_$(VERSION)_armhf.deb
+DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
 getversion:
 	@echo "$(VERSION)"
@@ -30,12 +29,14 @@ check::
 	@scripts/check deps
 	@scripts/check gcc
 
-bananui-base_$(VERSION)_armhf.deb: bananui-base
+bananui-base_$(VERSION)_armhf.deb: bananui-base build-libbananui
 	echo "$(VERSION)" > bananui-base/.version
 	(cd bananui-base; debuild --no-lintian -us -uc -aarmhf)
 
 device-startup_$(VERSION)_all.deb: device-startup
 	(cd device-startup; debuild --no-lintian -us -uc -aarmhf)
+
+build-libbananui: libbananui_$(VERSION)_armhf.deb
 
 libbananui_$(VERSION)_armhf.deb: libbananui
 	(cd libbananui; debuild --no-lintian -us -uc -aarmhf)
