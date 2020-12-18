@@ -20,12 +20,12 @@ VERSION=$(shell git describe --tags --abbrev=0)
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
-CFLAGS = -B "$$(pwd)/debroot/usr/lib/arm-linux-gnueabihf/" \
+LDLAGS = -B "$$(pwd)/debroot/usr/lib/arm-linux-gnueabihf/" \
 	-B "$$(pwd)/libbananui/" \
-	-isystem "$$(pwd)/debroot/usr/include/arm-linux-gnueabihf/" \
-	-isystem "$$(pwd)/debroot/usr/include/" \
-	-isystem "$$(pwd)/sysincludes/" \
 	-Wl,-rpath-link="$$(pwd)/debroot/usr/lib/arm-linux-gnueabihf/"
+CFLAGS = -isystem "$$(pwd)/debroot/usr/include/arm-linux-gnueabihf/" \
+	-isystem "$$(pwd)/debroot/usr/include/" \
+	-isystem "$$(pwd)/sysincludes/"
 
 export CFLAGS
 
@@ -40,15 +40,18 @@ check::
 
 bananui-base_$(VERSION)_armhf.deb: bananui-base build-libbananui
 	echo "$(VERSION)" > bananui-base/.version
-	(cd bananui-base; debuild --no-lintian -us -uc -aarmhf)
+	(cd bananui-base; pdebuild --configfile ../pbuilderrc \
+		-- --host-arch armhf)
 
 device-startup_$(VERSION)_all.deb: device-startup
-	(cd device-startup; debuild --no-lintian -us -uc -aarmhf)
+	(cd device-startup; pdebuild --configfile ../pbuilderrc \
+		-- --host-arch armhf)
 
 build-libbananui: libbananui_$(VERSION)_armhf.deb
 
 libbananui_$(VERSION)_armhf.deb: libbananui
-	(cd libbananui; debuild --no-lintian -us -uc -aarmhf)
+	(cd libbananui; pdebuild --configfile ../pbuilderrc \
+		-- --host-arch armhf)
 
 initrd.img: ramdisk
 	rm -f $@
@@ -61,8 +64,6 @@ debroot:
 	rm -rf debroot
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
 		buster debroot/ $(MIRROR) || rm -rf debroot
-	ln -s debroot/usr/lib/arm-linux-gnueabihf/libpam.so.0 \
-		debroot/usr/lib/arm-linux-gnueabihf/libpam.so
 
 copy-files: $(DEBS) modules
 	[ ! -f debroot/etc/wpa_supplicant.conf ] && \
