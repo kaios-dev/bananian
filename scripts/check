@@ -22,9 +22,15 @@ root () {
 packages () {
 	if which pdebuild >/dev/null 2>&1; then
 		for pkg in $@; do
-			if [ ! -d "$pkg" ]; then
-				PREBUILT="$PREBUILT $pkg"
-			fi
+			case "$pkg" in
+				*-dev)
+					;;
+				*)
+					if [ ! -d "$pkg" ]; then
+						PREBUILT="$PREBUILT $pkg"
+					fi
+					;;
+			esac
 		done
 		if [ -z "$PREBUILT" ]; then exit; fi
 		echo "The following packages will be downloaded as binaries:"
