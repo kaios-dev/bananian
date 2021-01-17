@@ -62,7 +62,7 @@ libbananui-debs: libbananui0_$(VERSION)_armhf.deb
 libbananui0_$(VERSION)_armhf.deb: libbananui
 	if [ ! -f libbananui/.prebuilt ]; then \
 		(cd libbananui; pdebuild --configfile ../pbuilderrc \
-			-- --host-arch armhf; \
+			-- --host-arch armhf) \
 	fi
 
 initrd.img: ramdisk
