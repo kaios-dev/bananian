@@ -57,7 +57,7 @@ libbananui-debs: libbananui0_$(VERSION)_armhf.deb
 	mkdir libbananui-debs; cp ../libbananui0*.deb \
 		libbananui-debs/; \
 	dpkg-scanpackages libbananui-debs /dev/null > \
-		libbananui-debs/Packages);
+		libbananui-debs/Packages;
 
 libbananui0_$(VERSION)_armhf.deb: libbananui
 	if [ ! -f libbananui/.prebuilt ]; then \
