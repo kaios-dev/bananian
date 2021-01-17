@@ -53,7 +53,7 @@ device-startup_$(VERSION)_all.deb: device-startup
 build-libbananui: libbananui0_$(VERSION)_armhf.deb
 
 libbananui0_$(VERSION)_armhf.deb: libbananui
-	if [ ! -f bananui-base/.prebuilt ]; then \
+	if [ ! -f libbananui/.prebuilt ]; then \
 		(cd libbananui; pdebuild --configfile ../pbuilderrc \
 		-- --host-arch armhf); \
 	fi
