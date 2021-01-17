@@ -43,6 +43,7 @@ bananui-base_$(VERSION)_armhf.deb: bananui-base libbananui-debs
 	if [ ! -f bananui-base/.prebuilt ]; then \
 		(cd bananui-base; pdebuild --configfile ../pbuilderrc \
 		-- --host-arch armhf \
+		--bindmounts "$$(pwd)/../libbananui-debs" \
 		--override-config --othermirror \
 		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./"); \
 		cp /var/cache/pbuilder/result/$@ .; \
