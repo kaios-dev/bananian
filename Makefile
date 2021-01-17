@@ -42,9 +42,9 @@ bananui-base_$(VERSION)_armhf.deb: bananui-base libbananui-debs
 	echo "$(VERSION)" > bananui-base/.version
 	if [ ! -f bananui-base/.prebuilt ]; then \
 		(cd bananui-base; pdebuild --configfile ../pbuilderrc \
+		-- --host-arch armhf \
 		--override-config --othermirror \
-		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./" \
-		-- --host-arch armhf); \
+		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./") \
 	fi
 
 device-startup_$(VERSION)_all.deb: device-startup
