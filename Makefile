@@ -82,11 +82,12 @@ debroot:
 		buster debroot/ $(MIRROR) || rm -rf debroot
 
 copy-files: $(DEBS) modules
-	[ ! -f debroot/etc/wpa_supplicant.conf ] && \
+	if [ ! -f debroot/etc/wpa_supplicant.conf ]; then \
 		echo 'network={' >> debroot/etc/wpa_supplicant.conf && \
 		echo '    ssid="SSID"' >> debroot/etc/wpa_supplicant.conf && \
 		echo '    psk="PSK"' >> debroot/etc/wpa_supplicant.conf && \
-		echo '}' >> debroot/etc/wpa_supplicant.conf
+		echo '}' >> debroot/etc/wpa_supplicant.conf; \
+	fi
 	editor debroot/etc/wpa_supplicant.conf
 	mkdir -p debroot/lib/modules/
 	rm -rf debroot/lib/modules/3.10.49-bananian+
