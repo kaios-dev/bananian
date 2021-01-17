@@ -1,9 +1,10 @@
 build:
   stage: build
   before_script:
-    - apt update && apt install cpio abootimg debootstrap devscripts crossbuild-essential-armhf build-essential -y
+    - apt update && apt install cpio abootimg debootstrap pbuilder -y
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/bananui-base
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/device-startup
+    - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/libbananui
   script:
     - make
     - echo "PACKAGE_VERSION=$(make getversion)" > version.env
@@ -13,27 +14,31 @@ build:
     paths:
       - bananui-base_*_armhf.deb
       - device-startup_*_all.deb
+      - libbananui0_*_armhf.deb
 pages:
   stage: deploy
   script:
     - mkdir .public
     - cp -r docs/* .public
     - mkdir .public/packages-latest
-    - cp bananui-base_${PACKAGE_VERSION}_armhf.deb .public/packages-latest/bananui-base_${PACKAGE_VERSION}_armhf.deb
-    - cp device_startup_${PACKAGE_VERSION}_all.deb .public/packages-latest/device_startup_${PACKAGE_VERSION}_all.deb
+    - cp bananui-base_${PACKAGE_VERSION}_armhf.deb .public/packages-latest/
+    - cp device_startup_${PACKAGE_VERSION}_all.deb .public/packages-latest/
+    - cp libbananui0_${PACKAGE_VERSION}_armhf.deb .public/packages-latest/
     - mv .public public
   artifacts:
     paths:
       - public
   only:
     - stable
+
 packages:
   stage: deploy
   before_script:
     - apt update && apt install curl
   script:
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file bananui-base_${PACKAGE_VERSION}_armhf.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/bananui-base/${PACKAGE_VERSION}/bananui-base_${PACKAGE_VERSION}_armhf.deb'
-    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file device-startup_${PACKAGE_VERSION}_all.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/device-startup/${PACKAGE_VERSION}/bananui-base_${PACKAGE_VERSION}_all.deb'
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file device-startup_${PACKAGE_VERSION}_all.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/device-startup/${PACKAGE_VERSION}/device-startup_${PACKAGE_VERSION}_all.deb'
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file libbananui0_${PACKAGE_VERSION}_armhf.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/libbananui0/${PACKAGE_VERSION}/libbananui0_${PACKAGE_VERSION}_armhf.deb'
   dependencies:
     - build
   only:

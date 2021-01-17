@@ -16,7 +16,7 @@ DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_
 
 all: check $(OUTPUTS)
 
-VERSION=0.1.3
+VERSION=0.2
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
