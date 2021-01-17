@@ -57,9 +57,8 @@ device-startup_$(VERSION)_all.deb: device-startup
 
 libbananui-debs: libbananui0_$(VERSION)_armhf.deb
 	(mkdir -p libbananui-debs; cd libbananui-debs; \
-	cp ../libbananui0*_$(VERSION)_armhf.deb libbananui-debs/; \
-	dpkg-scanpackages libbananui-debs /dev/null > \
-		libbananui-debs/Packages)
+	cp ../libbananui0*_$(VERSION)_armhf.deb .; \
+	dpkg-scanpackages . /dev/null > Packages)
 
 libbananui0_$(VERSION)_armhf.deb: libbananui
 	if [ ! -f libbananui/.prebuilt ]; then \
