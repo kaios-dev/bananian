@@ -44,25 +44,29 @@ bananui-base_$(VERSION)_armhf.deb: bananui-base libbananui-debs
 		(cd bananui-base; pdebuild --configfile ../pbuilderrc \
 		-- --host-arch armhf \
 		--override-config --othermirror \
-		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./") \
+		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./"); \
+		cp /var/cache/pbuilder/result/$@ .; \
 	fi
 
 device-startup_$(VERSION)_all.deb: device-startup
 	if [ ! -f device-startup/.prebuilt ]; then \
 		(cd device-startup; pdebuild --configfile ../pbuilderrc \
 		-- --host-arch armhf); \
+		cp /var/cache/pbuilder/result/$@ .; \
 	fi
 
 libbananui-debs: libbananui0_$(VERSION)_armhf.deb
-	mkdir libbananui-debs; cp ../libbananui0*_$(VERSION)_armhf.deb \
-		libbananui-debs/; \
+	(mkdir libbananui-debs; cd libbananui-debs; \
+	cp ../libbananui0*_$(VERSION)_armhf.deb libbananui-debs/; \
 	dpkg-scanpackages libbananui-debs /dev/null > \
-		libbananui-debs/Packages;
+		libbananui-debs/Packages)
 
 libbananui0_$(VERSION)_armhf.deb: libbananui
 	if [ ! -f libbananui/.prebuilt ]; then \
 		(cd libbananui; pdebuild --configfile ../pbuilderrc \
-			-- --host-arch armhf) \
+			-- --host-arch armhf); \
+		cp /var/cache/pbuilder/result/$@ .; \
+		cp /var/cache/pbuilder/result/libbananui0-dev_$(VERSION)_armhf.deb .; \
 	fi
 
 initrd.img: ramdisk
