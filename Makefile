@@ -16,7 +16,7 @@ DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_
 
 all: check $(OUTPUTS)
 
-VERSION=$(shell git describe --tags --abbrev=0)
+VERSION=0.1.3
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
@@ -36,22 +36,27 @@ check::
 	@scripts/check packages bananui-base device-startup
 	@scripts/check root
 	@scripts/check deps
-	@scripts/check gcc
 
 bananui-base_$(VERSION)_armhf.deb: bananui-base build-libbananui
 	echo "$(VERSION)" > bananui-base/.version
-	(cd bananui-base; pdebuild --configfile ../pbuilderrc \
-		-- --host-arch armhf)
+	if [ ! -f bananui-base/.prebuilt ]; then \
+		(cd bananui-base; pdebuild --configfile ../pbuilderrc \
+		-- --host-arch armhf); \
+	fi
 
 device-startup_$(VERSION)_all.deb: device-startup
-	(cd device-startup; pdebuild --configfile ../pbuilderrc \
-		-- --host-arch armhf)
+	if [ ! -f device-startup/.prebuilt ]; then \
+		(cd device-startup; pdebuild --configfile ../pbuilderrc \
+		-- --host-arch armhf); \
+	fi
 
 build-libbananui: libbananui_$(VERSION)_armhf.deb
 
 libbananui_$(VERSION)_armhf.deb: libbananui
-	(cd libbananui; pdebuild --configfile ../pbuilderrc \
-		-- --host-arch armhf)
+	if [ ! -f bananui-base/.prebuilt ]; then \
+		(cd libbananui; pdebuild --configfile ../pbuilderrc \
+		-- --host-arch armhf); \
+	fi
 
 initrd.img: ramdisk
 	rm -f $@
