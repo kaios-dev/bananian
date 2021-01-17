@@ -14,7 +14,8 @@ build:
     paths:
       - bananui-base_*_armhf.deb
       - device-startup_*_all.deb
-      - libbananui0_*_armhf.deb
+      # There is no underscore before the * to include libbananui0-dev
+      - libbananui0*_armhf.deb
 pages:
   stage: deploy
   script:
@@ -23,11 +24,13 @@ pages:
     - mkdir .public/packages-latest
     - cp bananui-base_${PACKAGE_VERSION}_armhf.deb .public/packages-latest/
     - cp device_startup_${PACKAGE_VERSION}_all.deb .public/packages-latest/
-    - cp libbananui0_${PACKAGE_VERSION}_armhf.deb .public/packages-latest/
+    - cp libbananui0*${PACKAGE_VERSION}_armhf.deb .public/packages-latest/
     - mv .public public
   artifacts:
     paths:
       - public
+  dependencies:
+    - build
   only:
     - stable
 
@@ -39,6 +42,7 @@ packages:
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file bananui-base_${PACKAGE_VERSION}_armhf.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/bananui-base/${PACKAGE_VERSION}/bananui-base_${PACKAGE_VERSION}_armhf.deb'
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file device-startup_${PACKAGE_VERSION}_all.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/device-startup/${PACKAGE_VERSION}/device-startup_${PACKAGE_VERSION}_all.deb'
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file libbananui0_${PACKAGE_VERSION}_armhf.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/libbananui0/${PACKAGE_VERSION}/libbananui0_${PACKAGE_VERSION}_armhf.deb'
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file libbananui0-dev_${PACKAGE_VERSION}_armhf.deb ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/libbananui0-dev/${PACKAGE_VERSION}/libbananui0-dev_${PACKAGE_VERSION}_armhf.deb'
   dependencies:
     - build
   only:

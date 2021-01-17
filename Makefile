@@ -33,14 +33,17 @@ getversion:
 	@echo "$(VERSION)"
 
 check::
-	@scripts/check packages bananui-base device-startup
+	@scripts/check packages bananui-base device-startup libbananui \
+		libbananui-dev
 	@scripts/check root
 	@scripts/check deps
 
-bananui-base_$(VERSION)_armhf.deb: bananui-base build-libbananui
+bananui-base_$(VERSION)_armhf.deb: bananui-base libbananui-debs
 	echo "$(VERSION)" > bananui-base/.version
 	if [ ! -f bananui-base/.prebuilt ]; then \
 		(cd bananui-base; pdebuild --configfile ../pbuilderrc \
+		--override-config --othermirror \
+		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./" \
 		-- --host-arch armhf); \
 	fi
 
@@ -50,12 +53,16 @@ device-startup_$(VERSION)_all.deb: device-startup
 		-- --host-arch armhf); \
 	fi
 
-build-libbananui: libbananui0_$(VERSION)_armhf.deb
+libbananui-debs: libbananui0_$(VERSION)_armhf.deb
+	mkdir libbananui-debs; cp ../libbananui0*.deb \
+		libbananui-debs/; \
+	dpkg-scanpackages libbananui-debs /dev/null > \
+		libbananui-debs/Packages);
 
 libbananui0_$(VERSION)_armhf.deb: libbananui
 	if [ ! -f libbananui/.prebuilt ]; then \
 		(cd libbananui; pdebuild --configfile ../pbuilderrc \
-		-- --host-arch armhf); \
+			-- --host-arch armhf; \
 	fi
 
 initrd.img: ramdisk

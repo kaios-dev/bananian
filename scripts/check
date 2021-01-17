@@ -46,8 +46,14 @@ packages () {
 		esac
 		PACKAGE_URL="https://affenull2345.gitlab.io/bananian/packages-latest/${pkg}_${VERSION}_${arch}.deb"
 		wget -c "$PACKAGE_URL"
-		mkdir "$pkg"
-		touch "$pkg/.prebuilt"
+		case "$pkg" in
+			*-dev)
+				;;
+			*)
+				mkdir "$pkg"
+				touch "$pkg/.prebuilt"
+				;;
+		esac
 	done
 }
 
