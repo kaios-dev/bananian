@@ -111,4 +111,4 @@ install-to-device: all
 		/data/bootstrap-debian.sh
 
 clean:
-	rm -rf *.deb $(OUTPUTS)
+	rm -rf *.deb $(OUTPUTS) libbananui-debs
