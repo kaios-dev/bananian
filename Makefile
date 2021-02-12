@@ -80,7 +80,7 @@ boot.img: initrd.img zImage bootimg.cfg
 debroot:
 	rm -rf debroot
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
-		buster debroot/ $(MIRROR) || rm -rf debroot
+		--merged-usr buster debroot/ $(MIRROR) || rm -rf debroot
 
 copy-files: $(DEBS) modules
 	if [ ! -f debroot/etc/wpa_supplicant.conf ]; then \
