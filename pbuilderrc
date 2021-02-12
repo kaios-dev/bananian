@@ -1,0 +1,2 @@
+PBUILDERSATISFYDEPENDSCMD="/usr/lib/pbuilder/pbuilder-satisfydepends-apt"
+DISTRIBUTION="buster"

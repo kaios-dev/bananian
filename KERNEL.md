@@ -50,8 +50,9 @@ Compile kernel:
     $ make menuconfig ARCH=arm
       < add/remove some configuration options >
     $ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+    $ cat dtb arch/arm/boot/zImage > zImage
 
-The kernel zImage is located in arch/arm/boot/zImage-dtb.
+The zImage file is the kernel.
 Since this is the official stock kernel and the configuration is based on
 /proc/config.gz on the phone, this kernel should work with KaiOS.
 Note that you have to replace the modules in /system/lib/modules if you want to

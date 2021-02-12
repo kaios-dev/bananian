@@ -12,32 +12,63 @@ else
 ONDEV_BOOTSTRAP_CMD = adb shell /data/bootstrap-debian.sh
 USE_QEMU_INSTALL =
 endif
-DEFAULT_PACKAGES = openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
+DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,libgraphicsmagick-q16-3,openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
+MIRROR = http://deb.debian.org/debian
 
 all: check $(OUTPUTS)
 
-VERSION=$(shell git describe --tags --abbrev=0)
+VERSION=0.2
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
+
+LDLAGS = -B "$$(pwd)/debroot/usr/lib/arm-linux-gnueabihf/" \
+	-B "$$(pwd)/libbananui/" \
+	-Wl,-rpath-link="$$(pwd)/debroot/usr/lib/arm-linux-gnueabihf/"
+CFLAGS = -isystem "$$(pwd)/debroot/usr/include/arm-linux-gnueabihf/" \
+	-isystem "$$(pwd)/debroot/usr/include/" \
+	-isystem "$$(pwd)/sysincludes/"
+
+export CFLAGS
 
 getversion:
 	@echo "$(VERSION)"
 
 check::
-	@scripts/check packages bananui-base device-startup
+	@scripts/check packages bananui-base device-startup libbananui \
+		libbananui-dev
 	@scripts/check root
 	@scripts/check deps
-	@scripts/check gcc
 
-bananui-base_$(VERSION)_armhf.deb: bananui-base
+bananui-base_$(VERSION)_armhf.deb: bananui-base libbananui-debs
 	echo "$(VERSION)" > bananui-base/.version
-	(cd bananui-base; debuild --no-lintian -us -uc -aarmhf)
+	if [ ! -f bananui-base/.prebuilt ]; then \
+		(cd bananui-base; pdebuild --configfile ../pbuilderrc \
+		-- --host-arch armhf \
+		--bindmounts "$$(pwd)/../libbananui-debs" \
+		--override-config --othermirror \
+		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./"); \
+		cp /var/cache/pbuilder/result/$@ .; \
+	fi
 
 device-startup_$(VERSION)_all.deb: device-startup
-	(cd device-startup; debuild --no-lintian -us -uc -aarmhf)
+	if [ ! -f device-startup/.prebuilt ]; then \
+		(cd device-startup; pdebuild --configfile ../pbuilderrc \
+		-- --host-arch armhf); \
+		cp /var/cache/pbuilder/result/$@ .; \
+	fi
 
-package-%: %
-	(cd $^; debuild --no-lintian -us -uc -aarmhf)
+libbananui-debs: libbananui0_$(VERSION)_armhf.deb
+	(mkdir -p libbananui-debs; cd libbananui-debs; \
+	cp ../libbananui0*_$(VERSION)_armhf.deb .; \
+	dpkg-scanpackages . /dev/null > Packages)
+
+libbananui0_$(VERSION)_armhf.deb: libbananui
+	if [ ! -f libbananui/.prebuilt ]; then \
+		(cd libbananui; pdebuild --configfile ../pbuilderrc \
+			-- --host-arch armhf); \
+		cp /var/cache/pbuilder/result/$@ .; \
+		cp /var/cache/pbuilder/result/libbananui0-dev_$(VERSION)_armhf.deb .; \
+	fi
 
 initrd.img: ramdisk
 	rm -f $@
@@ -49,19 +80,20 @@ boot.img: initrd.img zImage bootimg.cfg
 debroot:
 	rm -rf debroot
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
-		buster debroot/ $(MIRROR) || rm -rf debroot
+		--merged-usr buster debroot/ $(MIRROR) || rm -rf debroot
 
 copy-files: $(DEBS) modules
-	[ ! -f debroot/etc/wpa_supplicant.conf ] && \
+	if [ ! -f debroot/etc/wpa_supplicant.conf ]; then \
 		echo 'network={' >> debroot/etc/wpa_supplicant.conf && \
 		echo '    ssid="SSID"' >> debroot/etc/wpa_supplicant.conf && \
 		echo '    psk="PSK"' >> debroot/etc/wpa_supplicant.conf && \
-		echo '}' >> debroot/etc/wpa_supplicant.conf
+		echo '}' >> debroot/etc/wpa_supplicant.conf; \
+	fi
 	editor debroot/etc/wpa_supplicant.conf
 	mkdir -p debroot/lib/modules/
 	rm -rf debroot/lib/modules/3.10.49-bananian+
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
-	cp -f $(DEBS) debroot/var/cache
+	cp -f $(DEBS) libbananui0_$(VERSION)_armhf.deb debroot/var/cache
 
 ifeq ($(USE_QEMU),1)
 qemu-install: debroot copy-files
@@ -85,4 +117,4 @@ install-to-device: all
 		/data/bootstrap-debian.sh
 
 clean:
-	rm -rf *.deb $(OUTPUTS)
+	rm -rf *.deb $(OUTPUTS) libbananui-debs

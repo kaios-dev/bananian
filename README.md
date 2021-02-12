@@ -6,7 +6,8 @@ probably be many errors on non-Debian-based GNU/Linux distros.
 To build the subpackages, clone the package repositories:
 
     $ git clone https://gitlab.com/affenull2345/bananui-base
-    $ git clone https://gitlab.com/affenull2345/device-startup
+    $ git clone https://gitlab.com/affenull2345/device-startup-8110
+    $ git clone https://gitlab.com/affenull2345/libbananui
 
 If you don't do this, the build system will try downloading prebuilt versions
 of the packages. It may fail if the version is too old. Older versions can be
@@ -15,9 +16,16 @@ found at:
  * (source) <https://gitlab.com/affenull2345/bananui-base/-/releases> and
    <https://gitlab.com/affenull2345/device-startup/-/releases>
 
+Then install pbuilder:
+
+    # apt install pbuilder
+
+and set up the build chroot:
+
+    # pbuilder create --distribution buster
+
 Then run make as root (Please make a dry-run first to prove that nothing
-malicious happens). If it complains about missing compilers, make sure that
-the package crossbuild-essential-armhf is installed.
+malicious happens).
 
 #### QEMU mode
 QEMU mode runs debootstrap --second-stage and various other setup commands in
@@ -58,7 +66,7 @@ following commands on your phone:
     cd debroot
     busybox tar xvf /path/to/debroot.tar
      (lots of output)
-    (The following commands before 'exit' are only needed if QEMU mode was
+    (The following commands until 'exit' are only needed if QEMU mode was
     disabled.)
     mount -o bind /dev dev
     mount -o bind /sys sys
@@ -84,7 +92,8 @@ the default value 'bananian'.
 If you use the QEMU bootstrap method, the password will be set at build time.
 
 ### Shell access
-To get shell access to your phone, find out its IP address via your router. Then:
+To get shell access to your phone, find out its IP address via your router.
+Then execute:
 
     $ ssh user@X.X.X.X # Where X.X.X.X is your the phone's IP address
 
