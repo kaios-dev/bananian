@@ -1,9 +1,11 @@
-image: "debian:stretch"
+image: "debian:buster"
 
 build:
   stage: build
   before_script:
     - apt update && apt install cpio abootimg debootstrap pbuilder -y
+    - mv /usr/share/debootstrap/functions /tmp/debootstrap-functions
+    - sed 's/^.*umount "$TARGET/proc" 2>/dev/null.*$//' /tmp/debootstrap-functions > /usr/share/debootstrap/functions
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/bananui-base
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/device-startup
     - git clone $CI_SERVER_URL/$CI_PROJECT_NAMESPACE/libbananui
