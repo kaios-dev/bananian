@@ -34,8 +34,8 @@ getversion:
 	@echo "$(VERSION)"
 
 check::
-	@scripts/check packages bananui-base device-startup libbananui \
-		libbananui-dev
+	@scripts/check packages bananui-base device-startup libbananui0 \
+		libbananui0-dev
 	@scripts/check root
 	@scripts/check deps
 
