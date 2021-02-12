@@ -16,6 +16,8 @@ build:
       - device-startup_*_all.deb
       # There is no underscore before the * to include libbananui0-dev
       - libbananui0*_armhf.deb
+  only:
+    - stable
 pages:
   stage: deploy
   script:
