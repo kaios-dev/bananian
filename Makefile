@@ -13,6 +13,7 @@ ONDEV_BOOTSTRAP_CMD = adb shell /data/bootstrap-debian.sh
 USE_QEMU_INSTALL =
 endif
 DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,libgraphicsmagick-q16-3,openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
+MIRROR = http://deb.debian.org/debian
 
 all: check $(OUTPUTS)
 
