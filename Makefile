@@ -21,14 +21,6 @@ VERSION=0.2
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
-LDLAGS = -B "$$(pwd)/debroot/usr/lib/arm-linux-gnueabihf/" \
-	-B "$$(pwd)/libbananui/" \
-	-Wl,-rpath-link="$$(pwd)/debroot/usr/lib/arm-linux-gnueabihf/"
-CFLAGS = -isystem "$$(pwd)/debroot/usr/include/arm-linux-gnueabihf/" \
-	-isystem "$$(pwd)/debroot/usr/include/" \
-	-isystem "$$(pwd)/sysincludes/"
-
-export CFLAGS
 
 getversion:
 	@echo "$(VERSION)"
@@ -43,18 +35,16 @@ bananui-base_$(VERSION)_armhf.deb: bananui-base libbananui-debs
 	echo "$(VERSION)" > bananui-base/.version
 	if [ ! -f bananui-base/.prebuilt ]; then \
 		(cd bananui-base; pdebuild --configfile ../pbuilderrc \
-		-- --host-arch armhf \
+		--buildresult .. -- --host-arch armhf \
 		--bindmounts "$$(pwd)/../libbananui-debs" \
 		--override-config --othermirror \
 		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./"); \
-		cp /var/cache/pbuilder/result/$@ .; \
 	fi
 
 device-startup_$(VERSION)_all.deb: device-startup
 	if [ ! -f device-startup/.prebuilt ]; then \
 		(cd device-startup; pdebuild --configfile ../pbuilderrc \
-		-- --host-arch armhf); \
-		cp /var/cache/pbuilder/result/$@ .; \
+		--buildresult .. -- --host-arch armhf); \
 	fi
 
 libbananui-debs: libbananui0_$(VERSION)_armhf.deb
@@ -65,9 +55,7 @@ libbananui-debs: libbananui0_$(VERSION)_armhf.deb
 libbananui0_$(VERSION)_armhf.deb: libbananui
 	if [ ! -f libbananui/.prebuilt ]; then \
 		(cd libbananui; pdebuild --configfile ../pbuilderrc \
-			-- --host-arch armhf); \
-		cp /var/cache/pbuilder/result/$@ .; \
-		cp /var/cache/pbuilder/result/libbananui0-dev_$(VERSION)_armhf.deb .; \
+		--buildresult .. -- --host-arch armhf); \
 	fi
 
 initrd.img: ramdisk
@@ -94,6 +82,23 @@ copy-files: $(DEBS) modules
 	rm -rf debroot/lib/modules/3.10.49-bananian+
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
 	cp -f $(DEBS) libbananui0_$(VERSION)_armhf.deb debroot/var/cache
+
+ifeq ($(PACKAGE_PATH),)
+package:
+	@echo "Please set the PACKAGE_PATH variable!"; exit 1
+else
+package: libbananui-debs
+	@echo "Building package..."
+	TMPDEBS=$$(mktemp -d /tmp/libbananui-debs.XXXXXXXX) && \
+	cp -r libbananui-debs/* "$$TMPDEBS" && \
+	cd '$(PACKAGE_PATH)' && \
+	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
+		--buildresult '$(CURDIR)' -- --host-arch armhf \
+		--bindmounts "$$TMPDEBS" \
+		--override-config --othermirror \
+		"deb [trusted=yes] file://$$TMPDEBS ./"; \
+	rm -rf "$$TMPDEBS"
+endif
 
 ifeq ($(USE_QEMU),1)
 qemu-install: debroot copy-files
