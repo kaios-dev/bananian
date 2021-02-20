@@ -6,7 +6,7 @@ probably be many errors on non-Debian-based GNU/Linux distros.
 To build the subpackages, clone the package repositories:
 
     $ git clone https://gitlab.com/affenull2345/bananui-base
-    $ git clone https://gitlab.com/affenull2345/device-startup-8110
+    $ git clone https://gitlab.com/affenull2345/device-startup-8110 device-startup
     $ git clone https://gitlab.com/affenull2345/libbananui
 
 If you don't do this, the build system will try downloading prebuilt versions
