@@ -1,4 +1,5 @@
 # Bananian - Debian for the Nokia 8110 4G and a UI
+![Screenshot](screenshot.jpg)
 ### Building
 NOTE: This has been tested only on Debian GNU/Linux. There will
 probably be many errors on non-Debian-based GNU/Linux distros.
