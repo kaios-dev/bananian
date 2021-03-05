@@ -17,7 +17,7 @@ MIRROR = http://deb.debian.org/debian
 
 all: check $(OUTPUTS)
 
-VERSION=0.2
+VERSION=0.2.1
 export VERSION
 DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
 
