@@ -39,7 +39,7 @@ check:
 	#@scripts/check root
 	@scripts/check deps
 
-libbananui-debs: download
+libbananui-debs:
 	(mkdir -p libbananui-debs; cd libbananui-debs; \
 	cp ../libbananui0*_$(VERSION)_armhf.deb .; \
 	dpkg-scanpackages . /dev/null > Packages)
