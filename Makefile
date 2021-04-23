@@ -15,48 +15,32 @@ endif
 DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,libgraphicsmagick-q16-3,openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
 MIRROR = http://deb.debian.org/debian
 
-all: check $(OUTPUTS)
+.PHONY: all
+all: .config check packages $(OUTPUTS)
 
 VERSION=0.2.1
 export VERSION
-DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
+RELEASE=0
+export RELEASE
 
+.config:
+	@scripts/configure
+
+.PHONY: config
+config:
+	@scripts/configure
 
 getversion:
 	@echo "$(VERSION)"
 
 check::
-	@scripts/check packages bananui-base device-startup libbananui0 \
-		libbananui0-dev
-	@scripts/check root
+	#@scripts/check root
 	@scripts/check deps
 
-bananui-base_$(VERSION)_armhf.deb: bananui-base libbananui-debs
-	echo "$(VERSION)" > bananui-base/.version
-	if [ ! -f bananui-base/.prebuilt ]; then \
-		(cd bananui-base; pdebuild --configfile ../pbuilderrc \
-		--buildresult .. -- --host-arch armhf \
-		--bindmounts "$$(pwd)/../libbananui-debs" \
-		--override-config --othermirror \
-		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./"); \
-	fi
-
-device-startup_$(VERSION)_all.deb: device-startup
-	if [ ! -f device-startup/.prebuilt ]; then \
-		(cd device-startup; pdebuild --configfile ../pbuilderrc \
-		--buildresult .. -- --host-arch armhf); \
-	fi
-
-libbananui-debs: libbananui0_$(VERSION)_armhf.deb
+libbananui-debs: download
 	(mkdir -p libbananui-debs; cd libbananui-debs; \
 	cp ../libbananui0*_$(VERSION)_armhf.deb .; \
 	dpkg-scanpackages . /dev/null > Packages)
-
-libbananui0_$(VERSION)_armhf.deb: libbananui
-	if [ ! -f libbananui/.prebuilt ]; then \
-		(cd libbananui; pdebuild --configfile ../pbuilderrc \
-		--buildresult .. -- --host-arch armhf); \
-	fi
 
 initrd.img: ramdisk
 	rm -f $@
@@ -68,9 +52,16 @@ boot.img: initrd.img zImage bootimg.cfg
 debroot:
 	rm -rf debroot
 	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
-		--merged-usr buster debroot/ $(MIRROR) || rm -rf debroot
+		--merged-usr buster debroot/ $(MIRROR) || \
+		(rm -rf debroot && false)
 
-copy-files: $(DEBS) modules
+download: .config
+	@scripts/download-packages
+
+packages: download
+	@scripts/build-packages
+
+copy-files: packages modules
 	if [ ! -f debroot/etc/wpa_supplicant.conf ]; then \
 		echo 'network={' >> debroot/etc/wpa_supplicant.conf && \
 		echo '    ssid="SSID"' >> debroot/etc/wpa_supplicant.conf && \
@@ -81,11 +72,18 @@ copy-files: $(DEBS) modules
 	mkdir -p debroot/lib/modules/
 	rm -rf debroot/lib/modules/3.10.49-bananian+
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
-	cp -f $(DEBS) libbananui0_$(VERSION)_armhf.deb debroot/var/cache
+	cp -f $$(cat .packages) libbananui0_$(VERSION)_armhf.deb debroot/var/cache
 
 ifeq ($(PACKAGE_PATH),)
 package:
 	@echo "Please set the PACKAGE_PATH variable!"; exit 1
+else
+ifeq ($(NO_LIBBANANUI_DEPEND),1)
+package:
+	@echo "Building package..."
+	cd '$(PACKAGE_PATH)' && \
+	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
+		--buildresult '$(CURDIR)' -- --host-arch armhf
 else
 package: libbananui-debs
 	@echo "Building package..."
@@ -98,6 +96,7 @@ package: libbananui-debs
 		--override-config --othermirror \
 		"deb [trusted=yes] file://$$TMPDEBS ./"; \
 	rm -rf "$$TMPDEBS"
+endif
 endif
 
 ifeq ($(USE_QEMU),1)

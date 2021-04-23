@@ -12,59 +12,13 @@ deps () {
 	which abootimg || missing abootimg
 	which tar || missing tar
 	which debootstrap || missing debootstrap
+	which pdebuild || warn "Program pdebuild is required for building from source."
 }
 root () {
 	if [ "x`id -u`" != x0 ]; then
 		echo "You are not running as root."
 		exit 1
 	fi
-}
-packages () {
-	if which pdebuild >/dev/null 2>&1; then
-		for pkg in $@; do
-			case "$pkg" in
-				*-dev)
-					;;
-				*)
-					if [ ! -d "$pkg" ]; then
-						PREBUILT="$PREBUILT $pkg"
-					fi
-					;;
-			esac
-		done
-		if [ -z "$PREBUILT" ]; then exit; fi
-		echo "The following packages will be downloaded as binaries:"
-		echo $PREBUILT
-	else
-		echo "Program pdebuild is missing. Packages will be downloaded"\
-			"as binaries from the Internet."
-		PREBUILT="$@"
-	fi
-	which wget || missing wget
-	for pkg in $PREBUILT; do
-		case "$pkg" in
-			device-startup)
-				arch=all
-				;;
-			*)
-				arch=armhf
-				;;
-		esac
-		PACKAGE_URL="https://affenull2345.gitlab.io/bananian/packages-latest/${pkg}_${VERSION}_${arch}.deb"
-		wget -c "$PACKAGE_URL"
-		case "$pkg" in
-			*-dev)
-				;;
-			libbananui0)
-				mkdir libbananui
-				touch libbananui/.prebuilt
-				;;
-			*)
-				mkdir "$pkg"
-				touch "$pkg/.prebuilt"
-				;;
-		esac
-	done
 }
 
 $@

@@ -1,0 +1,35 @@
+#!/bin/sh
+
+set -e
+
+branch=$(git branch --show-current)
+if [ -z "$branch" ]; then branch=stable; fi
+
+while read firstpackage packages; do
+	package_from_source=0
+	while read package_build; do
+		packagename_build=$(echo "$package_build" | cut -f 1)
+		packagesource=$(echo "$package_build" | cut -f 2)
+		packagefile_build=$(echo "$package_build" | cut -f 3)
+		if [ "$packagefile_build" = "$firstpackage" ]; then
+			package_from_source=1
+			if [ -d "$packagename_build" ]; then
+				if [ -d "$packagename_build/.git" ]; then
+					(cd "$packagename_build" && git pull)
+				fi
+			else
+				git clone "$packagesource" "$packagename_build" -b "$branch"
+			fi
+		fi
+	done < .packages-build
+	if [ "x$package_from_source" != "x1" ]; then
+		if [ "x$RELEASE" != "x1" ]; then
+			echo "==>> ERROR: This is a development version. No pre-built packages are available." 1>&2
+			echo "===>> Please reconfigure: make config" 1>&2
+			exit 1
+		fi
+		for package in $firstpackage $packages; do
+			wget -c "https://affenull2345.gitlab.io/bananian/packages-latest/$package"
+		done
+	fi
+done < .packages

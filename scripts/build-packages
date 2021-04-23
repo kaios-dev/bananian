@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+while read package; do
+	packagename=$(echo "$package" | cut -f 1)
+	case "$packagename" in
+		libbananui*)
+			d=1
+			;;
+		*)
+			d=0
+			;;
+	esac
+	make package PACKAGE_PATH="$(pwd)/$packagename" NO_LIBBANANUI_DEPEND=$d
+done < .packages-build
