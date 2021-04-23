@@ -36,7 +36,7 @@ getversion:
 
 .PHONY: check
 check:
-	#@scripts/check root
+	@scripts/check root
 	@scripts/check deps
 
 libbananui-debs:
