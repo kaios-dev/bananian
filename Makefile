@@ -30,10 +30,12 @@ export RELEASE
 config:
 	@scripts/configure
 
+.PHONY: getversion
 getversion:
 	@echo "$(VERSION)"
 
-check::
+.PHONY: check
+check:
 	#@scripts/check root
 	@scripts/check deps
 
@@ -55,12 +57,15 @@ debroot:
 		--merged-usr buster debroot/ $(MIRROR) || \
 		(rm -rf debroot && false)
 
+.PHONY: download
 download: .config
 	@scripts/download-packages
 
+.PHONY: packages
 packages: download
 	@scripts/build-packages
 
+.PHONY: copy-files
 copy-files: packages modules
 	if [ ! -f debroot/etc/wpa_supplicant.conf ]; then \
 		echo 'network={' >> debroot/etc/wpa_supplicant.conf && \
@@ -74,6 +79,7 @@ copy-files: packages modules
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
 	cp -f $$(cat .packages) libbananui0_$(VERSION)_armhf.deb debroot/var/cache
 
+.PHONY: package
 ifeq ($(PACKAGE_PATH),)
 package:
 	@echo "Please set the PACKAGE_PATH variable!"; exit 1
@@ -100,6 +106,7 @@ endif
 endif
 
 ifeq ($(USE_QEMU),1)
+.PHONY: qemu-install
 qemu-install: debroot copy-files
 	scripts/qemubootstrap
 endif
@@ -109,6 +116,7 @@ debroot.tar: debroot copy-files $(USE_QEMU_INSTALL)
 	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
 	@echo "Now you can execute the commands from README.md."
 
+.PHONY: install-to-device
 install-to-device: all
 	adb wait-for-device
 	adb push debroot.tar /data
@@ -120,5 +128,6 @@ install-to-device: all
 	adb shell rm /data/install-bootimage.sh /data/unpack-debian.sh \
 		/data/bootstrap-debian.sh
 
+.PHONY: clean
 clean:
 	rm -rf *.deb $(OUTPUTS) libbananui-debs
