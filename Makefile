@@ -77,7 +77,7 @@ copy-files: packages modules
 	mkdir -p debroot/lib/modules/
 	rm -rf debroot/lib/modules/3.10.49-bananian+
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
-	cp -f $$(cat .packages) libbananui0_$(VERSION)_armhf.deb debroot/var/cache
+	cp -f $$(cat .packages) debroot/var/cache
 
 .PHONY: package
 ifeq ($(PACKAGE_PATH),)
