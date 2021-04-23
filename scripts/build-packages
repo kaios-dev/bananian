@@ -4,6 +4,7 @@ set -e
 
 while read package; do
 	packagename=$(echo "$package" | cut -f 1)
+	packagefile=$(echo "$package" | cut -f 3)
 	case "$packagename" in
 		libbananui*)
 			d=1
@@ -12,5 +13,10 @@ while read package; do
 			d=0
 			;;
 	esac
-	make package PACKAGE_PATH="$(pwd)/$packagename" NO_LIBBANANUI_DEPEND=$d
+	if [ -f "$packagefile" ] && [ "$packagefile" -nt "$packagename" ]; then
+		echo "Package already built, touch $packagename to rebuild."
+	else
+		make package PACKAGE_PATH="$(pwd)/$packagename" \
+			NO_LIBBANANUI_DEPEND=$d
+	fi
 done < .packages-build
