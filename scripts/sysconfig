@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+hostname=$(grep '^HOSTNAME=' .config | sed 's/^HOSTNAME=//')
+
+echo "==>> Configuring system"
+echo "===>> Setting hostname to $hostname"
+echo "$hostname" > debroot/etc/hostname

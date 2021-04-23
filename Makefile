@@ -107,11 +107,15 @@ endif
 
 ifeq ($(USE_QEMU),1)
 .PHONY: qemu-install
-qemu-install: debroot copy-files
-	scripts/qemubootstrap
+qemu-install: debroot copy-files sysconfig
+	@scripts/qemubootstrap
 endif
 
-debroot.tar: debroot copy-files $(USE_QEMU_INSTALL)
+.PHONY: sysconfig
+sysconfig: debroot
+	@scripts/sysconfig
+
+debroot.tar: debroot copy-files sysconfig $(USE_QEMU_INSTALL)
 	rm -f $@
 	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
 	@echo "Now you can execute the commands from README.md."
