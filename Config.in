@@ -1,0 +1,15 @@
+# vim: ft=kconfig
+
+mainmenu "Bananian Configuration"
+
+config CONFIG_HOSTNAME
+	string "Host name"
+	default "nokia-8110-4g"
+	help
+	  The name of the device in the network
+	
+menu "Packages"
+
+source "packages/Config.in"
+
+endmenu

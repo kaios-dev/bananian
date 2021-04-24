@@ -3,20 +3,70 @@
 set -e
 
 while read package; do
-	packagename=$(echo "$package" | cut -f 1)
-	packagefile=$(echo "$package" | cut -f 3)
-	case "$packagename" in
-		libbananui*)
-			d=1
-			;;
-		*)
-			d=0
+	case "$package" in
+		"#"*|"")
+			continue
 			;;
 	esac
+	configname=$(echo "$package" | cut -f 1)
+	packagenamearch=$(echo "$package" | cut -f 2 | sed 's/,.*$//')
+	packagename=$(echo "$packagenamearch" | cut -d : -f 1)
+	packagearch=$(echo "$packagenamearch" | cut -d : -f 2)
+	packagesource=""
+	while true; do
+		case "$packagesource" in
+			"#"*|"")
+				read packagesource || syntaxerr \
+					"Expected source URL, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	package_2=""
+	while true; do
+		case "$package_2" in
+			"#"*|"")
+				read package_2 || syntaxerr \
+					"Expected arch,version,opt; found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	packagever=$(echo "$package_2" | cut -f 1)
+	packagepriority=$(echo "$package_2" | cut -f 2)
+	packagedeps="#"
+	read packagedeps || syntaxerr "Expected dependencies, found EOF"
+	while true; do
+		case "$packagedeps" in
+			"#"*)
+				read packagedeps || syntaxerr \
+					"Expected dependencies, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+
+	packagefile="${packagename}_${packagever}_${packagearch}.deb"
+
+	NO_LIBBANANUI_DEPEND=1
+	for dep in "$packagedeps"; do
+		if [ "x$dep" = "xCONFIG_PACKAGE_LIBBANANUI" ]; then
+			NO_LIBBANANUI_DEPEND=0
+		fi
+	done
 	if [ -f "$packagefile" ] && [ "$packagefile" -nt "$packagename" ]; then
 		echo "Package already built, touch $packagename to rebuild."
 	else
 		make package PACKAGE_PATH="$(pwd)/$packagename" \
-			NO_LIBBANANUI_DEPEND=$d
+			NO_LIBBANANUI_DEPEND=$NO_LIBBANANUI_DEPEND
 	fi
-done < .packages-build
+done < packages/packages.list

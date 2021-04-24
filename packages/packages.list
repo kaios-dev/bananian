@@ -1,0 +1,24 @@
+# Format:
+# config	name:arch[,name:arch]
+# source
+# ver	optional|required|standard
+# dependencies or empty line
+# Order is important!!! Packages that go first build first.
+
+CONFIG_PACKAGE_LIBBANANUI	libbananui0:armhf,libbananui-dev:armhf
+https://gitlab.com/affenull2345/libbananui
+0.2.1	standard
+
+CONFIG_PACKAGE_DEVICE_STARTUP	device-startup:all
+https://gitlab.com/affenull2345/device-startup-8110
+0.2	required
+
+CONFIG_PACKAGE_BANANUI_BASE	bananui-base:armhf
+https://gitlab.com/affenull2345/bananui-base
+0.2.1	standard
+CONFIG_PACKAGE_LIBBANANUI
+
+CONFIG_PACKAGE_EXAMPLE	bananui-example-app:armhf
+https://gitlab.com/affenull2345/bananui-example-app
+0.1	optional
+CONFIG_PACKAGE_LIBBANANUI

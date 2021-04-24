@@ -15,6 +15,10 @@ endif
 DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,libgraphicsmagick-q16-3,openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
 MIRROR = http://deb.debian.org/debian
 
+ifeq ($(wildcard .config),)
+.config: menuconfig
+endif
+
 .PHONY: all
 all: .config check packages $(OUTPUTS)
 
@@ -23,12 +27,45 @@ export VERSION
 RELEASE=0
 export RELEASE
 
-.config:
-	@scripts/configure
+CONFIG_OBJ = $(CURDIR)/scripts/config
+CONFIG_IN = $(CURDIR)/Config.in
 
-.PHONY: config
-config:
-	@scripts/configure
+.PHONY: config menuconfig
+$(CONFIG_OBJ)/%onf:
+	mkdir -p $(@D)/lxdialog
+	$(MAKE) -C scripts/kconfig -f Makefile.br obj=$(@D) $(@F) \
+		HOSTCC=$(CC) HOSTCXX=$(CXX)
+
+generate-package-configs:
+	@scripts/generate-package-configs
+
+menuconfig: $(CONFIG_OBJ)/mconf generate-package-configs
+	@$< $(CONFIG_IN)
+config: $(CONFIG_OBJ)/conf generate-package-configs
+	@$< $(CONFIG_IN)
+xconfig: $(CONFIG_OBJ)/qconf generate-package-configs
+	@$< $(CONFIG_IN)
+gconfig: $(CONFIG_OBJ)/gconf generate-package-configs
+	@$< $(CONFIG_IN)
+nconfig: $(CONFIG_OBJ)/nconf generate-package-configs
+	@$< $(CONFIG_IN)
+
+help:
+	@echo 'Cleaning targets:'
+	@echo '  clean              - Remove packages, root and other generated'
+	@echo '                       files, excluding configuration'
+	@echo ''
+	@echo 'Configuration targets:'
+	@echo '  config             - Update current config utilising a line-oriented program'
+	@echo '  nconfig            - Update current config utilising a ncurses menu based'
+	@echo '                       program'
+	@echo '  menuconfig         - Update current config utilising a menu based program'
+	@echo '  xconfig            - Update current config utilising a Qt based front-end'
+	@echo '  gconfig            - Update current config utilising a GTK+ based front-end'
+
+	@echo ''
+	@echo 'Installation targets:'
+	@echo '  install-to-device  - Install Bananian via adb'
 
 .PHONY: getversion
 getversion:
@@ -77,7 +114,7 @@ copy-files: packages modules
 	mkdir -p debroot/lib/modules/
 	rm -rf debroot/lib/modules/3.10.49-bananian+
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
-	cp -f $$(cat .packages) debroot/var/cache
+	@scripts/copy-packages debroot/var/cache
 
 .PHONY: package
 ifeq ($(PACKAGE_PATH),)
@@ -86,22 +123,22 @@ package:
 else
 ifeq ($(NO_LIBBANANUI_DEPEND),1)
 package:
-	@echo "Building package..."
-	cd '$(PACKAGE_PATH)' && \
+	@echo "Building package in $(PACKAGE_PATH)..."
+	@cd '$(PACKAGE_PATH)' && echo 'Do not need to copy libbananui' && \
 	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
 		--buildresult '$(CURDIR)' -- --host-arch armhf
 else
 package: libbananui-debs
-	@echo "Building package..."
-	TMPDEBS=$$(mktemp -d /tmp/libbananui-debs.XXXXXXXX) && \
-	cp -r libbananui-debs/* "$$TMPDEBS" && \
+	@echo "Building package in $(PACKAGE_PATH)..."
+	@TMPDEBS=$$(mktemp -d /tmp/libbananui-debs.XXXXXXXX) && \
+	echo 'Copying libbananui...' && cp -r libbananui-debs/* "$$TMPDEBS" && \
 	cd '$(PACKAGE_PATH)' && \
 	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
 		--buildresult '$(CURDIR)' -- --host-arch armhf \
 		--bindmounts "$$TMPDEBS" \
 		--override-config --othermirror \
-		"deb [trusted=yes] file://$$TMPDEBS ./"; \
-	rm -rf "$$TMPDEBS"
+		"deb [trusted=yes] file://$$TMPDEBS ./"; pdebuildresult=$$?\
+	rm -rf "$$TMPDEBS"; exit $$pdebuildresult
 endif
 endif
 

@@ -1,7 +1,0 @@
-# Format:
-# name[,altname...]	version	repo	architecture	is-extra
-
-# Libbananui should always be the first package
-libbananui0,libbananui0-dev	0.2.1	https://gitlab.com/affenull2345/libbananui	armhf	0
-bananui-base	0.2.1	https://gitlab.com/affenull2345/bananui-base	armhf	0
-device-startup	0.2	https://gitlab.com/affenull2345/device-startup-8110	all	0
