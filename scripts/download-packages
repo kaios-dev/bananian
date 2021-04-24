@@ -71,8 +71,7 @@ while read package; do
 				(cd "$packagename" && git pull)
 			fi
 		else
-			pkbranch=$(echo "$packagesource" | cut -d '#' -f 2)
-			git clone "$packagesrcurl" "$packagename" -b "$pkbranch"
+			git clone "$packagesrcurl" "$packagename" -b "$packagebranch"
 		fi
 	elif grep -q "^${configname}_DOWNLOAD=y" .config; then
 		if [ "x$RELEASE" != "x1" ]; then
