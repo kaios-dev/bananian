@@ -4,14 +4,7 @@
 NOTE: This has been tested only on Debian GNU/Linux. There will
 probably be many errors on non-Debian-based GNU/Linux distros.
 
-If you don't do this, the build system will try downloading prebuilt versions
-of the packages. It may fail if the version is too old. Older versions can be
-found at:
- * (prebuilt) <https://gitlab.com/affenull2345/bananian/-/packages>
- * (source) <https://gitlab.com/affenull2345/bananui-base/-/releases> and
-   <https://gitlab.com/affenull2345/device-startup/-/releases>
-
-Then install pbuilder:
+First install pbuilder:
 
     # apt install pbuilder
 
