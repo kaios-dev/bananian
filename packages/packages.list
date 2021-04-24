@@ -20,5 +20,5 @@ CONFIG_PACKAGE_LIBBANANUI
 
 CONFIG_PACKAGE_EXAMPLE	bananui-example-app:armhf
 https://gitlab.com/affenull2345/bananui-example-app#master
-0.1	optional
+1	optional
 CONFIG_PACKAGE_LIBBANANUI
