@@ -2,8 +2,8 @@
 
 set -e
 
-branch=$(git rev-parse --abbrev-ref HEAD)
-if [ -z "$branch" ]; then branch=stable; fi
+branch=$(git symbolic-ref --short HEAD)
+: ${branch:=stable}
 
 syntaxerr () {
 	echo "Syntax error: $1" 1>&2
