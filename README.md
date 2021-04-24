@@ -4,12 +4,6 @@
 NOTE: This has been tested only on Debian GNU/Linux. There will
 probably be many errors on non-Debian-based GNU/Linux distros.
 
-To build the subpackages, clone the package repositories:
-
-    $ git clone https://gitlab.com/affenull2345/bananui-base
-    $ git clone https://gitlab.com/affenull2345/device-startup-8110 device-startup
-    $ git clone https://gitlab.com/affenull2345/libbananui
-
 If you don't do this, the build system will try downloading prebuilt versions
 of the packages. It may fail if the version is too old. Older versions can be
 found at:
@@ -25,8 +19,15 @@ and set up the build chroot:
 
     # pbuilder create --distribution buster
 
-Then run make as root (Please make a dry-run first to prove that nothing
-malicious happens).
+Then run `make menuconfig` and after that `make` as root
+(Please make sure that nothing malicious happens).
+
+To reconfigure, run `make menuconfig` again.
+Other configurators are also available:
+ - `config` (plain-text)
+ - `nconfig` (new ncurses-based menuconfig alternative)
+ - `xconfig` (qt-based, X11 front-end)
+ - `gconfig` (gtk-based, X11 front-end)
 
 #### QEMU mode
 QEMU mode runs debootstrap --second-stage and various other setup commands in
