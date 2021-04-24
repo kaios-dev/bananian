@@ -2,6 +2,8 @@
 
 set -e
 
+echo "==>> Copying packages:"
+
 while read package; do
 	case "$package" in
 		"#"*|"")
@@ -54,6 +56,7 @@ while read package; do
 		esac
 	done
 	for debname_arch in $(echo "$packages" | sed 's/,/ /g'); do
+		echo "===>> Copying $packages into $1..." 1>&2
 		debname=$(echo "$debname_arch" | cut -d : -f 1)
 		arch=$(echo "$debname_arch" | cut -d : -f 2)
 		cp "${debname}_${packagever}_${arch}.deb" "$1"
