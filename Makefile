@@ -137,7 +137,7 @@ package: libbananui-debs
 		--buildresult '$(CURDIR)' -- --host-arch armhf \
 		--bindmounts "$$TMPDEBS" \
 		--override-config --othermirror \
-		"deb [trusted=yes] file://$$TMPDEBS ./"; pdebuildresult=$$?\
+		"deb [trusted=yes] file://$$TMPDEBS ./"; pdebuildresult=$$?; \
 	rm -rf "$$TMPDEBS"; exit $$pdebuildresult
 endif
 endif
