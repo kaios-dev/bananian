@@ -12,7 +12,7 @@ build:
     - make packages
   artifacts:
     paths:
-      - *.deb
+      - '*.deb'
 pages:
   stage: deploy
   script:
