@@ -33,6 +33,9 @@ while read package; do
 				;;
 		esac
 	done
+	packagesrcurl=$(echo "$packagesource" | cut -d '#' -f 1)
+	packagebranch=$(echo "$packagesource" | cut -s -d '#' -f 2)
+	: ${packagebranch:=${branch}}
 	package_2=""
 	while true; do
 		case "$package_2" in
@@ -68,7 +71,8 @@ while read package; do
 				(cd "$packagename" && git pull)
 			fi
 		else
-			git clone "$packagesource" "$packagename" -b "$branch"
+			pkbranch=$(echo "$packagesource" | cut -d '#' -f 2)
+			git clone "$packagesrcurl" "$packagename" -b "$pkbranch"
 		fi
 	elif grep -q "^${configname}_DOWNLOAD=y" .config; then
 		if [ "x$RELEASE" != "x1" ]; then
