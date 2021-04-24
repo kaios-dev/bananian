@@ -9,7 +9,7 @@ ifeq ($(USE_QEMU),1)
 ONDEV_BOOTSTRAP_CMD =
 USE_QEMU_INSTALL = qemu-install
 else
-ONDEV_BOOTSTRAP_CMD = adb shell /data/bootstrap-debian.sh
+ONDEV_BOOTSTRAP_CMD = @adb shell /data/bootstrap-debian.sh
 USE_QEMU_INSTALL =
 endif
 DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,libgraphicsmagick-q16-3,openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
@@ -154,19 +154,20 @@ sysconfig: debroot
 
 debroot.tar: debroot copy-files sysconfig $(USE_QEMU_INSTALL)
 	rm -f $@
-	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
+	@(echo '==>> Creating debroot.tar...' && cd debroot && \
+		tar cf ../$@ --exclude=.gitignore *)
 	@echo "Now you can execute the commands from README.md."
 
 .PHONY: install-to-device
 install-to-device: all
 	adb wait-for-device
-	adb push debroot.tar /data
-	adb push boot.img /data
-	adb push on-device-scripts/*.sh /data
-	adb shell /data/install-bootimage.sh
-	adb shell /data/unpack-debian.sh
+	@adb push debroot.tar /data
+	@adb push boot.img /data
+	@adb push on-device-scripts/*.sh /data
+	@adb shell /data/install-bootimage.sh
+	@adb shell /data/unpack-debian.sh
 	$(ONDEV_BOOTSTRAP_CMD)
-	adb shell rm /data/install-bootimage.sh /data/unpack-debian.sh \
+	@adb shell rm /data/install-bootimage.sh /data/unpack-debian.sh \
 		/data/bootstrap-debian.sh
 
 .PHONY: clean

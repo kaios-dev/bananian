@@ -16,10 +16,12 @@ if [ "$1" = "-p" ]; then
 	shift
 fi
 
+echo "[on device] ==>> Mounting $DEBIANDIR"
+
 cd /data
 if [ -d "$DEBIANDIR" ]; then
-	echo "WARNING! A debian directory has been found! Please " \
-		"unmount/delete it."
+	echo "[on device] ===>> ERROR! A debian directory has been found!" \
+		"Please unmount/delete it."
 	exit 1
 fi
 mkdir "$DEBIANDIR"
@@ -27,7 +29,9 @@ busybox mount "$DEVICE" "$DEBIANDIR" || true
 cd "$DEBIANDIR"
 allfiles=*
 if [ "x$allfiles" != "x*" ]; then
-	echo "Debian partition not empty! Please delete all files manually."
+	echo "[on device] ===>> ERROR! Debian partition not empty! Please" \
+		"delete all files manually."
 	exit 1
 fi
-tar xvf ../debroot.tar
+echo '[ on device ] ==>> Unpacking debroot.tar'
+tar xf ../debroot.tar
