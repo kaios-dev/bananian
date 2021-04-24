@@ -5,7 +5,7 @@
 # dependencies or empty line
 # Order is important!!! Packages that go first build first.
 
-CONFIG_PACKAGE_LIBBANANUI	libbananui0:armhf,libbananui-dev:armhf
+CONFIG_PACKAGE_LIBBANANUI	libbananui0:armhf,libbananui0-dev:armhf
 https://gitlab.com/affenull2345/libbananui
 0.2.1	standard
 
