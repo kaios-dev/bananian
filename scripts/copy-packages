@@ -1,0 +1,61 @@
+#!/bin/sh
+
+set -e
+
+while read package; do
+	case "$package" in
+		"#"*|"")
+			continue
+			;;
+	esac
+	configname=$(echo "$package" | cut -f 1)
+	packages=$(echo "$package" | cut -f 2)
+	packagename=$(echo "$packages" | sed 's/,.*$//' | cut -d : -f 1)
+	packagesource=""
+	while true; do
+		case "$packagesource" in
+			"#"*|"")
+				read packagesource || syntaxerr \
+					"Expected source URL, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	package_2=""
+	while true; do
+		case "$package_2" in
+			"#"*|"")
+				read package_2 || syntaxerr \
+					"Expected arch,version,opt; found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	packagever=$(echo "$package_2" | cut -f 1)
+	packagepriority=$(echo "$package_2" | cut -f 2)
+	packagedeps="#"
+	read packagedeps || syntaxerr "Expected dependencies, found EOF"
+	while true; do
+		case "$packagedeps" in
+			"#"*)
+				read packagedeps || syntaxerr \
+					"Expected dependencies, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	for debname_arch in $(echo "$packages" | sed 's/,/ /g'); do
+		debname=$(echo "$debname_arch" | cut -d : -f 1)
+		arch=$(echo "$debname_arch" | cut -d : -f 2)
+		cp "${debname}_${packagever}_${arch}.deb" "$1"
+	done
+done < packages/packages.list
