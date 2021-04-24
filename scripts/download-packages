@@ -2,7 +2,8 @@
 
 set -e
 
-branch=$(git symbolic-ref --short HEAD)
+branch=$(git symbolic-ref --short HEAD || true)
+: ${branch:=${CI_COMMIT_BRANCH}}
 : ${branch:=stable}
 
 syntaxerr () {
