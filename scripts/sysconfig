@@ -2,7 +2,7 @@
 
 set -e
 
-. ".config"
+. "./.config"
 
 echo "==>> Configuring system"
 echo "===>> Setting hostname to $CONFIG_HOSTNAME"
