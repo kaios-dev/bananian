@@ -56,13 +56,6 @@ while read package; do
 	done
 
 	packagefile="${packagename}_${packagever}_${packagearch}.deb"
-
-	NO_LIBBANANUI_DEPEND=1
-	for dep in "$packagedeps"; do
-		if [ "x$dep" = "xCONFIG_PACKAGE_LIBBANANUI" ]; then
-			NO_LIBBANANUI_DEPEND=0
-		fi
-	done
 	if [ -f "$packagefile" ] && [ "$packagefile" -nt "$packagename" ]; then
 		echo "Package already built, touch $packagename to rebuild."
 	else
@@ -72,7 +65,6 @@ while read package; do
 		then
 			(cd "$packagename" && git deborig)
 		fi
-		make package PACKAGE_PATH="$(pwd)/$packagename" \
-			NO_LIBBANANUI_DEPEND=$NO_LIBBANANUI_DEPEND
+		make package PACKAGE_PATH="$(pwd)/$packagename"
 	fi
 done < packages/packages.list

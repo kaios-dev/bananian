@@ -76,11 +76,6 @@ check:
 	@scripts/check root
 	@scripts/check deps
 
-libbananui-debs:
-	(mkdir -p libbananui-debs; cd libbananui-debs; \
-	cp ../libbananui0*_$(VERSION)_armhf.deb .; \
-	dpkg-scanpackages . /dev/null > Packages)
-
 initrd.img: ramdisk
 	rm -f $@
 	scripts/pack-initrd $@ $<
@@ -121,25 +116,17 @@ ifeq ($(PACKAGE_PATH),)
 package:
 	@echo "Please set the PACKAGE_PATH variable!"; exit 1
 else
-ifeq ($(NO_LIBBANANUI_DEPEND),1)
 package:
 	@echo "Building package in $(PACKAGE_PATH)..."
-	@cd '$(PACKAGE_PATH)' && echo 'Do not need to copy libbananui' && \
-	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
-		--buildresult '$(CURDIR)' -- --host-arch armhf
-else
-package: libbananui-debs
-	@echo "Building package in $(PACKAGE_PATH)..."
-	@TMPDEBS=$$(mktemp -d /tmp/libbananui-debs.XXXXXXXX) && \
-	echo 'Copying libbananui...' && cp -r libbananui-debs/* "$$TMPDEBS" && \
+	@TMPDEBS=$$(mktemp -d /tmp/bananian-debs.XXXXXXXX) && \
+	mkdir -p debs && echo 'Copying debs...' && cp -r debs "$$TMPDEBS/" && \
 	cd '$(PACKAGE_PATH)' && \
 	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
 		--buildresult '$(CURDIR)' -- --host-arch armhf \
 		--bindmounts "$$TMPDEBS" \
 		--override-config --othermirror \
-		"deb [trusted=yes] file://$$TMPDEBS ./"; pdebuildresult=$$?; \
-	rm -rf "$$TMPDEBS"; exit $$pdebuildresult
-endif
+		"deb [trusted=yes] file://$$TMPDEBS/debs ./"; \
+	pdebuildresult=$$?; rm -rf "$$TMPDEBS"; exit $$pdebuildresult
 endif
 
 ifeq ($(USE_QEMU),1)
@@ -172,4 +159,4 @@ install-to-device: all
 
 .PHONY: clean
 clean:
-	rm -rf *.deb $(OUTPUTS) libbananui-debs
+	rm -rf *.deb $(OUTPUTS) debs
