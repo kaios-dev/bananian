@@ -18,6 +18,7 @@ deps () {
 	which debootstrap || missing debootstrap
 	which pdebuild || warn "Program pdebuild is required for building from source."
 	which wget || missing wget
+	which git-deborig || missing git-deborig
 }
 root () {
 	if [ "x`id -u`" != x0 ]; then

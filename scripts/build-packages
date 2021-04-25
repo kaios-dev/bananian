@@ -66,6 +66,12 @@ while read package; do
 	if [ -f "$packagefile" ] && [ "$packagefile" -nt "$packagename" ]; then
 		echo "Package already built, touch $packagename to rebuild."
 	else
+		if [ -f "$packagename/debian/source/format" ] && [ \
+			"x$(cat "$packagename/debian/source/format")" = \
+			"x3.0 (quilt)" ]
+		then
+			(cd "$packagename" && git deborig)
+		fi
 		make package PACKAGE_PATH="$(pwd)/$packagename" \
 			NO_LIBBANANUI_DEPEND=$NO_LIBBANANUI_DEPEND
 	fi
