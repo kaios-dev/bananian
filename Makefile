@@ -119,7 +119,7 @@ else
 package:
 	@echo "Building package in $(PACKAGE_PATH)..."
 	@TMPDEBS=$$(mktemp -d /tmp/bananian-debs.XXXXXXXX) && \
-	echo 'Copying debs...' && cp -f *.deb "$$TMPDEBS/" && \
+	echo 'Copying debs...' && (cp -f *.deb "$$TMPDEBS/" || true) && \
 	(cd "$$TMPDEBS" && dpkg-scanpackages . /dev/null > Packages) && \
 	cd '$(PACKAGE_PATH)' && \
 	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
