@@ -63,7 +63,7 @@ while read package; do
 			"x$(cat "$packagename/debian/source/format")" = \
 			"x3.0 (quilt)" ]
 		then
-			(cd "$packagename" && git deborig)
+			(cd "$packagename" && git deborig --force)
 		fi
 		make package PACKAGE_PATH="$(pwd)/$packagename"
 	fi
