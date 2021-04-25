@@ -65,6 +65,7 @@ while read package; do
 		then
 			(cd "$packagename" && git deborig --force)
 		fi
+		echo "$VERSION" > "$packagename/.bananian-version"
 		make package PACKAGE_PATH="$(pwd)/$packagename"
 	fi
 done < packages/packages.list
