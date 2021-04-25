@@ -30,7 +30,7 @@ export RELEASE
 CONFIG_OBJ = $(CURDIR)/scripts/config
 CONFIG_IN = $(CURDIR)/Config.in
 
-.PHONY: config menuconfig
+.PHONY: config menuconfig xconfig gconfig nconfig
 $(CONFIG_OBJ)/%onf:
 	mkdir -p $(@D)/lxdialog
 	$(MAKE) -C scripts/kconfig -f Makefile.br obj=$(@D) $(@F) \
