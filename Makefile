@@ -17,6 +17,9 @@ MIRROR = http://deb.debian.org/debian
 
 ifeq ($(wildcard .config),)
 .config: menuconfig
+else
+.config::
+	$(MAKE) oldconfig
 endif
 
 .PHONY: all
@@ -43,6 +46,8 @@ menuconfig: $(CONFIG_OBJ)/mconf generate-package-configs
 	@$< $(CONFIG_IN)
 config: $(CONFIG_OBJ)/conf generate-package-configs
 	@$< $(CONFIG_IN)
+oldconfig: $(CONFIG_OBJ)/conf generate-package-configs
+	@$< -s --$@ $(CONFIG_IN)
 xconfig: $(CONFIG_OBJ)/qconf generate-package-configs
 	@$< $(CONFIG_IN)
 gconfig: $(CONFIG_OBJ)/gconf generate-package-configs
