@@ -119,13 +119,14 @@ else
 package:
 	@echo "Building package in $(PACKAGE_PATH)..."
 	@TMPDEBS=$$(mktemp -d /tmp/bananian-debs.XXXXXXXX) && \
-	mkdir -p debs && echo 'Copying debs...' && cp -r debs "$$TMPDEBS/" && \
+	echo 'Copying debs...' && cp -f *.deb "$$TMPDEBS/" && \
+	(cd "$$TMPDEBS" && dpkg-scanpackages . /dev/null > Packages) && \
 	cd '$(PACKAGE_PATH)' && \
 	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
 		--buildresult '$(CURDIR)' -- --host-arch armhf \
 		--bindmounts "$$TMPDEBS" \
 		--override-config --othermirror \
-		"deb [trusted=yes] file://$$TMPDEBS/debs ./"; \
+		"deb [trusted=yes] file://$$TMPDEBS ./"; \
 	pdebuildresult=$$?; rm -rf "$$TMPDEBS"; exit $$pdebuildresult
 endif
 
