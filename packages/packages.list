@@ -36,7 +36,7 @@ https://gitlab.com/affenull2345/rmtfs-8110#master
 0.2+git20210424.e54cfd7e-2	optional
 CONFIG_PACKAGE_QRTR, CONFIG_PACKAGE_BOOTMODEM
 
-CONFIG_PACKAGE_OFONO	bananofono:armhf,bananofono-scripts:armhf,bananofono-dev:armhf
+CONFIG_PACKAGE_OFONO	bananofono:armhf,bananofono-scripts:all,bananofono-dev:all
 https://gitlab.com/affenull2345/bananofono#debian
 1.31-3+bananian1	optional
 CONFIG_PACKAGE_BOOTMODEM
