@@ -56,9 +56,12 @@ while read package; do
 		esac
 	done
 	for debname_arch in $(echo "$packages" | sed 's/,/ /g'); do
-		echo "===>> Copying $packages into $1..." 1>&2
 		debname=$(echo "$debname_arch" | cut -d : -f 1)
 		arch=$(echo "$debname_arch" | cut -d : -f 2)
-		cp "${debname}_${packagever}_${arch}.deb" "$1"
+		deb="${debname}_${packagever}_${arch}.deb"
+		if [ -f "$deb" ] || [ "x$2" != "x--skip-missing" ]; then
+			echo "===>> Copying $deb into $1..." 1>&2
+			cp "$deb" "$1"
+		fi
 	done
 done < packages/packages.list
