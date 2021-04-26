@@ -70,8 +70,8 @@ while read package; do
 	done
 
 	configdeps=$(echo "$packagedeps" | \
-		sed 's/[^, ]*/&_BUILD || &_DOWNLOAD/g' || \
-		sed 's/,/ || /g')
+		sed 's/[^, ]\+/(&_BUILD || &_DOWNLOAD)/g' | \
+		sed 's/,/ \&\& /g')
 
 	printf "choice %s\n" "$configname"
 	printf "\tprompt \"Package %s\"\n" "$packagename"
