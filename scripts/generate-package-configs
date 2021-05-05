@@ -69,56 +69,45 @@ while read package; do
 		esac
 	done
 
-	configdeps=$(echo "$packagedeps" | \
-		sed 's/[^, ]\+/(&_BUILD || &_DOWNLOAD)/g' | \
-		sed 's/,/ \&\& /g')
 
-	printf "choice %s\n" "$configname"
-	printf "\tprompt \"Package %s\"\n" "$packagename"
-	[ -n "$packagedeps" ] && printf "\tdepends on %s\n" "$configdeps"
-	case "$packagepriority" in
-		optional)
-			printf "\tdefault %s_DISABLE\n" "$configname"
-			;;
-		*)
-			if [ "x$RELEASE" = "x1" ]; then
-				printf "\tdefault %s_DOWNLOAD\n" "$configname"
-			else
-				printf "\tdefault %s_BUILD\n" "$configname"
-			fi
-			;;
-	esac
-	printf "\thelp\n"
-	printf "\t  Select whether package is installed, downloaded or built.\n"
-	printf "\t  Source URL: $packagesource\n"
-	printf "\t  Priority: $packagepriority\n"
-	printf "\t  Version: $packagever\n"
-
-	if [ "x$packagepriority" != "xrequired" ]; then
-		printf "config %s_DISABLE\n" "$configname"
-		printf "\tbool \"Don't install\"\n"
-		printf "\thelp\n"
-		printf "\t  Do not download and install this package\n\n"
+	printf "config %s\n" "$configname"
+	printf "\tbool \"Package %s\"\n" "$packagename"
+	if [ -n "$packagedeps" ]; then
+		for dep in $(echo "$packagedeps" | sed 's/,/ /g'); do
+			printf "\tselect %s\n" "$dep"
+		done
 	fi
 
-	printf "config %s_BUILD\n" "$configname"
-	printf "\tbool \"Build from source\"\n"
+	if [ "x$packagepriority" = "xstandard" ]; then
+		printf "\tdefault y\n"
+	fi
+
+	if [ "x$packagepriority" = "xrequired" ]; then
+		basepackages="$basepackages $configname"
+	fi
+
 	printf "\thelp\n"
-	printf "\t  Download the source code and compile it to a package\n\n"
+	sed 's/^/\t  /g' "descriptions/$packagename"
+	printf "\t  Source URL: $packagesource\n"
+	printf "\t  Priority: $packagepriority\n"
+	printf "\t  Version: $packagever\n\n"
 
 	if [ "x$RELEASE" = "x1" ]; then
 		printf "config %s_DOWNLOAD\n" "$configname"
-		printf "\tbool \"Download pre-built\"\n"
+		printf "\tbool \"Download a pre-built binary\"\n"
+		printf "\tdepends on %s\n" "$configname"
+		printf "\tdefault y\n"
 		printf "\thelp\n"
-		printf "\t  Download a pre-built binary package\n\n"
-	else
-		printf "config %s_DOWNLOAD\n" "$configname"
-		printf "\tbool \"Download pre-built (unsupported)\"\n"
-		printf "\thelp\n"
-		printf "\t  Download a pre-built binary package\n"
-		printf "\t  This is not a release build. Binaries are not available.\n\n"
+		printf "\t  Download a pre-built binary instead of building from source\n\n"
 	fi
-
-
-	printf "endchoice\n"
 done < packages.list >> Config.in
+
+if [ -n "$basepackages" ]; then
+cat <<END >> Config.in
+config CONFIG_PKG_BASE
+	bool
+	default y
+	select $basepackages
+
+END
+fi
