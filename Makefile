@@ -39,6 +39,9 @@ $(CONFIG_OBJ)/%onf:
 	$(MAKE) -C scripts/kconfig -f Makefile.br obj=$(@D) $(@F) \
 		HOSTCC=$(CC) HOSTCXX=$(CXX)
 
+$(CONFIG_OBJ)/gconf.glade: $(CONFIG_OBJ)/gconf
+	cp -f scripts/kconfig/$(@F) $(@D)
+
 generate-package-configs:
 	@scripts/generate-package-configs
 
@@ -50,7 +53,7 @@ oldconfig: $(CONFIG_OBJ)/conf generate-package-configs
 	@$< -s --$@ $(CONFIG_IN)
 xconfig: $(CONFIG_OBJ)/qconf generate-package-configs
 	@$< $(CONFIG_IN)
-gconfig: $(CONFIG_OBJ)/gconf generate-package-configs
+gconfig: $(CONFIG_OBJ)/gconf $(CONFIG_OBJ)/gconf.glade generate-package-configs
 	@$< $(CONFIG_IN)
 nconfig: $(CONFIG_OBJ)/nconf generate-package-configs
 	@$< $(CONFIG_IN)
