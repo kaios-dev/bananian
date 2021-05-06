@@ -66,6 +66,7 @@ while read package; do
 				;;
 		esac
 	done
+	if ! grep -q "^${configname}=y" .config; then continue; fi
 	if ! grep -q "^${configname}_DOWNLOAD=y" .config; then
 		if [ -d "$packagename" ]; then
 			if [ -d "$packagename/.git" ]; then
@@ -74,7 +75,7 @@ while read package; do
 		else
 			git clone "$packagesrcurl" "$packagename" -b "$packagebranch"
 		fi
-	elif grep -q "^${configname}=y" .config; then
+	else
 		if [ "x$RELEASE" != "x1" ]; then
 			echo "==>> Can't download $packages:"
 			echo "==>> ERROR: This is a development version. No pre-built packages are available." 1>&2

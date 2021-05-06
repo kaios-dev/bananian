@@ -55,6 +55,12 @@ while read package; do
 		esac
 	done
 
+	if ! grep -q "${configname}=y" .config ||
+		grep -q "${configname}_DOWNLOAD=y";
+	then
+		continue
+	fi
+
 	packagefile="${packagename}_${packagever}_${packagearch}.deb"
 	if [ -f "$packagefile" ] && [ "$packagefile" -nt "$packagename" ]; then
 		echo "Package already built, touch $packagename to rebuild."

@@ -55,6 +55,7 @@ while read package; do
 				;;
 		esac
 	done
+	if ! grep -q "$configname=y" .config; then continue; fi
 	for debname_arch in $(echo "$packages" | sed 's/,/ /g'); do
 		debname=$(echo "$debname_arch" | cut -d : -f 1)
 		arch=$(echo "$debname_arch" | cut -d : -f 2)
