@@ -56,7 +56,7 @@ while read package; do
 	done
 
 	if ! grep -q "${configname}=y" .config ||
-		grep -q "${configname}_DOWNLOAD=y";
+		grep -q "${configname}_DOWNLOAD=y" .config;
 	then
 		continue
 	fi

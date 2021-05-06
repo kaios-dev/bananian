@@ -12,7 +12,7 @@ else
 ONDEV_BOOTSTRAP_CMD = @adb shell /data/bootstrap-debian.sh
 USE_QEMU_INSTALL =
 endif
-DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,libgraphicsmagick-q16-3,openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
+DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
 MIRROR = http://deb.debian.org/debian
 
 ifeq ($(wildcard .config),)
@@ -91,11 +91,11 @@ initrd.img: ramdisk
 boot.img: initrd.img zImage bootimg.cfg
 	abootimg --create $@ -f bootimg.cfg -k zImage -r $<
 
-debroot:
+debroot: packages
 	rm -rf debroot
-	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
-		--merged-usr buster debroot/ $(MIRROR) || \
-		(rm -rf debroot && false)
+	debootstrap --include="$(DEFAULT_PACKAGES),$$(scripts/get-deps)" \
+		--arch armhf --foreign --merged-usr buster debroot/ \
+		$(MIRROR) || (rm -rf debroot && false)
 
 .PHONY: download
 download: .config

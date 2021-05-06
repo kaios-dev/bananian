@@ -2,7 +2,13 @@
 
 set -e
 
-echo "==>> Copying packages:"
+echo "==>> Copying packages:" 1>&2
+
+syntaxerr () {
+	echo "Syntax error: $1" 1>&2
+	exit 1
+}
+
 
 while read package; do
 	case "$package" in
