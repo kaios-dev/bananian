@@ -29,14 +29,19 @@ DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,openssh-server,vim,wpas
 MIRROR = http://deb.debian.org/debian
 
 ifeq ($(wildcard .config),)
-.config: menuconfig
+
+.PHONY: all
+all: menuconfig
+
 else
-.config::
-	$(MAKE) oldconfig
-endif
 
 .PHONY: all
 all: .config check packages $(OUTPUTS)
+
+.config::
+	$(MAKE) oldconfig
+
+endif
 
 VERSION=0.2.1
 export VERSION
