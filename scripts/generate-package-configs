@@ -1,0 +1,128 @@
+#!/bin/sh
+# Copyright (C) 2020-2021 Affe Null <affenull2345@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+set -e
+
+cd packages
+
+syntaxerr () {
+	echo "Syntax error: $1" 1>&2
+	exit 1
+}
+
+cat <<END > Config.in
+#
+# This file is AUTO-GENERATED. Please do not edit by hand.
+# Changes are overwritten on each \`make *config\`. Edit packages.list instead.
+#
+# vim: ft=kconfig
+END
+
+while read package; do
+	case "$package" in
+		"#"*|"")
+			continue
+			;;
+	esac
+	configname=$(echo "$package" | cut -f 1)
+	packagename=$(echo "$package" | cut -f 2 | sed 's/,.*$//' | \
+		cut -d : -f 1)
+	packagesource=""
+	while true; do
+		case "$packagesource" in
+			"#"*|"")
+				read packagesource || syntaxerr \
+					"Expected source URL, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	package_2=""
+	while true; do
+		case "$package_2" in
+			"#"*|"")
+				read package_2 || syntaxerr \
+					"Expected arch,version,opt; found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	packagever=$(echo "$package_2" | cut -f 1)
+	packagepriority=$(echo "$package_2" | cut -f 2)
+	packagedeps="#"
+	read packagedeps || syntaxerr "Expected dependencies, found EOF"
+	while true; do
+		case "$packagedeps" in
+			"#"*)
+				read packagedeps || syntaxerr \
+					"Expected dependencies, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+
+
+	printf "config %s\n" "$configname"
+	printf "\tbool \"Package %s\"\n" "$packagename"
+	if [ -n "$packagedeps" ]; then
+		for dep in $(echo "$packagedeps" | sed 's/,/ /g'); do
+			printf "\tselect %s\n" "$dep"
+		done
+	fi
+
+	if [ "x$packagepriority" = "xstandard" ]; then
+		printf "\tdefault y\n"
+	fi
+
+	if [ "x$packagepriority" = "xrequired" ]; then
+		basepackages="$basepackages $configname"
+	fi
+
+	printf "\thelp\n"
+	sed 's/^/\t  /g' "descriptions/$packagename"
+	printf "\t  Source URL: $packagesource\n"
+	printf "\t  Priority: $packagepriority\n"
+	printf "\t  Version: $packagever\n\n"
+
+	if [ "x$RELEASE" = "x1" ]; then
+		printf "config %s_DOWNLOAD\n" "$configname"
+		printf "\tbool \"Download a pre-built binary\"\n"
+		printf "\tdepends on %s\n" "$configname"
+		printf "\tdefault y\n"
+		printf "\thelp\n"
+		printf "\t  Download a pre-built binary instead of building from source\n\n"
+	fi
+done < packages.list >> Config.in
+
+if [ -n "$basepackages" ]; then
+cat <<END >> Config.in
+config CONFIG_PKG_BASE
+	bool
+	default y
+	select $basepackages
+
+END
+fi

@@ -1,6 +1,19 @@
+# Copyright (C) 2020-2021 Affe Null <affenull2345@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
 # Makefile for bananian (installer)
-
-
 
 OUTPUTS = initrd.img boot.img debroot debroot.tar
 # Pass USE_QEMU=1 to the make command to bootstrap on the build machine
@@ -9,54 +22,85 @@ ifeq ($(USE_QEMU),1)
 ONDEV_BOOTSTRAP_CMD =
 USE_QEMU_INSTALL = qemu-install
 else
-ONDEV_BOOTSTRAP_CMD = adb shell /data/bootstrap-debian.sh
+ONDEV_BOOTSTRAP_CMD = @adb shell /data/bootstrap-debian.sh
 USE_QEMU_INSTALL =
 endif
-DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,libgraphicsmagick-q16-3,openssh-server,vim,wpasupplicant,man-db,busybox,sudo,$(EXTRA_PACKAGES)
+DEFAULT_PACKAGES = hicolor-icon-theme,adwaita-icon-theme,openssh-server,vim,wpasupplicant,man-db,busybox,sudo,pulseaudio,$(EXTRA_PACKAGES)
 MIRROR = http://deb.debian.org/debian
 
-all: check $(OUTPUTS)
+ifeq ($(wildcard .config),)
 
-VERSION=0.2
+.PHONY: all
+all: menuconfig
+
+else
+
+.PHONY: all
+all: .config check packages $(OUTPUTS)
+
+.config::
+	$(MAKE) oldconfig
+
+endif
+
+VERSION=0.2.1
 export VERSION
-DEBS = bananui-base_$(VERSION)_armhf.deb device-startup_$(VERSION)_all.deb
+RELEASE=0
+export RELEASE
 
+CONFIG_OBJ = $(CURDIR)/scripts/config
+CONFIG_IN = $(CURDIR)/Config.in
 
+.PHONY: config menuconfig xconfig gconfig nconfig
+$(CONFIG_OBJ)/%onf:
+	mkdir -p $(@D)/lxdialog
+	$(MAKE) -C scripts/kconfig -f Makefile.br obj=$(@D) $(@F) \
+		HOSTCC=$(CC) HOSTCXX=$(CXX)
+
+$(CONFIG_OBJ)/gconf.glade: $(CONFIG_OBJ)/gconf
+	cp -f scripts/kconfig/$(@F) $(@D)
+
+generate-package-configs:
+	@scripts/generate-package-configs
+
+menuconfig: $(CONFIG_OBJ)/mconf generate-package-configs
+	@$< $(CONFIG_IN)
+config: $(CONFIG_OBJ)/conf generate-package-configs
+	@$< $(CONFIG_IN)
+oldconfig: $(CONFIG_OBJ)/conf generate-package-configs
+	@$< -s --$@ $(CONFIG_IN)
+xconfig: $(CONFIG_OBJ)/qconf generate-package-configs
+	@$< $(CONFIG_IN)
+gconfig: $(CONFIG_OBJ)/gconf $(CONFIG_OBJ)/gconf.glade generate-package-configs
+	@$< $(CONFIG_IN)
+nconfig: $(CONFIG_OBJ)/nconf generate-package-configs
+	@$< $(CONFIG_IN)
+
+help:
+	@echo 'Cleaning targets:'
+	@echo '  clean              - Remove packages, root and other generated'
+	@echo '                       files, excluding configuration'
+	@echo ''
+	@echo 'Configuration targets:'
+	@echo '  config             - Update current config utilising a line-oriented program'
+	@echo '  nconfig            - Update current config utilising a ncurses menu based'
+	@echo '                       program'
+	@echo '  menuconfig         - Update current config utilising a menu based program'
+	@echo '  xconfig            - Update current config utilising a Qt based front-end'
+	@echo '  gconfig            - Update current config utilising a GTK+ based front-end'
+
+	@echo ''
+	@echo 'Installation targets:'
+	@echo '  install-to-device  - Install Bananian via adb'
+
+.PHONY: getversion
 getversion:
 	@echo "$(VERSION)"
 
-check::
-	@scripts/check packages bananui-base device-startup libbananui0 \
-		libbananui0-dev
+.PHONY: check
+check:
 	@scripts/check root
 	@scripts/check deps
-
-bananui-base_$(VERSION)_armhf.deb: bananui-base libbananui-debs
-	echo "$(VERSION)" > bananui-base/.version
-	if [ ! -f bananui-base/.prebuilt ]; then \
-		(cd bananui-base; pdebuild --configfile ../pbuilderrc \
-		--buildresult .. -- --host-arch armhf \
-		--bindmounts "$$(pwd)/../libbananui-debs" \
-		--override-config --othermirror \
-		"deb [trusted=yes] file:///$$(pwd)/../libbananui-debs ./"); \
-	fi
-
-device-startup_$(VERSION)_all.deb: device-startup
-	if [ ! -f device-startup/.prebuilt ]; then \
-		(cd device-startup; pdebuild --configfile ../pbuilderrc \
-		--buildresult .. -- --host-arch armhf); \
-	fi
-
-libbananui-debs: libbananui0_$(VERSION)_armhf.deb
-	(mkdir -p libbananui-debs; cd libbananui-debs; \
-	cp ../libbananui0*_$(VERSION)_armhf.deb .; \
-	dpkg-scanpackages . /dev/null > Packages)
-
-libbananui0_$(VERSION)_armhf.deb: libbananui
-	if [ ! -f libbananui/.prebuilt ]; then \
-		(cd libbananui; pdebuild --configfile ../pbuilderrc \
-		--buildresult .. -- --host-arch armhf); \
-	fi
 
 initrd.img: ramdisk
 	rm -f $@
@@ -65,12 +109,22 @@ initrd.img: ramdisk
 boot.img: initrd.img zImage bootimg.cfg
 	abootimg --create $@ -f bootimg.cfg -k zImage -r $<
 
-debroot:
+debroot: packages
 	rm -rf debroot
-	debootstrap --include=$(DEFAULT_PACKAGES) --arch armhf --foreign \
-		--merged-usr buster debroot/ $(MIRROR) || rm -rf debroot
+	debootstrap --include="$(DEFAULT_PACKAGES),$$(scripts/get-deps)" \
+		--arch armhf --foreign --merged-usr buster debroot/ \
+		$(MIRROR) || (rm -rf debroot && false)
 
-copy-files: $(DEBS) modules
+.PHONY: download
+download: .config
+	@scripts/download-packages
+
+.PHONY: packages
+packages: download
+	@scripts/build-packages
+
+.PHONY: copy-files
+copy-files: packages modules
 	if [ ! -f debroot/etc/wpa_supplicant.conf ]; then \
 		echo 'network={' >> debroot/etc/wpa_supplicant.conf && \
 		echo '    ssid="SSID"' >> debroot/etc/wpa_supplicant.conf && \
@@ -81,45 +135,57 @@ copy-files: $(DEBS) modules
 	mkdir -p debroot/lib/modules/
 	rm -rf debroot/lib/modules/3.10.49-bananian+
 	cp -rf modules debroot/lib/modules/3.10.49-bananian+
-	cp -f $(DEBS) libbananui0_$(VERSION)_armhf.deb debroot/var/cache
+	@scripts/copy-packages debroot/var/cache
 
+.PHONY: package
 ifeq ($(PACKAGE_PATH),)
 package:
 	@echo "Please set the PACKAGE_PATH variable!"; exit 1
 else
-package: libbananui-debs
-	@echo "Building package..."
-	TMPDEBS=$$(mktemp -d /tmp/libbananui-debs.XXXXXXXX) && \
-	cp -r libbananui-debs/* "$$TMPDEBS" && \
+package:
+	@echo "Building package in $(PACKAGE_PATH)..."
+	@TMPDEBS=$$(mktemp -d /tmp/bananian-debs.XXXXXXXX) && \
+	scripts/copy-packages "$$TMPDEBS" --skip-missing && \
+	(cd "$$TMPDEBS" && dpkg-scanpackages . /dev/null > Packages) && \
+	echo '$(VERSION)' > /tmp/bananian-version && \
 	cd '$(PACKAGE_PATH)' && \
 	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
 		--buildresult '$(CURDIR)' -- --host-arch armhf \
-		--bindmounts "$$TMPDEBS" \
+		--bindmounts "$$TMPDEBS /tmp/bananian-version" \
 		--override-config --othermirror \
 		"deb [trusted=yes] file://$$TMPDEBS ./"; \
-	rm -rf "$$TMPDEBS"
+	pdebuildresult=$$?; rm -rf "$$TMPDEBS" /tmp/bananian-version; \
+	exit $$pdebuildresult
 endif
 
 ifeq ($(USE_QEMU),1)
-qemu-install: debroot copy-files
-	scripts/qemubootstrap
+.PHONY: qemu-install
+qemu-install: debroot copy-files sysconfig
+	@scripts/qemubootstrap
 endif
 
-debroot.tar: debroot copy-files $(USE_QEMU_INSTALL)
+.PHONY: sysconfig
+sysconfig: debroot
+	@scripts/sysconfig
+
+debroot.tar: debroot copy-files sysconfig $(USE_QEMU_INSTALL)
 	rm -f $@
-	(cd debroot; tar cvf ../$@ --exclude=.gitignore *)
+	@(echo '==>> Creating debroot.tar...' && cd debroot && \
+		tar cf ../$@ --exclude=.gitignore *)
 	@echo "Now you can execute the commands from README.md."
 
+.PHONY: install-to-device
 install-to-device: all
 	adb wait-for-device
-	adb push debroot.tar /data
-	adb push boot.img /data
-	adb push on-device-scripts/*.sh /data
-	adb shell /data/install-bootimage.sh
-	adb shell /data/unpack-debian.sh
+	@adb push debroot.tar /data
+	@adb push boot.img /data
+	@adb push on-device-scripts/*.sh /data
+	@adb shell /data/install-bootimage.sh
+	@adb shell /data/unpack-debian.sh
 	$(ONDEV_BOOTSTRAP_CMD)
-	adb shell rm /data/install-bootimage.sh /data/unpack-debian.sh \
+	@adb shell rm /data/install-bootimage.sh /data/unpack-debian.sh \
 		/data/bootstrap-debian.sh
 
+.PHONY: clean
 clean:
-	rm -rf *.deb $(OUTPUTS) libbananui-debs
+	rm -rf *.deb $(OUTPUTS) debs

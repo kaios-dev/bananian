@@ -1,0 +1,106 @@
+#!/bin/sh
+# Copyright (C) 2020-2021 Affe Null <affenull2345@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+set -e
+
+branch=$(git symbolic-ref --short HEAD || true)
+: ${branch:=${CI_COMMIT_BRANCH}}
+: ${branch:=stable}
+
+syntaxerr () {
+	echo "Syntax error: $1" 1>&2
+	exit 1
+}
+
+
+while read package; do
+	case "$package" in
+		"#"*|"")
+			continue
+			;;
+	esac
+	configname=$(echo "$package" | cut -f 1)
+	packages=$(echo "$package" | cut -f 2)
+	packagename=$(echo "$packages" | sed 's/,.*$//' | cut -d : -f 1)
+	packagesource=""
+	while true; do
+		case "$packagesource" in
+			"#"*|"")
+				read packagesource || syntaxerr \
+					"Expected source URL, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	packagesrcurl=$(echo "$packagesource" | cut -d '#' -f 1)
+	packagebranch=$(echo "$packagesource" | cut -s -d '#' -f 2)
+	: ${packagebranch:=${branch}}
+	package_2=""
+	while true; do
+		case "$package_2" in
+			"#"*|"")
+				read package_2 || syntaxerr \
+					"Expected arch,version,opt; found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	packagever=$(echo "$package_2" | cut -f 1)
+	packagepriority=$(echo "$package_2" | cut -f 2)
+	packagedeps="#"
+	read packagedeps || syntaxerr "Expected dependencies, found EOF"
+	while true; do
+		case "$packagedeps" in
+			"#"*)
+				read packagedeps || syntaxerr \
+					"Expected dependencies, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	if ! grep -q "^${configname}=y" .config; then continue; fi
+	if ! grep -q "^${configname}_DOWNLOAD=y" .config; then
+		if [ -d "$packagename" ]; then
+			if [ -d "$packagename/.git" ]; then
+				(cd "$packagename" && git pull)
+			fi
+		else
+			git clone "$packagesrcurl" "$packagename" -b "$packagebranch"
+		fi
+	else
+		if [ "x$RELEASE" != "x1" ]; then
+			echo "==>> Can't download $packages:"
+			echo "==>> ERROR: This is a development version. No pre-built packages are available." 1>&2
+			echo "===>> Please reconfigure: make menuconfig" 1>&2
+			exit 1
+		fi
+		for debname_arch in $(echo "$packages" | sed 's/,/ /g'); do
+			debname=$(echo "$debname_arch" | cut -d : -f 1)
+			arch=$(echo "$debname_arch" | cut -d : -f 2)
+			wget -c "https://affenull2345.gitlab.io/bananian/packages-latest/${debname}_${packagever}_${arch}.deb"
+		done
+	fi
+done < packages/packages.list

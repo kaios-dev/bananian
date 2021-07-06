@@ -1,0 +1,91 @@
+#!/bin/sh
+# Copyright (C) 2020-2021 Affe Null <affenull2345@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+set -e
+
+while read package; do
+	case "$package" in
+		"#"*|"")
+			continue
+			;;
+	esac
+	configname=$(echo "$package" | cut -f 1)
+	packagenamearch=$(echo "$package" | cut -f 2 | sed 's/,.*$//')
+	packagename=$(echo "$packagenamearch" | cut -d : -f 1)
+	packagearch=$(echo "$packagenamearch" | cut -d : -f 2)
+	packagesource=""
+	while true; do
+		case "$packagesource" in
+			"#"*|"")
+				read packagesource || syntaxerr \
+					"Expected source URL, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	package_2=""
+	while true; do
+		case "$package_2" in
+			"#"*|"")
+				read package_2 || syntaxerr \
+					"Expected arch,version,opt; found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+	packagever=$(echo "$package_2" | cut -f 1)
+	packagepriority=$(echo "$package_2" | cut -f 2)
+	packagedeps="#"
+	read packagedeps || syntaxerr "Expected dependencies, found EOF"
+	while true; do
+		case "$packagedeps" in
+			"#"*)
+				read packagedeps || syntaxerr \
+					"Expected dependencies, found EOF"
+				continue
+				;;
+			*)
+				break
+				;;
+		esac
+	done
+
+	if ! grep -q "${configname}=y" .config ||
+		grep -q "${configname}_DOWNLOAD=y" .config;
+	then
+		continue
+	fi
+
+	packagefile="${packagename}_${packagever}_${packagearch}.deb"
+	if [ -f "$packagefile" ] && [ "$packagefile" -nt "$packagename" ]; then
+		echo "Package already built, touch $packagename to rebuild."
+	else
+		if [ -f "$packagename/debian/source/format" ] && [ \
+			"x$(cat "$packagename/debian/source/format")" = \
+			"x3.0 (quilt)" ]
+		then
+			(cd "$packagename" && git deborig --force)
+		fi
+		make package PACKAGE_PATH="$(pwd)/$packagename"
+	fi
+done < packages/packages.list

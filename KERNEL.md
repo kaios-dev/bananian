@@ -22,13 +22,10 @@ Compile GCC 4.9.4:
     $ cd bld
     $ CFLAGS_FOR_TARGET='-g -O2 -mfloat-abi=hard -D__ARM_PCS_VFP' \
       $(pwd)/../configure --prefix=/usr \
-      --target=arm-linux-unknown-gnueabihf \
+      --target=arm-linux-unknown-gnueabi \
       --enable-languages=c,c++
-    $ mv Makefile Makefile.old
-    $ sed 's/-D_GNU_SOURCE/-mfloat-abi=hard -D__ARM_PCS_VFP -D_GNU_SOURCE/' Makefile.old > Makefile
-    ( This will patch the Makefile )
-    $ make
-    $ sudo make install
+    $ make all-gcc
+    $ sudo make install-gcc
     $ cd ..
 
 # Compiling the official stock kernel (new method)
@@ -58,21 +55,14 @@ Since this is the official stock kernel and the configuration is based on
 Note that you have to replace the modules in /system/lib/modules if you want to
 use it with KaiOS.
 
-# Compiling the CodeAurora kernel (old default)
+# Compiling the CodeAurora kernel (old method)
 
 Download kernel:
 
     $ git clone -b LF.BR.1.2.8 https://source.codeaurora.org/quic/la/kernel/msm-3.10 kernel
 
-Extract device tree blob from kernel (zImage is the current kernel on the
-phone):
-
-    $ hd zImage | grep "d0 0d fe ed 00 02 14 f4  00 00 00 38 00 01 e1 f8"
-    $ dd if=zImage of=kernel/dtb bs=16 skip=$(0x[first hexadecimal number of
-      the output from the previous command, but with one trailing zero removed])
-
 Download <https://gitlab.com/affenull2345/bananian/-/raw/master/kernel-config>
-into kernel.
+into the kernel.
 
 Add Prima WLAN kernel module:
 
