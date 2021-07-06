@@ -147,13 +147,15 @@ package:
 	@TMPDEBS=$$(mktemp -d /tmp/bananian-debs.XXXXXXXX) && \
 	scripts/copy-packages "$$TMPDEBS" --skip-missing && \
 	(cd "$$TMPDEBS" && dpkg-scanpackages . /dev/null > Packages) && \
+	echo '$(VERSION)' > /tmp/bananian-version && \
 	cd '$(PACKAGE_PATH)' && \
 	pdebuild --configfile '$(CURDIR)/pbuilderrc' \
 		--buildresult '$(CURDIR)' -- --host-arch armhf \
-		--bindmounts "$$TMPDEBS" \
+		--bindmounts "$$TMPDEBS /tmp/bananian-version" \
 		--override-config --othermirror \
 		"deb [trusted=yes] file://$$TMPDEBS ./"; \
-	pdebuildresult=$$?; rm -rf "$$TMPDEBS"; exit $$pdebuildresult
+	pdebuildresult=$$?; rm -rf "$$TMPDEBS" /tmp/bananian-version; \
+	exit $$pdebuildresult
 endif
 
 ifeq ($(USE_QEMU),1)
