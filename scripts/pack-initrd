@@ -15,5 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-cd $2;
-find . | grep -vF '.gitignore' | cpio -R 0:0 -o -H newc | gzip > $1
+set -e
+
+{
+	cd "$2";
+	find . |
+		grep -vF '.gitignore' |
+		cpio -R 0:0 -o -H newc |
+		gzip
+} > "$1"
