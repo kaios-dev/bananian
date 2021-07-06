@@ -45,7 +45,7 @@ endif
 
 VERSION=0.2.1
 export VERSION
-RELEASE=0
+RELEASE=1
 export RELEASE
 
 CONFIG_OBJ = $(CURDIR)/scripts/config
