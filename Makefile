@@ -112,7 +112,7 @@ boot.img: initrd.img zImage bootimg.cfg
 debroot: packages
 	rm -rf debroot
 	debootstrap --include="$(DEFAULT_PACKAGES),$$(scripts/get-deps)" \
-		--arch armhf --foreign --merged-usr buster debroot/ \
+		--arch armhf --foreign --merged-usr bullseye debroot/ \
 		$(MIRROR) || (rm -rf debroot && false)
 
 .PHONY: download

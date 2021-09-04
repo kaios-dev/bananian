@@ -34,7 +34,7 @@ First install pbuilder:
 
 and set up the build chroot:
 ```
-# pbuilder create --distribution buster
+# pbuilder create --distribution bullseye
 ```
 
 #### Starting the build
