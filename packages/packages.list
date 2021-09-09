@@ -10,7 +10,7 @@ https://gitlab.com/affenull2345/libbananui.git
 0.2.1	standard
 
 CONFIG_PACKAGE_DEVICE_STARTUP	device-startup:all
-https://gitlab.com/affenull2345/device-startup-8110.git
+https://gitlab.com/affenull2345/device-startup-8110.git#stable
 0.2	required
 
 CONFIG_PACKAGE_BANANUI_BASE	bananui-base:armhf
