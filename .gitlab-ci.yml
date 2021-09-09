@@ -1,4 +1,4 @@
-image: "debian:buster"
+image: "debian:bullseye"
 
 build:
   stage: build
@@ -7,7 +7,7 @@ build:
     - mv /usr/share/debootstrap/functions /tmp/debootstrap-functions
     - sed 's/^.*umount "$TARGET\/proc".*$//' /tmp/debootstrap-functions > /usr/share/debootstrap/functions
   script:
-    - pbuilder create --distribution buster
+    - pbuilder create --distribution bullseye
     - cp allpkgs.config .config
     - make packages
   artifacts:
